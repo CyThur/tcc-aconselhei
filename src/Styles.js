@@ -26,7 +26,8 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginBottom: '30%'
   },
   logoInicio: {
     alignSelf: 'center',
@@ -90,6 +91,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginTop: 5,
+  },
+  inputLoginError: {
+  alignSelf: 'flex-start',
+  color: '#f23535',
+  marginBottom: '4%',
+  marginLeft: '15%',
+  fontSize: 15,
   },
   inputCad: {
     width: '85%',
