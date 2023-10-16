@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from './Styles.js';
 
@@ -26,19 +26,18 @@ const Calendario = () => {
   const dataMax = new Date();
 
   return (
-    <View style={{ flexDirection: 'row', width: '105%' }}>
-      <View style={styles.txtViewInput2}>
-        <Text style={styles.txtInput2}>
-          {selectedDate.toISOString().split('T')[0]}
-        </Text>
+      <View style={{ width:'100%', flexDirection: 'row', alignItems: 'center', justifyContent:'center'}}>
         <TouchableOpacity onPress={showDatePickerModal}>
-          <AntDesign
-            name="calendar"
-            size={20}
-            color="#113E6B"
-          />
+          <FontAwesome name="calendar" size={25} color="#1E5A97" style={[{ marginRight: 10 }, {marginBottom: 16}]}/>
         </TouchableOpacity>
-      </View>
+          <Text 
+            style={[
+            styles.inputLogin, {
+              //validador do calendario
+            }]}>
+            {selectedDate.toISOString().split('T')[0]}
+          </Text>
+      
 
       {showDatePicker && (
         <DateTimePicker

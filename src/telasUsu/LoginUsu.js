@@ -12,7 +12,7 @@ export default function LoginAdv({ navigation }) {
       index: 0,
       routes: [{ name: 'TabRoutesUsu' }]
     })
-    console.log(data);
+    console.log(data); //pra ver como os dados estão sendo enviados
   }
 
   const schema = yup.object({
@@ -43,19 +43,19 @@ export default function LoginAdv({ navigation }) {
                 name="email"
                 render={({ field: {onChange, onBlur, value}}) => (
                   <TextInput
-                  style={[
-                    styles.inputLogin, {
-                      borderWidth: errors.email ? 1.5 : 1,
-                      borderColor: errors.email ? '#f23535' : '#1E5A97',
-                      marginBottom: errors.email ? 5 : 16
-                    }]}
-                  placeholder="E-mail"
-                  keyboardType='email-address'
-                  autoCapitalize='none'
-                  autoComplete='email'
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur} //quando o textinput é tocado
+                    style={[
+                      styles.inputLogin, {
+                        borderWidth: errors.email ? 1.5 : 1,
+                        borderColor: errors.email ? '#f23535' : '#1E5A97',
+                        marginBottom: errors.email ? 5 : 16
+                      }]}
+                    placeholder="E-mail"
+                    keyboardType='email-address'
+                    autoCapitalize='none'
+                    autoComplete='email'
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur} //quando o textinput é tocado
                   />
                 )}
               />

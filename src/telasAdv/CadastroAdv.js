@@ -3,7 +3,9 @@ import { View, TextInput, Text, TouchableWithoutFeedback, TouchableOpacity, Imag
 import { styles } from '../Styles.js';
 import { FontAwesome } from '@expo/vector-icons';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-
+import {useForm, Controller} from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 export default function CadastroAdv({ navigation }) {
 

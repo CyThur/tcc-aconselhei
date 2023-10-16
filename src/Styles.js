@@ -135,6 +135,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    width: '100%',
   },
   button: {
     backgroundColor: '#1E5A97',
