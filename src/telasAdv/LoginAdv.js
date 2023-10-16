@@ -12,7 +12,7 @@ export default function LoginAdv({ navigation }) {
       index: 0,
       routes: [{ name: 'TabRoutesAdv' }]
     })
-    console.log(data);
+    console.log(data); //pra ver como os dados estão sendo enviados
   }
 
   const schema = yup.object({
