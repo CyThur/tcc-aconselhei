@@ -5,15 +5,10 @@ import {useForm, Controller} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { styles } from '../Styles.js';
+import { auth } from '../firebase.config.js';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginAdv({ navigation }) {
-  const logar = (data) => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'TabRoutesAdv' }]
-    })
-    console.log(data);
-  }
 
   const schema = yup.object({
     email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
@@ -23,6 +18,22 @@ export default function LoginAdv({ navigation }) {
   const {control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
+
+  const onSubmit = async (data) => {
+    const { email, senha } = data;
+    signInWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        Alert.alert('Atenção', 'Login efetuado com sucesso!');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'TabRoutesAdv' }]
+        })
+      })
+      .catch(() => {
+        Alert.alert('Atenção', 'E-mail ou senha inválidos!')
+      })
+  }
 
   return (
     <View style={styles.container}>
@@ -41,7 +52,7 @@ export default function LoginAdv({ navigation }) {
               <Controller
                 control={control}
                 name="email"
-                render={({ field: {onChange, onBlur, value}}) => (
+                render = {({ field: {onChange, onBlur, value}}) => (
                   <TextInput
                   style={[
                     styles.inputLogin, {
@@ -55,7 +66,7 @@ export default function LoginAdv({ navigation }) {
                   autoComplete='email'
                   value={value}
                   onChangeText={onChange}
-                  onBlur={onBlur} //quando o textinput é tocado
+                  onBlur={onBlur}
                   />
                 )}
               />
@@ -88,7 +99,7 @@ export default function LoginAdv({ navigation }) {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSubmit(logar)} style={styles.button}>
+            <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
           </View>

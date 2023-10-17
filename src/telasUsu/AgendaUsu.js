@@ -6,6 +6,8 @@ import { getToday, getFormatedDate } from 'react-native-modern-datepicker';
 import { styles } from '../Styles';
 
 
+
+
 export default function AgendaUsu() {
 
   const today = new Date();

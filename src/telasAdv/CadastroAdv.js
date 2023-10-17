@@ -8,10 +8,12 @@ import { MultipleSelectList } from 'react-native-dropdown-select-list';
 export default function CadastroAdv({ navigation }) {
 
     const cadastrar = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'TabRoutesAdv' }]
-        })
+        // navigation.reset({
+        //     index: 0,
+        //     routes: [{ name: 'TabRoutesAdv' }]
+        // })
+
+        console.log(categories, selected)
     }
 
     const [nome, setNome] = useState('');
@@ -20,7 +22,6 @@ export default function CadastroAdv({ navigation }) {
     const [reSenha, setReSenha] = useState('');
 
     const [oab, setOab] = useState('');
-    const [paisFormacao, setPaisFormacao] = useState('');
     const [institu, setInstitu] = useState('');
 
     const [selected, setSelected] = React.useState('');
@@ -112,17 +113,10 @@ export default function CadastroAdv({ navigation }) {
                         />
                         <TextInput
                             style={styles.inputList}
-                            placeholder="País de Formação"
-                            value={paisFormacao}
-                            onChangeText={setPaisFormacao}
-                        />
-                        <TextInput
-                            style={styles.inputList}
                             placeholder="Instituição onde se formou"
                             value={institu}
                             onChangeText={setInstitu}
                         />
-
                         <View style={styles.viewList}>
                             <MultipleSelectList
                                 setSelected={(val) => setCategories(val)}
@@ -145,7 +139,7 @@ export default function CadastroAdv({ navigation }) {
                             />
 
                             <MultipleSelectList
-                                setSelected={setSelected}
+                                setSelected={(val) => setSelected(val)}
                                 data={diaSemana}
                                 placeholder="Dias disponíveis para consultorias"
                                 label="Dias disponíveis para consultorias"
