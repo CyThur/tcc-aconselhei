@@ -93,11 +93,11 @@ export const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputLoginError: {
-  alignSelf: 'flex-start',
-  color: '#f23535',
-  marginBottom: '4%',
-  marginLeft: '15%',
-  fontSize: 15,
+    alignSelf: 'flex-start',
+    color: '#f23535',
+    marginBottom: '4%',
+    marginLeft: '15%',
+    fontSize: 15,
   },
   inputCad: {
     width: '85%',
@@ -793,192 +793,235 @@ export const styles = StyleSheet.create({
   },
 
   //PERFIL ADVOGADO
-    containerPerfilAdv: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '4%',
-    },
-  
-    perfilImagePerfilAdv: {
-      width: 170,
-      height: 170,
-      borderRadius: 75,
-      marginBottom: 10,
-      marginTop: 50,
-      alignSelf: 'center',
-    },
-  
-    profileTextPerfilAdv: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      marginBottom: 10,
-      alignSelf: 'center',
-    },
-  
-    profileText2PerfilAdv: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      marginBottom: 40,
-      marginTop: 40,
-      alignSelf: 'center',
-    },
-  
-    nameContainerPerfilAdv: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 30,
-    },
-  
-    namePerfilAdv: {
-      fontSize: 20,
-      marginRight: '10%',
-      fontWeight: 'bold',
-      color: '#1E5A97',
-    },
-  
-    labelPerfilAdv: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginTop: 20,
-    },
-  
-    inputPerfilAdv: {
-      width: 360,
-      height: 40,
-      borderColor: 'gray',
-      borderBottomWidth: 2,
-      marginBottom: 10,
-      paddingLeft: 10,
-    },
-  
-    buttonPerfilAdv: {
-      backgroundColor: '#1E5A97',
-      padding: 15,
-      marginTop: 20,
-      borderRadius: 10,
-      width: '35%',
-      alignSelf: 'center',
-    },
-  
-    buttonTextPerfilAdv: {
-      color: 'white',
-      fontSize: 20,
-      textAlign: 'center',
-    },
-  
-    smallButtonPerfilAdv: {
-      backgroundColor: '#113E6B',
-      padding: 10,
-      borderRadius: 10,
-      marginRight: 150,
-      marginBottom: 10,
-      marginTop: 10,
-      width: '50%',
-    },
-  
-    editableNameContainerPerfilAdv: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
+  containerPerfilAdv: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '4%',
+  },
 
-    //NOTIFICACOES USUARIO
-    containerNotificacoesUsu: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-    },
+  perfilImagePerfilAdv: {
+    width: 170,
+    height: 170,
+    borderRadius: 75,
+    marginBottom: 10,
+    marginTop: 50,
+    alignSelf: 'center',
+  },
 
-        //AVALIAR ADVOGADO SCREEN
-        containerAvaliarAdvogadoScreen: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        },
-        textAvaliarAdvogadoScreen: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
-        buttonAvaliarAdvogadoScreen: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: '#f5f5f5',
-          borderRadius: 5,
-          padding: 10,
-          marginTop: 20,
-        },
-        buttonTextAvaliarAdvogadoScreen: {
-          fontSize: 18,
-          marginLeft: 10,
-        },
+  profileTextPerfilAdv: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
 
-        //CONSULTORIA SCREEN
-        containerConsultoriaScreen: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        },
-        textConsultoriaScreen: {
-          fontSize: 24,
-          fontWeight: 'bold',
-        },
-        buttonConsultoriaScreen: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: '#f5f5f5',
-          borderRadius: 5,
-          padding: 10,
-          marginTop: 20,
-        },
-        buttonTextConsultoriaScreen: {
-          fontSize: 18,
-          marginLeft: 10,
-        },
+  profileText2PerfilAdv: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 40,
+    marginTop: 40,
+    alignSelf: 'center',
+  },
 
-        //NOTIFICATION SCREEN
-        containerNS: {
-          flex: 1,
-          padding: 25,
-          backgroundColor: '#ffffff',
-        },
-        headerNS: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 50,
-          marginTop: 30,
-          height: 50,
-        },
-        notificationTextNS: {
-          fontSize: 24,
-          fontWeight: 'bold',
-          marginLeft: 10,
-        },
-        buttonNS: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: '#A1B3C5',
-          borderRadius: 10,
-          padding: 10,
-          marginTop: 20,
-        },
-        buttonTextNS: {
-          fontSize: 19,
-          marginLeft: 10,
-        },
-        rateButtonNS: {
-          backgroundColor: '#1E5A97',
-          borderRadius: 10,
-          padding: 15,
-          marginTop: 350,
-          alignItems: 'center',
-        },
-        rateButtonTextNS: {
-          fontSize: 18,
-          fontWeight: 'bold',
-          color: '#fff',
-        },
+  nameContainerPerfilAdv: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+
+  namePerfilAdv: {
+    fontSize: 20,
+    marginRight: '10%',
+    fontWeight: 'bold',
+    color: '#1E5A97',
+  },
+
+  labelPerfilAdv: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+
+  inputPerfilAdv: {
+    width: 360,
+    height: 40,
+    borderColor: 'gray',
+    borderBottomWidth: 2,
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+
+  buttonPerfilAdv: {
+    backgroundColor: '#1E5A97',
+    padding: 15,
+    marginTop: 20,
+    borderRadius: 10,
+    width: '35%',
+    alignSelf: 'center',
+  },
+
+  buttonTextPerfilAdv: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+
+  smallButtonPerfilAdv: {
+    backgroundColor: '#113E6B',
+    padding: 10,
+    borderRadius: 10,
+    marginRight: 150,
+    marginBottom: 10,
+    marginTop: 10,
+    width: '50%',
+  },
+
+  editableNameContainerPerfilAdv: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  //NOTIFICACOES USUARIO
+  containerNotificacoesUsu: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+
+  //AVALIAR ADVOGADO SCREEN
+  containerAvaliarAdvogadoScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  textAvaliarAdvogadoScreen: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  buttonAvaliarAdvogadoScreen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 20,
+  },
+  buttonTextAvaliarAdvogadoScreen: {
+    fontSize: 18,
+    marginLeft: 10,
+  },
+
+  //CONSULTORIA SCREEN
+  containerConsultoriaScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  textConsultoriaScreen: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  buttonConsultoriaScreen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 20,
+  },
+  buttonTextConsultoriaScreen: {
+    fontSize: 18,
+    marginLeft: 10,
+  },
+
+  //NOTIFICATION SCREEN
+  containerNS: {
+    flex: 1,
+    padding: 25,
+    backgroundColor: '#ffffff',
+  },
+  headerNS: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 50,
+    marginTop: 30,
+    height: 50,
+  },
+  notificationTextNS: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  buttonNS: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#A1B3C5',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 20,
+  },
+  buttonTextNS: {
+    fontSize: 19,
+    marginLeft: 10,
+  }, 
+  rateButtonNS: {
+    backgroundColor: '#1E5A97',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 350,
+    alignItems: 'center',
+  },
+  rateButtonTextNS: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+
+
+  txtView3: {
+    marginBottom: 50,
+    justifyContent: 'center',
+    textAlign: 'center',
+    color: '#113E6B',
+    fontWeight: 'bold',
+  },
+  txt: {
+    fontSize: 18,
+    color: '#113E6B',
+    alignSelf: 'center',
+  },
+  specialtyItem: {
+    height: 50,
+    marginBottom: 15,
+    padding: 10,
+    backgroundColor: '#E1E1DE',
+    borderWidth: 1,
+    borderRadius: 11,
+    borderColor: '#1E5A97',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  specialtyText: {
+    fontSize: 15,
+    color: '#113E6B',
+    fontWeight: 'bold',
+  },
+  card: {
+    width: 150, 
+    borderWidth: 2,
+    borderRadius: 10, 
+    padding: 10,
+    margin: 10,
+    borderColor: '#1E5A97',
+    backgroundColor: '#E1E1DE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+
 });

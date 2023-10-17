@@ -39,7 +39,7 @@ export default function AgendarConsul({navigation}) {
           <Text style={styles.btnTextAgendarConsul}>HORA</Text>
         </TouchableOpacity>
       </View>
-
+          
       <View
         style={{
           flexDirection: 'row',
