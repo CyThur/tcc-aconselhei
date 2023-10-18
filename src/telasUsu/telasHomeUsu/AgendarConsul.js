@@ -45,12 +45,12 @@ export default function AgendarConsul({ navigation }) {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.specialtyItem}
-              onPress={() => navigation.navigate('Profissional', { speciality: item.name, })}>
+              onPress={() => navigation.navigate('Profissional', { speciality: item.name,})}> 
               <Text style={styles.specialtyText}>{item.name}</Text>
             </TouchableOpacity>
           )}
         />
-      
+   
     </View>
   );
 

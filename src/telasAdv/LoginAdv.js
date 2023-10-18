@@ -35,6 +35,14 @@ export default function LoginAdv({ navigation }) {
       })
   }
 
+  {/* apagar futuramente */}
+  const PassarDiretoAdv = async (data) => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'TabRoutesAdv' }]
+        })
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.logoView}>
@@ -101,6 +109,11 @@ export default function LoginAdv({ navigation }) {
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
+            </TouchableOpacity>
+
+            {/* apagar futuramente */}
+            <TouchableOpacity onPress={PassarDiretoAdv} style={styles.button}>
+              <Text style={styles.loginButtonText}>passar direto</Text>
             </TouchableOpacity>
           </View>
 
