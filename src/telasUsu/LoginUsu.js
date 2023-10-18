@@ -34,6 +34,13 @@ export default function LoginAdv({ navigation }) {
         Alert.alert('Atenção', 'E-mail ou senha inválidos!')
       })
   }
+  //apagar futuramente
+  const PassarDireto = async (data) => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'TabRoutesUsu' }]
+        })
+  }
 
   return (
     <View style={styles.container}>
@@ -102,6 +109,13 @@ export default function LoginAdv({ navigation }) {
             <TouchableOpacity onPress={() => navigation.navigate('TabRoutesUsu')} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
+
+            {/* apagar futuramente*/}
+            <TouchableOpacity onPress={PassarDireto} 
+            style={styles.button}>
+              <Text style={styles.loginButtonText}>passar sem login</Text>
+            </TouchableOpacity>
+
           </View>
 
           <View style={styles.inputContainer}>
