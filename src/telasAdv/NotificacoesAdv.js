@@ -5,6 +5,7 @@ export default function HomeUsu() {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Notificações dos Advogados</Text>
+      {/*Notificação  indicando a hora da consulta, e caminho para o chat*/}
       <StatusBar style="auto" />
     </View>
   );

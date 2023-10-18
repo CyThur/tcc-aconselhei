@@ -1037,4 +1037,39 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+  // PerfilAdvEsco
+  header: {
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginTop: 10,
+  },
+  infoBox: {
+    backgroundColor: '#A1B3C5',
+    padding: 20,
+    margin: 20,
+    borderRadius: 10,
+
+    justifyContent: 'justify',
+    alignItems: 'justify',
+    textAlign: 'justify',
+  },
+   txtNome: {
+    color: '#1E5A97',
+    fontWeight: 'bold',
+    fontSize: 25,
+    
+    textAlign: 'justify',
+    alignSelf: 'justify',
+    justifyContent: 'justify'
+  },
+  infoText: {
+    color: 'black',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+
 });

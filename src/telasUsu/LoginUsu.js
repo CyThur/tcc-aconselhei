@@ -97,8 +97,9 @@ export default function LoginAdv({ navigation }) {
             </View>
             {errors.senha && <Text style={styles.inputLoginError}>{errors.senha?.message}</Text>}
           </View>
+          {/* handleSubmit(onSubmit) */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
+            <TouchableOpacity onPress={() => navigation.navigate('TabRoutesUsu')} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
           </View>

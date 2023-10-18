@@ -1,5 +1,5 @@
 import React from 'react';
-import {  View, Text, FlatList, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {  View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import { styles } from '../../Styles';
 
 export default function AgendarConsul({ navigation }) {

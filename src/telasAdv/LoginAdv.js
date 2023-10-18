@@ -99,7 +99,7 @@ export default function LoginAdv({ navigation }) {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
+            <TouchableOpacity onPress={() => navigation.navigate('TabRoutesAdv')} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
           </View>
