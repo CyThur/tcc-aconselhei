@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Importe o ícone de edição
 import { styles } from '../../Styles';
 
@@ -114,16 +105,6 @@ export default function App() {
         <View>
           <Text style={styles.labelPerfilAdv}>Número da OAB:</Text>
           <TextInput style={styles.inputPerfilAdv} placeholder="XXXXXX-OAB/UF" />
-        </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>País de formação:</Text>
-          <TextInput
-            style={styles.inputPerfilAdv}
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="País em que se formou"
-          />
         </View>
 
         <View>

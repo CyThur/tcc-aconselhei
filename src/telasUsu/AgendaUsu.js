@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { View, StyleSheet, Modal, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getToday, getFormatedDate } from 'react-native-modern-datepicker';
 import { styles } from '../Styles';
@@ -18,52 +18,45 @@ export default function AgendaUsu() {
 
   return (
     <View style={styles.containerAgendaUsu}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.centeredViewAgendaUsu}>
+          <View style={styles.modalViewAgendaUsu}>
+            <DatePicker
+              mode='calendar'
+              minimumDate={startDate}
+              selected={date}
+              onDateChange={handleChange}
+              style={styles.datePickerAgendaUsu}
+            />
+          </View>
+        </View>
 
-
-      <View>
-        <Modal animationType='slide'>
-          <ScrollView>
-
-            <View style={styles.centeredViewAgendaUsu}>
-              <View style={styles.modalViewAgendaUsu}>
-                <DatePicker
-                  mode='calendar'
-                  minimumDate={startDate}
-                  selected={date}
-                  onDateChange={handleChange}
-                  style={styles.datePickerAgendaUsu}
-                />
-              </View>
+        <View>
+          <Text style={styles.agendamentosAgendaUsu}>Meus Agendamentos</Text>
+          <View style={styles.navigatorAgendaUsu}></View>
+          <View style={styles.appointmentContainerAgendaUsu}>
+            <View style={styles.appointmentInfoAgendaUsu}>
+              <Text style={styles.dayAgendaUsu}>SEGUNDA</Text>
+              <Text style={styles.dateAgendaUsu}>10/10</Text>
             </View>
+            <Text style={styles.timeAgendaUsu}>11:00</Text>
+            <Text style={styles.nameAgendaUsu}>Dra. Marina Riboli</Text>
+            <Text style={styles.descriptionAgendaUsu}>Direito do consumidor</Text>
+          </View>
 
-            <View>
-              <Text style={styles.agendamentosAgendaUsu}>Meus Agendamentos</Text>
-              <View style={styles.navigatorAgendaUsu}></View>
-              <View style={styles.appointmentContainerAgendaUsu}>
-                <View style={styles.appointmentInfo}>
-                  <Text style={styles.dayAgendaUsu}>SEGUNDA</Text>
-                  <Text style={styles.dateAgendaUsu}>10/10</Text>
-                </View>
-                <Text style={styles.timeAgendaUsu}>11:00</Text>
-                <Text style={styles.nameAgendaUsu}>Dra. Marina Riboli</Text>
-                <Text style={styles.descriptionAgendaUsu}>Direito do consumidor</Text>
-              </View>
-
-              <View style={styles.appointmentContainerAgendaUsu}>
-                <View style={styles.appointmentInfoAgendaUsu}>
-                  <Text style={styles.dayAgendaUsu}>QUARTA</Text>
-                  <Text style={styles.dateAgendaUsu}>12/10</Text>
-                </View>
-                <Text style={styles.timeAgendaUsu}>12:30</Text>
-                <Text style={styles.nameAgendaUsu}>Dr. Fabrício Freitas</Text>
-                <Text style={styles.descriptionAgendaUsu}>Direito do trabalho</Text>
-              </View>
+          <View style={styles.appointmentContainerAgendaUsu}>
+            <View style={styles.appointmentInfoAgendaUsu}>
+              <Text style={styles.dayAgendaUsu}>QUARTA</Text>
+              <Text style={styles.dateAgendaUsu}>12/10</Text>
             </View>
-          </ScrollView>
-        </Modal>
-      </View>
+            <Text style={styles.timeAgendaUsu}>12:30</Text>
+            <Text style={styles.nameAgendaUsu}>Dr. Fabrício Freitas</Text>
+            <Text style={styles.descriptionAgendaUsu}>Direito do trabalho</Text>
+          </View>
 
-      <StatusBar style='auto' />
+
+        </View>
+      </ScrollView>
     </View >
 
 

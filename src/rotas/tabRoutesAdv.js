@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeAdv from '../telasAdv/HomeAdv';
-import Agenda from '../telasAdv/AgendaAdv';
+import Solicitacoes from '../telasAdv/Solicitacoes';
 import Notificacoes from '../telasAdv/NotificacoesAdv';
 
 const Tab = createBottomTabNavigator();
@@ -12,6 +12,7 @@ export default function TabRoutesAdv() {
         <Tab.Navigator screenOptions={{
             headerShown: false,
             tabBarActiveTintColor: '#fff',
+            tabBarInactiveTintColor: '#191970',
             tabBarStyle: {
                 backgroundColor: '#1E5A97',
                 borderTopWidth: 0,
@@ -35,15 +36,15 @@ export default function TabRoutesAdv() {
             />
 
             <Tab.Screen
-                name="Agenda"
-                component={Agenda}
+                name="Solicitacoes"
+                component={Solicitacoes}
                 options={{
-                    tabBarLabel: 'Agenda',
+                    tabBarLabel: 'Solicitações',
                     tabBarIcon: ({ color, size, focused }) =>{
                         if(focused){
-                            return <Ionicons name="calendar" color={color} size={size} />
+                            return <Ionicons name="warning" color={color} size={size} />
                         }
-                        return <Ionicons name="calendar-outline" color={color} size={size} />
+                        return <Ionicons name="warning-outline" color={color} size={size} />
                     } 
                 }}
             />

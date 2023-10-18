@@ -18,8 +18,8 @@ export default function ConsulAgen() {
 
   return (
     <View style={styles.containerAgendaAdv}>
-      <View>
-        <Modal animationType='slide'>
+      
+        
           <ScrollView>
 
             <View style={styles.centeredViewAgendaAdv}>
@@ -67,10 +67,8 @@ export default function ConsulAgen() {
               </View>
             </View>
           </ScrollView>
-        </Modal>
-      </View>
-
-      <StatusBar style='auto' />
+      
+      
     </View >
   );
 }

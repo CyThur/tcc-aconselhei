@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function Inicial() {
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Agenda dos Advogados</Text>
+      <Text style={styles.titulo}>Solicitações recebidas</Text>
       <StatusBar style="auto" />
     </View>
   );
