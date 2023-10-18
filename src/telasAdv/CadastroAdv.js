@@ -20,6 +20,9 @@ export default function CadastroAdv({ navigation }) {
         ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida'),
         oab: yup.string().required('Informe o número da OAB').min(6, 'Número inválido').max(6, 'Número inválido'),
         instituicao: yup.string().required('Informe a instituição onde se formou'),
+        
+        areasFormacao: yup.array().required('Informe suas áreas de atuação'),
+        disponibilidade: yup.array().of(yup.string()).required('Informe seus dias de disponibilidade')
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -28,7 +31,7 @@ export default function CadastroAdv({ navigation }) {
 
     const cadastrar = async (data) => {
 
-        const {email, senha, nomeadv, ufOab, oab, instituicao } = data;
+        const { email, senha, nomeadv, ufOab, oab, instituicao, } = data;
 
         console.log(email, senha, nomeadv, ufOab, oab, instituicao, categories, selected)
         //CRIAR UM USUARIO COM O MESMO ID DO AUTHENTICATION (FAZER RELACIONAMENTO)
@@ -41,26 +44,26 @@ export default function CadastroAdv({ navigation }) {
                     const docRef = doc(db, 'advogados', user.uid)
 
                     await setDoc(docRef, {
-                        nome: nomeadv ,
-                        faculdade: instituicao ,
-                        ufOab:  ufOab ,
+                        nome: nomeadv,
+                        faculdade: instituicao,
+                        ufOab: ufOab,
                         oab: oab,
                         categorias: categories,
                         dias: selected,
-                    }).then(()=> {
+                    }).then(() => {
                         Alert.alert('Atenção', 'Cadastro realizado com sucesso!');
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'TabRoutesAdv' }]
                         })
-                    }).catch((err)=> console.log(err));
+                    }).catch((err) => console.log(err));
                 })
-                
+
             })
     }
 
     const [selected, setSelected] = React.useState('');
-    const [categories, setCategories] = React.useState([]);
+    const [categories, setCategories] = React.useState('');
 
     const areas = [
         { key: 'Direito Ambiental', value: 'Direito Ambiental' },
@@ -268,49 +271,77 @@ export default function CadastroAdv({ navigation }) {
                         {errors.instituicao && <Text style={[styles.inputLoginError, { marginLeft: '9%' }]}>{errors.instituicao?.message}</Text>}
 
                         <View style={styles.viewList}>
-                            <MultipleSelectList
-                                setSelected={(val) => setCategories(val)}
-                                data={areas}
-                                save="value"
-                                placeholder="Áreas de atuação"
-                                label="Áreas de atuação"
-                                notFoundText="Área não encontrada"
-                                searchPlaceholder="Pesquisar"
-                                labelStyles={{ color: '#1E5A97' }}
-                                badgeStyles={{ backgroundColor: '#1E5A97' }}
-                                boxStyles={{
-                                    borderRadius: 18,
-                                    borderColor: '#1E5A97',
-                                    padding: 10,
-                                    backgroundColor: '#E1E1DE',
-                                    width: 320,
-                                    alignSelf: 'center',
-                                }}
+                            <Controller
+                                control={control}
+                                name="areasFormacao"
+                                render={({ field: { onChange, onBlur, valuee } }) => (
+                                    <MultipleSelectList
+                                        setSelected={setCategories}
+                                        data={areas}
+                                        save="value"
+                                        placeholder="Áreas de atuação"
+                                        label="Áreas de atuação"
+                                        notFoundText="Área não encontrada"
+                                        searchPlaceholder="Pesquisar"
+                                        value={valuee}
+                                        onBlur={onBlur}
+                                        labelStyles={{ color: '#1E5A97' }}
+                                        badgeStyles={{ backgroundColor: '#1E5A97' }}
+                                        boxStyles={[{
+                                            marginTop: 9,
+                                            marginBottom: 20,
+                                            borderRadius: 18,
+                                            borderColor: '#1E5A97',
+                                            padding: 10,
+                                            backgroundColor: '#E1E1DE',
+                                            width: 320,
+                                            alignSelf: 'center',
+                                        }, {
+                                            borderWidth: errors.areasFormacao ? 1.5 : 1,
+                                            borderColor: errors.areasFormacao ? '#f23535' : '#1E5A97',
+                                            marginBottom: errors.areasFormacao ? 5 : 16
+                                           }
+                                        ]}
+                                    />
+                                )}
                             />
-                            {categories !== '' ? null : <Text style={[styles.inputLoginError, { marginLeft: '1%', marginTop: '-5%' }]}>Qual a sua área de atuação?</Text>}
-                            
+                            {errors.areasFormacao && <Text style={[styles.inputLoginError, { marginLeft: '-1%'}]}>{errors.areasFormacao?.message}</Text>}
 
-                            <MultipleSelectList
-                                setSelected={setSelected}
-                                data={diaSemana}
-                                placeholder="Dias disponíveis para consultorias"
-                                label="Dias disponíveis para consultorias"
-                                notFoundText="Dia não encontrado"
-                                searchPlaceholder="Pesquisar"
-                                labelStyles={{ color: '#1E5A97' }}
-                                badgeStyles={{ backgroundColor: '#1E5A97' }}
-                                boxStyles={{
-                                    marginTop: 9,
-                                    marginBottom: 20,
-                                    borderRadius: 18,
-                                    borderColor: '#1E5A97',
-                                    padding: 10,
-                                    backgroundColor: '#E1E1DE',
-                                    width: 320,
-                                    alignSelf: 'center',
-                                }}
+                            <Controller
+                                control={control}
+                                name="disponibilidade"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <MultipleSelectList
+                                        setSelected={setSelected}
+                                        data={diaSemana}
+                                        placeholder="Dias disponíveis para consultorias"
+                                        label="Dias disponíveis para consultorias"
+                                        notFoundText="Dia não encontrado"
+                                        searchPlaceholder="Pesquisar"
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        labelStyles={{ color: '#1E5A97' }}
+                                        badgeStyles={{ backgroundColor: '#1E5A97' }}
+                                        boxStyles={[{
+                                            marginTop: 9,
+                                            marginBottom: 20,
+                                            borderRadius: 18,
+                                            borderColor: '#1E5A97',
+                                            padding: 10,
+                                            backgroundColor: '#E1E1DE',
+                                            width: 320,
+                                            alignSelf: 'center',
+                                        }, {
+                                            borderWidth: errors.disponibilidade ? 1.5 : 1,
+                                            borderColor: errors.disponibilidade ? '#f23535' : '#1E5A97',
+                                            marginBottom: errors.disponibilidade ? 5 : 16
+                                           }
+                                        ]}
+                                    />
+                                )}
                             />
-                            {selected !== '' ? null : <Text style={[styles.inputLoginError, { marginLeft: '1%', marginTop: '-5%' }]}>Escolha dias de disponibilidade!</Text>}
+                            {errors.disponibilidade && <Text style={[styles.inputLoginError, { marginLeft: '-1.5%'}]}>{errors.disponibilidade?.message}</Text>}
                         </View>
                     </View>
 

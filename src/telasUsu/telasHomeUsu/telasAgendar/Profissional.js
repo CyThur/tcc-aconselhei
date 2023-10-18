@@ -12,26 +12,6 @@ export default function Profissional({ route, navigation }) {
     const q = query(colRef, where('categorias', 'array-contains', speciality));
 
     const [list, setList] = useState([]);
-    
-    // if (list.length == 0) {
-    //     return (
-    //         <View style={styles.containerTelas}>
-    //             <View style={styles.logoView}>
-    //                 <Image
-    //                     style={styles.logo2}
-    //                     source={require('../../../../assets/aconselhei1.png')}
-    //                 />
-    //             </View>
-    //             <View style={styles.txtView3}>
-    //                 <Text style={styles.txt}>Advogados especialzados no assunto:</Text>
-    //                 <Text style={styles.txt2}>{speciality}</Text>
-    //             </View>
-    //             <View style={{ height: '60%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
-    //                 <Text style={styles.txt3}>Desculpe! Ainda não há advogados cadastrados que trabalhem com essa especialidade.</Text>
-    //             </View>
-    //         </View>
-    //     );
-    // }
 
     async function pegarDadosFiltrados() {
         await getDocs(q).then((snapshot) => {
@@ -41,7 +21,7 @@ export default function Profissional({ route, navigation }) {
                     return copyState
                 })
                 console.log(list)
-
+                
             })
         }).catch((err) => console.log(err))
     }
@@ -50,18 +30,36 @@ export default function Profissional({ route, navigation }) {
         pegarDadosFiltrados()
 
     }, [])
+    if (list.length == 0) {
+        return (
+            <View style={styles.containerTelas}>
+                <View style={styles.logoView}>
+                    <Image
+                        style={styles.logo2}
+                        source={require('../../../../assets/aconselhei1.png')}
+                    />
+                </View>
+                <View style={styles.txtView3}>
+                    <Text style={styles.txt}>Advogados especialzados no assunto:</Text>
+                    <Text style={styles.txt2}>{speciality}</Text>
+                </View>
+                <View style={{ height: '60%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+                    <Text style={styles.txt3}>Desculpe! Ainda não há advogados cadastrados que trabalhem com essa especialidade.</Text>
+                </View>
+            </View>
+        );
+    }
 
     function Advs({ item }) {
         return (
             <TouchableOpacity
                 style={styles.card}
-                onPress={() => navigation.navigate('', { adv: item })}
+                onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item })}
             >
                 <Text style={styles.name}>{item.nome}</Text>
             </TouchableOpacity>
         )
     }
-
 
     return (
         <View style={styles.containerTelas}>

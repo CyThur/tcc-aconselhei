@@ -1,142 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { styles } from '../../Styles';
+import { styles } from '../../../Styles';
+import CustomRating from './CustomRating'; // Importe o componente de classificação personalizada
 
-export default function PerfilAdvEsco({navigation}) {
+export default function PerfilAdvEsco({ route, navigation }) {
+  const { adv } = route.params;
+  const [rating, setRating] = useState(3.0); // Defina o valor inicial da classificação aqui
+
   return (
-    <View style={styles.containerAgendarConsul}>
-
-      <Image
-        source={{
-          uri: 'https://cdn-icons-png.flaticon.com/512/3364/3364044.png',
-        }}
-        style={styles.bannerAgendarConsul}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.tituloAgendarConsul}>Nome do advogado</Text>
-
-      <Text style={styles.descricao}>descrição do advogado</Text>
-
-      <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        {/* <Image
+          source={{ uri: adv.photoUrl }}
+          style={styles.profileImage}
+        /> */}
+        <CustomRating rating={rating} />
+        <Text style={styles.txtNome}>{adv.nome}</Text>
       </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
+      <View style={styles.infoBox}>
+        <Text style={styles.infoText}>• Formado(a) em Direito na {adv.faculdade}</Text>
+        {/* <Text style={styles.infoText}>• {adv.aprovacao}</Text> */}
+        <Text style={styles.infoText}>• Ingressou no aplicativo em 2023.</Text>
+        <Text style={styles.infoText}>• Realizou XX consultorias</Text>
       </View>
-
-       <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-
-       <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>VERIFICAR DISPONIBILIDADE</Text>
+      </TouchableOpacity>
     </View>
   );
 }
