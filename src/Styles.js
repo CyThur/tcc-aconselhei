@@ -135,7 +135,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    width: '100%',
   },
   button: {
     backgroundColor: '#1E5A97',
@@ -538,13 +537,13 @@ export const styles = StyleSheet.create({
   containerAgendaUsu: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
+    height: '100%',
   },
 
   centeredViewAgendaUsu: {
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'top',
-    paddingTop: 25,
+    paddingTop: '10%',
   },
 
   modalViewAgendaUsu: {
@@ -760,7 +759,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
-    color:'#113E6B',
+    color: '#113E6B',
   },
   switchContainerCancelarPlano: {
     flexDirection: 'row',
@@ -968,7 +967,7 @@ export const styles = StyleSheet.create({
   buttonTextNS: {
     fontSize: 19,
     marginLeft: 10,
-  }, 
+  },
   rateButtonNS: {
     backgroundColor: '#1E5A97',
     borderRadius: 10,
@@ -995,6 +994,19 @@ export const styles = StyleSheet.create({
     color: '#113E6B',
     alignSelf: 'center',
   },
+  txt2: {
+    fontSize: 18,
+    color: '#113E6B',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  txt3: {
+    fontSize: 15,
+    color: 'rgba(0, 0, 0, 0.4)',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
   specialtyItem: {
     height: 50,
     marginBottom: 15,
@@ -1007,12 +1019,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   specialtyText: {
-    fontSize: 15,
+    fontSize: 18,
     color: '#113E6B',
     fontWeight: 'bold',
   },
   card: {
     width: 150, 
+    height: 150,
     borderWidth: 2,
     borderRadius: 10, 
     padding: 10,

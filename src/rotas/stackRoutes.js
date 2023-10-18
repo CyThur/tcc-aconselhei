@@ -18,6 +18,7 @@ import CadastroUsu from '../telasUsu/CadastroUsu';
 import TabRoutesAdv from './tabRoutesAdv';
 import PerfilUsu from '../telasUsu/telasHomeUsu/PerfilUsu';
 import AgendarConsul from '../telasUsu/telasHomeUsu/AgendarConsul';
+import Profissional from '../telasUsu/telasHomeUsu/telasAgendar/Profissional';
 import HistoricoUsu from '../telasUsu/telasHomeUsu/HistoricoUsu';
 import Planos from '../telasUsu/telasHomeUsu/Planos';
 import TemPlano from '../telasUsu/telasHomeUsu/TemPlano';
@@ -46,6 +47,7 @@ export default function StackRoutes() {
             <Stack.Screen name="TabRoutesUsu" component={TabRoutesUsu} />
             <Stack.Screen name="PerfilUsu" component={PerfilUsu} />
             <Stack.Screen name="AgendarConsul" component={AgendarConsul} />
+            <Stack.Screen name="Profissional" component={Profissional} />
             <Stack.Screen name="HistoricoUsu" component={HistoricoUsu} />
             <Stack.Screen name="Planos" component={Planos} />
             <Stack.Screen name="TemPlano" component={TemPlano}/>

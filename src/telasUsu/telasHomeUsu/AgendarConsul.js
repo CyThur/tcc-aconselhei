@@ -1,143 +1,57 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Constants from 'expo-constants';
+import {  View, Text, FlatList, TouchableOpacity, ScrollView, Image} from 'react-native';
 import { styles } from '../../Styles';
 
-export default function AgendarConsul({navigation}) {
+export default function AgendarConsul({ navigation }) {
+
+  const especialidades = [
+    { id: '1', name: 'Direito Ambiental' },
+    { id: '2', name: 'Direito Civil' },
+    { id: '3', name: 'Direito do Consumidor' },
+    { id: '4', name: 'Direito Contratual' },
+    { id: '5', name: 'Direito Desportivo' },
+    { id: '6', name: 'Direito Digital' },
+    { id: '7', name: 'Direito Eleitoral' },
+    { id: '8', name: 'Direito Empresarial' },
+    { id: '9', name: 'Direito da Família' },
+    { id: '10', name: 'Direitos Humanos' },
+    { id: '11', name: 'Direito Imobiliário' },
+    { id: '12', name: 'Direito Penal' },
+    { id: '13', name: 'Direito da Propriedade Intelectual' },
+    { id: '14', name: 'Defensoria Pública' },
+    { id: '15', name: 'Direito Trabalhista' },
+    { id: '16', name: 'Direito Tributário' },
+  ];
+
   return (
-    <View style={styles.containerAgendarConsul}>
-
-      <Image
-        source={{
-          uri: 'https://cdn-icons-png.flaticon.com/512/3364/3364044.png',
-        }}
-        style={styles.bannerAgendarConsul}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.tituloAgendarConsul}>Nome do advogado</Text>
-
-      <Text style={styles.descricao}>descrição do advogado</Text>
-
-      <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-          
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
+    <View style={styles.containerTelas}>
+      <View style={styles.logoView}>
+        <Image
+          style={styles.logo2}
+          source={require('../../../assets/aconselhei1.png')}
+        />
       </View>
 
-       <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
+      <View style={styles.txtView3}>
+        <Text style={styles.txt}>Selecione o assunto de interesse:</Text>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-
-       <Text style={styles.dataAgendarConsul}>DATA</Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnAgendarConsul}>
-          <Text style={styles.btnTextAgendarConsul}>HORA</Text>
-        </TouchableOpacity>
-      </View>
+      
+        <FlatList
+          style={{ paddingTop: 0, width: '90%' }}
+          showsVerticalScrollIndicator={false}
+          data={especialidades}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.specialtyItem}
+              onPress={() => navigation.navigate('Profissional', { speciality: item.name, })}>
+              <Text style={styles.specialtyText}>{item.name}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      
     </View>
   );
+
 }
