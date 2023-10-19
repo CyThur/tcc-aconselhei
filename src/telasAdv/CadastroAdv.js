@@ -3,7 +3,7 @@ import { View, TextInput, Text, TouchableWithoutFeedback, TouchableOpacity, Imag
 import { styles } from '../Styles.js';
 import { FontAwesome } from '@expo/vector-icons';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import { useForm, Controller, set } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { db, auth } from '../firebase.config.js';
@@ -12,7 +12,28 @@ import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/aut
 
 export default function CadastroAdv({ navigation }) {
 
-    const schema = yup.object({
+    const [diasStyles, setDiasStyles] = useState({
+        borderRadius: 18,
+        borderColor: '#1E5A97',
+        padding: 10,
+        backgroundColor: '#E1E1DE',
+        width: 320,
+        alignSelf: 'center',
+    });
+    const [boxStyles, setBoxStyles] = useState({
+        borderRadius: 18,
+        borderColor: '#1E5A97',
+        padding: 10,
+        backgroundColor: '#E1E1DE',
+        width: 320,
+        alignSelf: 'center',
+    });
+    const [errorMessage, setErrorMessage] = useState('');
+    const [diasErrorMessage, setDiasErrorMessage] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [selected, setSelected] = useState([]);
+
+    const schema = yup.object().shape({
         nomeadv: yup.string().required('Informe seu nome completo'),
         email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
         senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres'),
@@ -20,9 +41,6 @@ export default function CadastroAdv({ navigation }) {
         ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida'),
         oab: yup.string().required('Informe o número da OAB').min(6, 'Número inválido').max(6, 'Número inválido'),
         instituicao: yup.string().required('Informe a instituição onde se formou'),
-        
-        areasFormacao: yup.array().required('Informe suas áreas de atuação'),
-        disponibilidade: yup.array().of(yup.string()).required('Informe seus dias de disponibilidade')
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -58,13 +76,14 @@ export default function CadastroAdv({ navigation }) {
                         })
                     }).catch((err) => console.log(err));
                 })
-
             })
-    }
 
-    const [selected, setSelected] = React.useState('');
-    const [categories, setCategories] = React.useState('');
+        if (categories === '') {
+            Alert.alert('Erro', 'Por favor, selecione pelo menos uma área de atuação.');
+            return;
+        }
 
+    };
     const areas = [
         { key: 'Direito Ambiental', value: 'Direito Ambiental' },
         { key: 'Direito Civil', value: 'Direito Civil' },
@@ -248,7 +267,7 @@ export default function CadastroAdv({ navigation }) {
                                 )}
                             />
                         </View>
-                        {errors.ufOab || errors.oab ? <Text style={[styles.inputLoginError, { marginLeft: '8%', marginTop: '-4%' }]}>{errors.ufOab?.message || errors.oab.message}</Text> : null}
+                        {errors.ufOab || errors.oab ? <Text style={[styles.inputLoginError, { marginLeft: '9%', marginTop: '-1%' }]}>{errors.ufOab?.message || errors.oab.message}</Text> : null}
 
                         <Controller
                             control={control}
@@ -268,92 +287,95 @@ export default function CadastroAdv({ navigation }) {
                                 />
                             )}
                         />
-                        {errors.instituicao && <Text style={[styles.inputLoginError, { marginLeft: '9%' }]}>{errors.instituicao?.message}</Text>}
+                        {errors.instituicao && <Text style={[styles.inputLoginError, { marginLeft: '9%', marginTop: '-1%' }]}>{errors.instituicao?.message}</Text>}
 
                         <View style={styles.viewList}>
-                            <Controller
-                                control={control}
-                                name="areasFormacao"
-                                render={({ field: { onChange, onBlur, valuee } }) => (
-                                    <MultipleSelectList
-                                        setSelected={setCategories}
-                                        data={areas}
-                                        save="value"
-                                        placeholder="Áreas de atuação"
-                                        label="Áreas de atuação"
-                                        notFoundText="Área não encontrada"
-                                        searchPlaceholder="Pesquisar"
-                                        value={valuee}
-                                        onBlur={onBlur}
-                                        labelStyles={{ color: '#1E5A97' }}
-                                        badgeStyles={{ backgroundColor: '#1E5A97' }}
-                                        boxStyles={[{
-                                            marginTop: 9,
-                                            marginBottom: 20,
-                                            borderRadius: 18,
-                                            borderColor: '#1E5A97',
-                                            padding: 10,
-                                            backgroundColor: '#E1E1DE',
-                                            width: 320,
-                                            alignSelf: 'center',
-                                        }, {
-                                            borderWidth: errors.areasFormacao ? 1.5 : 1,
-                                            borderColor: errors.areasFormacao ? '#f23535' : '#1E5A97',
-                                            marginBottom: errors.areasFormacao ? 5 : 16
-                                           }
-                                        ]}
-                                    />
-                                )}
+                            <MultipleSelectList
+                                setSelected={setCategories}
+                                data={areas}
+                                placeholder="Áreas de atuação"
+                                label="Áreas de atuação"
+                                notFoundText="Área não encontrada"
+                                searchPlaceholder="Pesquisar"
+                                labelStyles={{ color: '#1E5A97' }}
+                                badgeStyles={{ backgroundColor: '#1E5A97' }}
+                                boxStyles={boxStyles}
                             />
-                            {errors.areasFormacao && <Text style={[styles.inputLoginError, { marginLeft: '-1%'}]}>{errors.areasFormacao?.message}</Text>}
+                            {errorMessage !== '' && <Text style={[styles.inputLoginError, { marginLeft: '1%', marginTop: '-1%' }]}>{errorMessage}</Text>}
 
-                            <Controller
-                                control={control}
-                                name="disponibilidade"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <MultipleSelectList
-                                        setSelected={setSelected}
-                                        data={diaSemana}
-                                        placeholder="Dias disponíveis para consultorias"
-                                        label="Dias disponíveis para consultorias"
-                                        notFoundText="Dia não encontrado"
-                                        searchPlaceholder="Pesquisar"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        onBlur={onBlur}
-                                        labelStyles={{ color: '#1E5A97' }}
-                                        badgeStyles={{ backgroundColor: '#1E5A97' }}
-                                        boxStyles={[{
-                                            marginTop: 9,
-                                            marginBottom: 20,
-                                            borderRadius: 18,
-                                            borderColor: '#1E5A97',
-                                            padding: 10,
-                                            backgroundColor: '#E1E1DE',
-                                            width: 320,
-                                            alignSelf: 'center',
-                                        }, {
-                                            borderWidth: errors.disponibilidade ? 1.5 : 1,
-                                            borderColor: errors.disponibilidade ? '#f23535' : '#1E5A97',
-                                            marginBottom: errors.disponibilidade ? 5 : 16
-                                           }
-                                        ]}
-                                    />
-                                )}
+                            <MultipleSelectList
+                                setSelected={setSelected}
+                                data={diaSemana}
+                                placeholder="Dias disponíveis para consultorias"
+                                label="Dias disponíveis para consultorias"
+                                notFoundText="Dia não encontrado"
+                                searchPlaceholder="Pesquisar"
+                                labelStyles={{ color: '#1E5A97' }}
+                                badgeStyles={{ backgroundColor: '#1E5A97' }}
+                                boxStyles={diasStyles}
                             />
-                            {errors.disponibilidade && <Text style={[styles.inputLoginError, { marginLeft: '-1.5%'}]}>{errors.disponibilidade?.message}</Text>}
+                            {diasErrorMessage !== '' && <Text style={[styles.inputLoginError, { marginLeft: '1%', marginTop: '-1%' }]}>{diasErrorMessage}</Text>}
                         </View>
                     </View>
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            onPress={handleSubmit(cadastrar)}
-                            style={styles.loginButton}>
+                            onPress={() => {
+                                // Verifica se tem pelo menos uma área selecionada
+                                if (categories.length === 0) {
+                                    setBoxStyles({
+                                        borderRadius: 18,
+                                        borderColor: 'red',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setErrorMessage('Defina ao menos uma área de atuação');
+                                } else {
+                                    setBoxStyles({
+                                        borderRadius: 18,
+                                        borderColor: '#1E5A97',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setErrorMessage('');
+                                }
+                                if (selected.length === 0) {
+                                    setDiasStyles({
+                                        borderRadius: 18,
+                                        borderColor: 'red',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setDiasErrorMessage('Escolha ao menos um dia da semana');
+                                } else {
+                                    setDiasStyles({
+                                        borderRadius: 18,
+                                        borderColor: '#1E5A97',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setDiasErrorMessage('');
+                                }
+                                if (categories.length > 0 && selected.length > 0) {
+                                    handleSubmit(cadastrar)();
+                                }
+                            }}
+
+                            style={styles.loginButton}
+                        >
                             <Text style={styles.loginButtonText}>CADASTRAR</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-            </View>
-        </TouchableWithoutFeedback>
+            </View >
+        </TouchableWithoutFeedback >
     );
 }
