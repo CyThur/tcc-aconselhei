@@ -78,10 +78,6 @@ export default function CadastroAdv({ navigation }) {
                 })
             })
 
-        if (categories === '') {
-            Alert.alert('Erro', 'Por favor, selecione pelo menos uma área de atuação.');
-            return;
-        }
 
     };
     const areas = [

@@ -1,62 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Importe o ícone de edição
+import { View, Text, Image, ImageBackground, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
 import { styles } from '../../Styles';
 
-// Componente para exibir o nome editável
-function EditableName({ name, onNameChange }) {
-  const [isEditing, setIsEditing] = useState(false);
+const PefilAdv = () => {
 
-  const handleNameChange = () => {
-    if (isEditing) {
-      onNameChange(name);
-    }
-    setIsEditing(!isEditing);
-  };
-
-  return (
-    <View style={styles.editableNameContainer}>
-      <Text style={styles.label}></Text>
-      {isEditing ? (
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={onNameChange}
-          onBlur={handleNameChange}
-        />
-      ) : (
-        <View style={styles.nameContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <TouchableOpacity onPress={handleNameChange}>
-            <FontAwesome name="edit" size={20} color="#1E5A97" />
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  );
-}
-
-export default function App() {
-  const [name, setName] = useState('Seu nome');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-
-  const handlePasswordChange = () => {
-    if (isChangingPassword) {
-      if (newPassword === confirmPassword) {
-        // Simulação de salvamento da senha (em um ambiente de desenvolvimento local)
-        // Aqui você pode substituir esta parte por uma chamada real à API ou lógica de salvamento de senha
-        Alert.alert('Senha salva com sucesso!');
-        setIsChangingPassword(false);
-      } else {
-        Alert.alert('A senha e a confirmação não coincidem');
-      }
-    } else {
-      setIsChangingPassword(true);
-    }
+  const [isModalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
   const handleSaveData = () => {
@@ -67,106 +20,116 @@ export default function App() {
 
   return (
     <View style={styles.containerPerfilAdv}>
-      <ScrollView style={{ backgroundColor: 'react-spring-scroll-snap' }}>
-        <Image
-          source={{
-            uri: 'https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/0c3c390a53af14d8ca2843178f74ac3a',
-          }}
-          style={styles.perfilImagePerfilAdv}
-        />
-        <Text style={styles.profileTextPerfilAdv}>Perfil</Text>
 
-        <EditableName name={name} onNameChange={setName} />
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Email:</Text>
-          <TextInput
-            style={styles.inputPerfilAdv}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholder="Digite seu email"
-          />
+      <View style={{ margin: 20, marginTop: 150 }}>
+        <View style={{ alignItems: 'center', }}>
+          <TouchableOpacity onPress={toggleModal}>
+            <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+              <ImageBackground
+                source={{
+                  uri: 'https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/0c3c390a53af14d8ca2843178f74ac3a',
+                }}
+                style={{ height: 120, width: 120, }}
+                imageStyle={{ borderRadius: 60, borderWidth:1, borderColor: '#000' }}
+              >
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.7, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', borderRadius: 10 }} />
+                </View>
+              </ImageBackground>
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.profileTextPerfilAdv}>Perfil</Text>
         </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Telefone:</Text>
-          <TextInput
-            style={styles.inputPerfilAdv}
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="Digite seu telefone"
-          />
-        </View>
-
-        <Text style={styles.profileText2PerfilAdv}>Advogado(a)</Text>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Número da OAB:</Text>
-          <TextInput style={styles.inputPerfilAdv} placeholder="XXXXXX-OAB/UF" />
-        </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Instituição de formação:</Text>
-          <TextInput
-            style={styles.inputPerfilAdv}
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="Instituição em que se formou"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Área de atuação:</Text>
-          <Text style={{ marginBottom: 30 }}>Arrumar</Text>
-        </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
-          <Text style={{ marginBottom: 30 }}>Arrumar</Text>
-        </View>
-
-        <View>
-          <Text style={styles.labelPerfilAdv}>
-            Horários disponíveis para consultoria:
-          </Text>
-          <Text style={{ marginBottom: 30 }}>Arrumar</Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.smallButtonPerfilAdv}
-          onPress={handlePasswordChange}>
-          <Text style={styles.buttonTextPerfilAdv}>
-            {isChangingPassword ? 'Salvar Alterações' : 'Alterar Senha'}
-          </Text>
-        </TouchableOpacity>
-
-        {isChangingPassword ? (
-          <View>
-            <Text style={styles.labelPerfilAdv}>Nova Senha:</Text>
+        <ScrollView  showsVerticalScrollIndicator={false}>
+          <View style={styles.action}>
+            <FontAwesome name="user-o" size={20} />
             <TextInput
-              style={styles.inputPerfilAdv}
-              value={newPassword}
-              onChangeText={(text) => setNewPassword(text)}
-              secureTextEntry={true}
-              placeholder="Digite sua nova senha"
-            />
-            <Text style={styles.labelPerfilAdv}>Confirmar Senha:</Text>
-            <TextInput
-              style={styles.inputPerfilAdv}
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={true}
-              placeholder="Confirme sua nova senha"
+              placeholder="Nome completo"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={styles.textInputPerfil}
             />
           </View>
-        ) : null}
+          <View style={styles.action}>
+            <FontAwesome name="envelope-o" size={20} />
+            <TextInput
+              placeholder="E-mail"
+              keyboardType="email-address"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={styles.textInputPerfil}
+            />
+          </View>
+          <View style={styles.action}>
+            <FontAwesome name="phone" size={20} />
+            <TextInput
+              placeholder="Telefone"
+              keyboardType='number-pad'
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={styles.textInputPerfil}
+            />
+          </View>
+          <View style={styles.action}>
+            <FontAwesome name="balance-scale" size={20} />
+            <TextInput
+              placeholder="UF/ OAB"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={styles.textInputPerfil}
+            />
+          </View>
+          <View style={styles.action}>
+            <FontAwesome name="university" size={20} />
+            <TextInput
+              placeholder="Instituição onde se formou"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={styles.textInputPerfil}
+            />
+          </View>
 
-        <TouchableOpacity style={styles.buttonPerfilAdv} onPress={handleSaveData}>
-          <Text style={styles.buttonTextPerfilAdv}>SALVAR</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <View>
+            <Text style={styles.labelPerfilAdv}>Área de atuação:</Text>
+            <Text style={{ marginBottom: 30 }}>Arrumar</Text>
+          </View>
+
+          <View>
+            <Text style={styles.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
+            <Text style={{ marginBottom: 30 }}>Arrumar</Text>
+          </View>
+
+          <View>
+            <Text style={styles.labelPerfilAdv}>
+              Horários disponíveis para consultoria:
+            </Text>
+            <Text style={{ marginBottom: 30 }}>Arrumar</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleSaveData}>
+              <Text style={styles.loginButtonText}>SALVAR</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+      <Modal isVisible={isModalVisible} style={styles.modalPerfil} backdropOpacity={0.3} backdropColor="transparent" onBackdropPress={toggleModal}>
+        <View style={styles.modalContentPerfil}>
+          <View style={styles.modalHeader} />
+          <Text style={styles.panelTitle}>Carregar foto</Text>
+          <Text style={styles.panelSubtitle}>Escolha sua Imagem de perfil</Text>
+          <TouchableOpacity style={styles.panelButton}>
+            <Text style={styles.panelButtonTitle}>Tire uma foto</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.panelButton}>
+            <Text style={styles.panelButtonTitle}>Importar foto da biblioteca</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.panelButton} onPress={toggleModal}>
+            <Text style={styles.panelButtonTitle}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
-}
+};
+
+export default PefilAdv;

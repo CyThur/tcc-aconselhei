@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableWithoutFeedback, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import {useForm, Controller} from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { styles } from '../Styles.js';
-import { auth } from '../firebase.config.js';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase.config.js';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getDoc, doc } from 'firebase/firestore'
 
 export default function LoginAdv({ navigation }) {
 
@@ -15,20 +16,31 @@ export default function LoginAdv({ navigation }) {
     senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres')
   })
 
-  const {control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
 
   const onSubmit = async (data) => {
     const { email, senha } = data;
     signInWithEmailAndPassword(auth, email, senha)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        Alert.alert('Atenção', 'Login efetuado com sucesso!');
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'TabRoutesAdv' }]
+      .then(() => {
+        onAuthStateChanged(auth, async (user) => {
+          const docRef = doc(db, 'advogados', user.uid)
+
+          const snapshot = await getDoc(docRef)
+
+          if (snapshot.exists()) {
+            Alert.alert('Atenção', 'Login efetuado com sucesso!');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'TabRoutesAdv' }]
+            })
+          }
+          else {
+            Alert.alert('Atenção', 'Você não é advogado.');
+          }
         })
+
       })
       .catch(() => {
         Alert.alert('Atenção', 'E-mail ou senha inválidos!')
@@ -47,50 +59,50 @@ export default function LoginAdv({ navigation }) {
       <TouchableWithoutFeedback>
         <ScrollView style={{ paddingTop: 35, width: '90%' }} showsVerticalScrollIndicator={false}>
           <View style={styles.inputContainer}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent:'center', }}>
-              <FontAwesome name="envelope" size={20} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]}/>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+              <FontAwesome name="envelope" size={20} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]} />
               <Controller
                 control={control}
                 name="email"
-                render = {({ field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                  style={[
-                    styles.inputLogin, {
-                      borderWidth: errors.email ? 1.5 : 1,
-                      borderColor: errors.email ? '#f23535' : '#1E5A97',
-                      marginBottom: errors.email ? 5 : 16
-                    }]}
-                  placeholder="E-mail"
-                  keyboardType='email-address'
-                  autoCapitalize='none'
-                  autoComplete='email'
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
+                    style={[
+                      styles.inputLogin, {
+                        borderWidth: errors.email ? 1.5 : 1,
+                        borderColor: errors.email ? '#f23535' : '#1E5A97',
+                        marginBottom: errors.email ? 5 : 16
+                      }]}
+                    placeholder="E-mail"
+                    keyboardType='email-address'
+                    autoCapitalize='none'
+                    autoComplete='email'
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
                   />
                 )}
               />
             </View>
             {errors.email && <Text style={styles.inputLoginError}>{errors.email?.message}</Text>}
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent:'center', }}>
-              <FontAwesome name="lock" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]}/>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+              <FontAwesome name="lock" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]} />
               <Controller
                 control={control}
                 name="senha"
-                render={({ field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                  style={[
-                    styles.inputLogin, {
-                      borderWidth: errors.senha ? 1.5 : 1,
-                      borderColor: errors.senha ? '#f23535' : '#1E5A97',
-                      marginBottom: errors.senha ? 5 : 16
-                    }]}
-                  placeholder="Senha"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  secureTextEntry={true}
+                    style={[
+                      styles.inputLogin, {
+                        borderWidth: errors.senha ? 1.5 : 1,
+                        borderColor: errors.senha ? '#f23535' : '#1E5A97',
+                        marginBottom: errors.senha ? 5 : 16
+                      }]}
+                    placeholder="Senha"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    secureTextEntry={true}
                   />
                 )}
               />

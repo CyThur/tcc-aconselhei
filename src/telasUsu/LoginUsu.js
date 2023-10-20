@@ -5,10 +5,11 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { styles } from '../Styles.js';
-import { auth } from '../firebase.config.js';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase.config.js';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getDoc, doc } from 'firebase/firestore'
 
-export default function LoginAdv({ navigation }) {
+export default function LoginUsu({ navigation }) {
 
   const schema = yup.object({
     email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
@@ -22,13 +23,24 @@ export default function LoginAdv({ navigation }) {
   const onSubmit = async (data) => {
     const { email, senha } = data;
     signInWithEmailAndPassword(auth, email, senha)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        Alert.alert('Atenção', 'Login efetuado com sucesso!');
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'TabRoutesUsu' }]
+      .then(() => {
+        onAuthStateChanged(auth, async (user) => {
+          const docRef = doc(db, 'usuarios', user.uid)
+
+          const snapshot = await getDoc(docRef)
+
+          if (snapshot.exists()) {
+            Alert.alert('Atenção', 'Login efetuado com sucesso!');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'TabRoutesUsu' }]
+            })
+          }
+          else {
+            Alert.alert('Atenção', 'Faça login como advogado.');
+          }
         })
+
       })
       .catch(() => {
         Alert.alert('Atenção', 'E-mail ou senha inválidos!')
@@ -97,9 +109,9 @@ export default function LoginAdv({ navigation }) {
             </View>
             {errors.senha && <Text style={styles.inputLoginError}>{errors.senha?.message}</Text>}
           </View>
-          {/* handleSubmit(onSubmit) */}
+         {/* () => navigation.navigate('TabRoutesUsu') */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('TabRoutesUsu')} style={styles.button}>
+            <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
               <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
 
