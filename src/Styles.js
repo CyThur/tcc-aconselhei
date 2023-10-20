@@ -788,45 +788,99 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButtonCancelarPlano: {
-    backgroundColor: 'gray', // Estilo para o botão desabilitado
+    backgroundColor: 'gray',
   },
 
   //PERFIL ADVOGADO
   containerPerfilAdv: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: '4%',
+    backgroundColor: '#fff'
+  },
+  containerModal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalPerfil: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContentPerfil: {
+    backgroundColor: '#fff',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    shadowColor: '#333333',
+    shadowOffset: { width: -1, height: -3 },
+    shadowRadius: 2,
+    shadowOpacity: 0.4,
+    elevation: 8,
+  },
+  modalHeader: {
+    height: 5,
+    width: 40,
+    backgroundColor: 'gray',
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  panelTitle: {
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  panelSubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: '#1E5A97',
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '100%',
+  },
+  panelButtonTitle: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  action: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 5,
+  },
+  actionError: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FF0000',
+    paddingBottom: 5,
+  },
+  textInputPerfil: {
+    flex: 1,
+    marginTop: -6,
+    paddingLeft: 10,
+    color: '#05375a'
   },
 
-  perfilImagePerfilAdv: {
-    width: 170,
-    height: 170,
-    borderRadius: 75,
-    marginBottom: 10,
-    marginTop: 50,
-    alignSelf: 'center',
-  },
+
 
   profileTextPerfilAdv: {
-    fontSize: 30,
+    marginTop: 10,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 10,
     alignSelf: 'center',
-  },
-
-  profileText2PerfilAdv: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 40,
-    marginTop: 40,
-    alignSelf: 'center',
-  },
-
-  nameContainerPerfilAdv: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 30,
   },
 
   namePerfilAdv: {
@@ -851,30 +905,7 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 
-  buttonPerfilAdv: {
-    backgroundColor: '#1E5A97',
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 10,
-    width: '35%',
-    alignSelf: 'center',
-  },
 
-  buttonTextPerfilAdv: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-
-  smallButtonPerfilAdv: {
-    backgroundColor: '#113E6B',
-    padding: 10,
-    borderRadius: 10,
-    marginRight: 150,
-    marginBottom: 10,
-    marginTop: 10,
-    width: '50%',
-  },
 
   editableNameContainerPerfilAdv: {
     flexDirection: 'row',
@@ -1024,10 +1055,10 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   card: {
-    width: 150, 
+    width: 150,
     height: 150,
     borderWidth: 2,
-    borderRadius: 10, 
+    borderRadius: 10,
     padding: 10,
     margin: 10,
     borderColor: '#1E5A97',
@@ -1057,11 +1088,11 @@ export const styles = StyleSheet.create({
     alignItems: 'justify',
     textAlign: 'justify',
   },
-   txtNome: {
+  txtNome: {
     color: '#1E5A97',
     fontWeight: 'bold',
     fontSize: 25,
-    
+
     textAlign: 'justify',
     alignSelf: 'justify',
     justifyContent: 'justify'

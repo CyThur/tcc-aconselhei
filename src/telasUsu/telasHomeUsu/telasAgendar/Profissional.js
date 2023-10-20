@@ -21,7 +21,6 @@ export default function Profissional({ route, navigation }) {
                     return copyState
                 })
                 console.log(list)
-                
             })
         }).catch((err) => console.log(err))
     }
