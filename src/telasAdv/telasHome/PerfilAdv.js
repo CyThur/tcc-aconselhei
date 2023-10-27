@@ -134,22 +134,37 @@ const PerfilAdv = ({ navigation }) => {
   }, []);
 
   // salvar as infos
-  const handleSaveData = useCallback(async () => {
+  const salvarEmail = useCallback(async () => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const docRef = doc(db, 'advogados', user.uid)
         await updateDoc(docRef, {
           email: stateEmail,
-          telefone: stateTelefone,
         })
-        Alert.alert('Dado salvo com sucesso!');
+        Alert.alert('Novo email salvo com sucesso!');
       } else {
-        console.log('Erro ao atualizar as informações!');
+        console.log('Erro ao atualizar a informação!');
       }
     });
 
-  }, [stateEmail, stateTelefone]);
+  }, [stateEmail]);
+
+  const salvarTel = useCallback(async () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, 'advogados', user.uid)
+        await updateDoc(docRef, {
+          telefone: stateTelefone,
+        })
+        Alert.alert('Novo telefone salvo com sucesso!');
+      } else {
+        console.log('Erro ao atualizar a informação!');
+      }
+    });
+
+  }, [stateTelefone]);
 
   if (state == null) {
     return (
@@ -163,7 +178,6 @@ const PerfilAdv = ({ navigation }) => {
   return (
     <View style={stylesP.containerPerfilAdv}>
       <View style={{ margin: 20, marginTop: 150 }}>
-        <TesteFotoLista files={files} />
         <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
         <View style={{ alignItems: 'center', }}>
           <TouchableOpacity onPress={toggleModal}>
@@ -183,6 +197,9 @@ const PerfilAdv = ({ navigation }) => {
           <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
           <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oab}</Text>
         </View>
+
+        <TesteFotoLista files={files} />
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={stylesP.action}>
             <FontAwesome name="envelope-o" size={20} />
@@ -195,6 +212,7 @@ const PerfilAdv = ({ navigation }) => {
               onChangeText={(text) => setStateEmail(text)}
               style={stylesP.textInputPerfil}
             />
+            <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
           </View>
           <View style={stylesP.action}>
             <FontAwesome name="phone" size={20} />
@@ -207,6 +225,7 @@ const PerfilAdv = ({ navigation }) => {
               style={stylesP.textInputPerfil}
               onChangeText={(text) => setStateTelefone(text)}
             />
+            <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
           </View>
 
           <View>
@@ -225,7 +244,7 @@ const PerfilAdv = ({ navigation }) => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.loginButton} onPress={handleSaveData}>
+            <TouchableOpacity style={styles.loginButton} onPress={''}>
               <Text style={styles.loginButtonText}>SALVAR</Text>
             </TouchableOpacity>
           </View>

@@ -1,24 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View, Image, FlatList } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { styles } from '../../Styles';
 
-export default function Historico() {
+export default function HistoricoAdv({ navigation }) {
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Histórico dos Advogados</Text>
-      <StatusBar style="auto" />
+    <View style={styles.containerTelas}>
+      <View style={styles.logoView}>
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <AntDesign
+            name="left"
+            size={20}
+            color="#1E5A97"
+            style={{ marginRight: '7%' }}
+            onPress={() => navigation.navigate('TabRoutesAdv')} />
+          <Image
+            style={styles.logo2}
+            source={require('../../../assets/aconselhei1.png')}
+          />
+        </View>
+      </View>
+      <Text style={styles.navOption}>HISTÓRICO</Text>
+      <View style={{ height: '60%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+        <Text style={styles.txt3}>Você ainda não realizou nenhuma consultoria.</Text>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  titulo: {
-    fontSize: 22,
-    fontWeight: 'bold'
-  },
-});

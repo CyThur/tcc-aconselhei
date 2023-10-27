@@ -437,7 +437,7 @@ export const styles = StyleSheet.create({
   centeredViewAgendaAdv: {
     alignItems: 'center',
     justifyContent: 'top',
-    paddingTop: 25,
+    paddingTop: 10,
   },
 
   modalViewAgendaAdv: {
@@ -659,12 +659,12 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  navOption2HistUsu: {
+  navOption: {
+    marginTop: 10, 
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1E5A97',
+    color: '#000',
     textAlign: 'center',
-    textDecorationLine: 'underline',
   },
 
   scrollViewHistUsu: {
@@ -930,6 +930,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  
   specialtyText: {
     fontSize: 18,
     color: '#113E6B',
@@ -946,7 +947,16 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E1E1DE',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
+  },
+
+  name2: {
+    fontSize: 20,
+    marginRight: '10%',
+    fontWeight: 'bold',
+    color: '#1E5A97',
     textAlign: 'center',
+    alignSelf: 'center',
   },
 
   // PerfilAdvEsco

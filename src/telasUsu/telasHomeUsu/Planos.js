@@ -26,6 +26,7 @@ export default function Planos({ navigation }) {
           />
         </View>
       </View>
+      <Text style={styles.navOption}>PLANOS</Text>
       <View style={{ height: '60%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
         <Text style={styles.txt3}>Desculpe! Planos ainda não disponíveis.</Text>
       </View>
