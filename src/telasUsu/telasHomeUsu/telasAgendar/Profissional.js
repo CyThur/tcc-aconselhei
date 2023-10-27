@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../../Styles';
 import { db } from '../../../firebase.config.js';
 
@@ -29,14 +30,30 @@ export default function Profissional({ route, navigation }) {
         pegarDadosFiltrados()
 
     }, [])
+
     if (list.length == 0) {
         return (
             <View style={styles.containerTelas}>
                 <View style={styles.logoView}>
-                    <Image
-                        style={styles.logo2}
-                        source={require('../../../../assets/aconselhei1.png')}
-                    />
+                    <View style={{
+                        flexDirection: 'row',
+                        width: '100%',
+                        height: '100%',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <AntDesign
+                            name="left"
+                            size={20}
+                            color="#1E5A97"
+                            style={{ marginRight: '7%' }}
+                            onPress={() => navigation.navigate('TabRoutesUsu')} />
+                        <Image
+                            style={styles.logo2}
+                            source={require('../../../../assets/aconselhei1.png')}
+                        />
+                    </View>
                 </View>
                 <View style={styles.txtView3}>
                     <Text style={styles.txt}>Advogados especialzados no assunto:</Text>
@@ -63,10 +80,25 @@ export default function Profissional({ route, navigation }) {
     return (
         <View style={styles.containerTelas}>
             <View style={styles.logoView}>
-                <Image
-                    style={styles.logo2}
-                    source={require('../../../../assets/aconselhei1.png')}
-                />
+                <View style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    height: '100%',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <AntDesign
+                        name="left"
+                        size={20}
+                        color="#1E5A97"
+                        style={{ marginRight: '7%' }}
+                        onPress={() => navigation.navigate('TabRoutesUsu')} />
+                    <Image
+                        style={styles.logo2}
+                        source={require('../../../../assets/aconselhei1.png')}
+                    />
+                </View>
             </View>
 
             <View style={styles.txtView3}>

@@ -964,24 +964,19 @@ export const styles = StyleSheet.create({
     padding: 20,
     margin: 20,
     borderRadius: 10,
-
-    justifyContent: 'justify',
-    alignItems: 'justify',
-    textAlign: 'justify',
   },
   txtNome: {
     color: '#1E5A97',
     fontWeight: 'bold',
     fontSize: 25,
-
-    textAlign: 'justify',
-    alignSelf: 'justify',
-    justifyContent: 'justify'
+    textAlign: 'justify', 
+    marginTop: 10, 
   },
   infoText: {
     color: 'black',
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: 'justify',
+    marginBottom: 10,
   },
 
 });

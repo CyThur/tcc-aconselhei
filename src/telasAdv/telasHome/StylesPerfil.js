@@ -83,17 +83,24 @@ export const stylesP = StyleSheet.create({
         color: '#05375a'
     },
     profileTextPerfilAdv: {
+        color: '#1E5A97',
         marginTop: 10,
         fontSize: 25,
         fontWeight: 'bold',
-        marginBottom: 10,
         alignSelf: 'center',
     },
-    namePerfilAdv: {
-        fontSize: 20,
-        marginRight: '10%',
-        fontWeight: 'bold',
-        color: '#1E5A97',
+    profileTextPerfilAdvFacul: {
+        color: '#555555',
+        marginTop: 3,
+        fontSize: 16,
+        alignSelf: 'center',
+    },
+    profileTextPerfilAdvOAB: {
+        color: '#555555',
+        marginTop: 3,
+        fontSize: 13,
+        marginBottom: 20,
+        alignSelf: 'center',
     },
     labelPerfilAdv: {
         fontSize: 16,
@@ -111,5 +118,15 @@ export const stylesP = StyleSheet.create({
     editableNameContainerPerfilAdv: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+
+
+    profileTextPerfilUsu: {
+        color: '#1E5A97',
+        marginTop: 10,
+        marginBottom: 30,
+        fontSize: 25,
+        fontWeight: 'bold',
+        alignSelf: 'center',
     },
 }); 
