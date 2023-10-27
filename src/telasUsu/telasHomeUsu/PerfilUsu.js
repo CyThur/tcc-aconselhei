@@ -1,135 +1,229 @@
-import React, { useState } from 'react';
-import {View, Text, Image, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert,} from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { useState, useEffect, useCallback } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { AntDesign } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import * as ImagePicker from 'expo-image-picker';
+import ButtonP from '../../BtnImgPicker';
+import ImageViewer from '../../ImgPickerViewer';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, getDoc, doc, updateDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
+import { stylesP } from '../../telasAdv/telasHome/StylesPerfil';
+import { storage, db, listFiles, uploadToFirebase } from '../../firebase.config';
 
-function EditableName({ name, onNameChange }) {
-  const [isEditing, setIsEditing] = useState(false);
+import TesteFotoLista from "../../testeListaFotos";
 
-  const handleNameChange = () => {
-    if (isEditing) {
-      onNameChange(name);
-    }
-    setIsEditing(!isEditing);
+
+const PerfilUsu = ({ navigation }) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+  const [image, setImage] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [state, setState] = useState(null);
+
+  const [stateEmail, setStateEmail] = useState('');
+  const [stateTelefone, setStateTelefone] = useState('');
+
+  const placeholderImage = '../../../assets/userSemFoto.png';
+
+  useEffect(() => {
+    listFiles().then((listResp) => {
+      const files = listResp.map((value) => {
+        return { name: value.fullPath };
+      });
+
+      setFiles(files);
+    });
+  }, []);
+
+  /**
+   *
+   */
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+      allowsMultipleSelection: false,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    } else {
+      Alert.alert('Atenção', 'Você não tirou nenhuma foto.');
+    }
+  };
+
+  /**
+   *
+   */
+
+  const tirarFoto = async () => {
+    try {
+      const cameraResp = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        aspect: [4, 4],
+        quality: 1,
+        allowsMultipleSelection: false,
+      })
+      if (!cameraResp.canceled) {
+        const { uri } = cameraResp.assets[0];
+        const fileName = uri.split("/").pop();
+        const uploadResp = await uploadToFirebase(uri, fileName, (v) =>
+          console.log(v)
+        );
+        console.log(uploadResp);
+
+        listFiles().then((listResp) => {
+          const files = listResp.map((value) => {
+            return { name: value.fullPath };
+          });
+
+          setFiles(files);
+        });
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'A imagem não foi carregada' + e.message);
+    }
+  };
+
+  // if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
+  //   Alert.alert(
+  //     'Atenção',
+  //     'Você precisa permitir o acesso à câmera para usar essa função.',
+  //     [{ text: 'Permitir', onPress: () => requestPermission() }],);
+  // }
+
+  //pegar infos dos beneficiados
+  useEffect(() => {
+    const getUserData = async () => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const docRef = doc(db, 'usuarios', user.uid)
+          await getDoc(docRef).then((doc) => {
+            const userData = {
+              nome: doc.data().nome,
+              email: user.email,
+              telefone: doc.data().telefone,
+            };
+            console.log(doc.data())
+            console.log(userData)
+            setState(userData)
+          })
+        } else {
+          console.log('Erro: Usuário não autenticado!');
+        }
+      });
+    };
+    getUserData();
+  }, []);
+
+  // salvar as infos
+  const handleSaveData = useCallback(async () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, 'usuarios', user.uid)
+        await updateDoc(docRef, {
+          email: stateEmail,
+          telefone: stateTelefone,
+        })
+        Alert.alert('Dado salvo com sucesso!');
+      } else {
+        console.log('Erro ao atualizar as informações!');
+      }
+    });
+
+  }, [stateEmail, stateTelefone]);
+
+  if (state == null) {
+    return (
+      <Image
+        style={{ width: '100%', height: '100%' }}
+        source={require('../../../assets/splash.png')}
+      />
+    )
+  }
+
   return (
-    <View style={styles.editableNameContainer}>
-      <Text style={styles.label}></Text>
-      {isEditing ? (
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={onNameChange}
-          onBlur={handleNameChange}
-        />
-      ) : (
-        <View style={styles.nameContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <TouchableOpacity onPress={handleNameChange}>
-            <FontAwesome name="edit" size={20} color="#1E5A97" />
+    <View style={stylesP.containerPerfilAdv}>
+      <View style={{ margin: 20, marginTop: -150 }}>
+        <TesteFotoLista files={files} />
+        <AntDesign name="left" size={24} color="#1E5A97" onPress={()=> navigation.navigate('TabRoutesUsu')}/>
+        <View style={{ alignItems: 'center', }}>
+          <TouchableOpacity onPress={toggleModal}>
+            <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+              <ImageBackground
+                source={require(placeholderImage)}
+                style={{ height: 120, width: 120, }}
+                imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
+              >
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
+                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.7, alignSelf: 'center', justifyContent: 'center' }} />
+                </View>
+              </ImageBackground>
+            </View>
+          </TouchableOpacity>
+          <Text style={stylesP.profileTextPerfilUsu}>{state.nome}</Text>
+        </View>
+
+        <View style={stylesP.action}>
+          <FontAwesome name="envelope-o" size={20} />
+          <TextInput
+            placeholder={state.email}
+            keyboardType="email-address"
+            placeholderTextColor="#1E5A97"
+            autoCorrect={false}
+            value={stateEmail}
+            onChangeText={(text) => setStateEmail(text)}
+            style={stylesP.textInputPerfil}
+          />
+        </View>
+        <View style={stylesP.action}>
+          <FontAwesome name="phone" size={20} />
+          <TextInput
+            placeholder={String(state.telefone)}
+            placeholderTextColor="#1E5A97"
+            keyboardType='number-pad'
+            autoCorrect={false}
+            value={stateTelefone}
+            style={stylesP.textInputPerfil}
+            onChangeText={(text) => setStateTelefone(text)}
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleSaveData}>
+            <Text style={styles.loginButtonText}>SALVAR</Text>
           </TouchableOpacity>
         </View>
-      )}
+
+      </View>
+      <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
+        <View style={stylesP.modalContentPerfil}>
+          <View style={stylesP.modalHeader} />
+          <Text style={stylesP.panelTitle}>Carregar foto</Text>
+          <Text style={stylesP.panelSubtitle}>Escolha sua Imagem de perfil</Text>
+          <ButtonP label="Tire uma foto" onPress={tirarFoto} />
+          <ButtonP theme="primary" label="Importar foto da biblioteca" onPress={pickImageAsync} />
+          <TouchableOpacity style={stylesP.panelButton} onPress={toggleModal}>
+            <Text style={stylesP.panelButtonTitle}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
-}
+};
 
-export default function PerfilUsu({navigation}) {
-  const [name, setName] = useState('Seu nome');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-
-  const handlePasswordChange = () => {
-    if (isChangingPassword) {
-      if (newPassword === confirmPassword) {
-        Alert.alert('Senha salva com sucesso!');
-        setIsChangingPassword(false);
-      } else {
-        Alert.alert('A senha e a confirmação não coincidem');
-      }
-    } else {
-      setIsChangingPassword(true);
-    }
-  };
-
-  const handleSaveData = () => {
-    Alert.alert('Dados salvos com sucesso!');
-    // Adicione a lógica real para salvar os dados aqui, como uma chamada à API.
-  };
-
-  return (
-    <ScrollView style={{ paddingTop: 20 }} showsVerticalScrollIndicator={false}>
-      <View style={styles.containerPerfilUsu}>
-      
-        <Image
-          source={{
-            uri: 'https://i.pinimg.com/1200x/5a/e2/25/5ae225b4ebc9e80004734ca4ca93a783.jpg',
-          }}
-          style={styles.perfilImage}
-        />
-        <Text style={styles.profileText}>Perfil</Text>
-
-        <EditableName name={name} onNameChange={setName} />
-
-        <View>
-          <Text style={styles.label}>Email:</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholder="Digite seu email"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.label}>Telefone:</Text>
-          <TextInput
-            style={styles.input}
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="Digite seu telefone"
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.smallButton}
-          onPress={handlePasswordChange}>
-          <Text style={styles.buttonText}>
-            {isChangingPassword ? 'Salvar Alterações' : 'Alterar Senha'}
-          </Text>
-        </TouchableOpacity>
-
-        {isChangingPassword ? (
-          <View>
-            <Text style={styles.label}>Nova Senha:</Text>
-            <TextInput
-              style={styles.input}
-              value={newPassword}
-              onChangeText={(text) => setNewPassword(text)}
-              secureTextEntry={true}
-              placeholder="Digite sua nova senha"
-            />
-            <Text style={styles.label}>Confirmar Senha:</Text>
-            <TextInput
-              style={styles.input}
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={true}
-              placeholder="Confirme sua nova senha"
-            />
-          </View>
-        ) : null}
-
-        <TouchableOpacity style={styles.buttonPerfilUsu} onPress={handleSaveData}>
-          <Text style={styles.buttonText}>SALVAR</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
-}
+export default PerfilUsu;

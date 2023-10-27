@@ -1,5 +1,6 @@
 import React from 'react';
-import {  View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../Styles';
 
 export default function AgendarConsul({ navigation }) {
@@ -26,31 +27,46 @@ export default function AgendarConsul({ navigation }) {
   return (
     <View style={styles.containerTelas}>
       <View style={styles.logoView}>
-        <Image
-          style={styles.logo2}
-          source={require('../../../assets/aconselhei1.png')}
-        />
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <AntDesign
+            name="left"
+            size={20}
+            color="#1E5A97"
+            style={{ marginRight: '7%' }}
+            onPress={() => navigation.navigate('TabRoutesUsu')} />
+          <Image
+            style={styles.logo2}
+            source={require('../../../assets/aconselhei1.png')}
+          />
+        </View>
       </View>
 
       <View style={styles.txtView3}>
         <Text style={styles.txt}>Selecione o assunto de interesse:</Text>
       </View>
 
-      
-        <FlatList
-          style={{ paddingTop: 0, width: '90%' }}
-          showsVerticalScrollIndicator={false}
-          data={especialidades}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.specialtyItem}
-              onPress={() => navigation.navigate('Profissional', { speciality: item.name,})}> 
-              <Text style={styles.specialtyText}>{item.name}</Text>
-            </TouchableOpacity>
-          )}
-        />
-   
+
+      <FlatList
+        style={{ paddingTop: 0, width: '90%' }}
+        showsVerticalScrollIndicator={false}
+        data={especialidades}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.specialtyItem}
+            onPress={() => navigation.navigate('Profissional', { speciality: item.name, })}>
+            <Text style={styles.specialtyText}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
+
     </View>
   );
 
