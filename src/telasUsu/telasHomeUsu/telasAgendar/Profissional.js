@@ -72,7 +72,7 @@ export default function Profissional({ route, navigation }) {
                 style={styles.card}
                 onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item })}
             >
-                <Text style={styles.name}>{item.nome}</Text>
+                <Text style={styles.name2}>{item.nome}</Text>
             </TouchableOpacity>
         )
     }
@@ -106,7 +106,7 @@ export default function Profissional({ route, navigation }) {
                 <Text style={styles.txt2}>{speciality}</Text>
             </View>
             <ScrollView style={{ height: '100%', width: '90%' }} showsVerticalScrollIndicator={false}>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {list.map((item) => <Advs item={item} />)}
                 </View>
             </ScrollView>
