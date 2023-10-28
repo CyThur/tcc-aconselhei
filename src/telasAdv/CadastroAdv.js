@@ -41,6 +41,7 @@ export default function CadastroAdv({ navigation }) {
         ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida'),
         oab: yup.string().required('Informe o número da OAB').min(6, 'Número inválido').max(6, 'Número inválido'),
         instituicao: yup.string().required('Informe a instituição onde se formou'),
+        numeroCelAdv: yup.string().required('Informe seu número de celular'),
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -49,9 +50,9 @@ export default function CadastroAdv({ navigation }) {
 
     const cadastrar = async (data) => {
 
-        const { email, senha, nomeadv, ufOab, oab, instituicao, } = data;
+        const { email, senha, numeroCelAdv, nomeadv, ufOab, oab, oabCompleta = ufOab + oab, instituicao, } = data;
 
-        console.log(email, senha, nomeadv, ufOab, oab, instituicao, categories, selected)
+        console.log(email, senha, numeroCelAdv, nomeadv, ufOab, oab, oabCompleta, instituicao, categories, selected)
         //CRIAR UM USUARIO COM O MESMO ID DO AUTHENTICATION (FAZER RELACIONAMENTO)
 
         createUserWithEmailAndPassword(auth, email, senha)
@@ -68,18 +69,20 @@ export default function CadastroAdv({ navigation }) {
                         oab: oab,
                         categorias: categories,
                         dias: selected,
+                        oabCompleta: oabCompleta,
+                        numeroCelular: numeroCelAdv,
                     }).then(() => {
                         Alert.alert('Atenção', 'Cadastro realizado com sucesso!');
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'TabRoutesAdv' }]
-                        })
+                        });
+                        console.log(oabCompleta, numeroCelAdv);
                     }).catch((err) => console.log(err));
                 })
-            })
-
-
+            }) 
     };
+
     const areas = [
         { key: 'Direito Ambiental', value: 'Direito Ambiental' },
         { key: 'Direito Civil', value: 'Direito Civil' },
@@ -145,6 +148,29 @@ export default function CadastroAdv({ navigation }) {
                             />
                         </View>
                         {errors.nomeadv && <Text style={styles.inputLoginError}>{errors.nomeadv?.message}</Text>}
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+                            <FontAwesome name="phone" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.numeroCelAdv ? 3.5 : 16 }]} />
+                            <Controller
+                                control={control}
+                                name="numeroCelAdv"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <TextInput
+                                        style={[
+                                            styles.inputList2, {
+                                                borderWidth: errors.numeroCelAdv ? 1.5 : 1,
+                                                borderColor: errors.numeroCelAdv ? '#f23535' : '#1E5A97',
+                                                marginBottom: errors.numeroCelAdv ? 5 : 16
+                                            }]}
+                                        placeholder="Número de celular"
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                    />
+                                )}
+                            />
+                        </View>
+                        {errors.numeroCelAdv && <Text style={styles.inputLoginError}>{errors.numeroCelAdv?.message}</Text>}
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                             <FontAwesome name="envelope" size={20} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]} />
