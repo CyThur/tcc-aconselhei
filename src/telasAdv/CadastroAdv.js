@@ -71,6 +71,7 @@ export default function CadastroAdv({ navigation }) {
                         dias: selected,
                         oabCompleta: oabCompleta,
                         numeroCelular: numeroCelAdv,
+                        foto: null,
                     }).then(() => {
                         Alert.alert('Atenção', 'Cadastro realizado com sucesso!');
                         navigation.reset({
