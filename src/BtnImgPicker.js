@@ -15,6 +15,18 @@ export default function BtnImgPicker({ label, theme, onPress }) {
 
         );
     }
+    if (theme === "secundary") {
+        return (
+            <TouchableOpacity style={stylesP.panelButton} onPress={onPress}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesome name="trash" size={18} color="#fff" style={styles.buttonIcon} />
+                    <Text style={stylesP.panelButtonTitle}>{label}</Text>
+                </View>
+
+            </TouchableOpacity>
+
+        );
+    }
 
     return (
         <TouchableOpacity style={stylesP.panelButton} onPress={onPress}>

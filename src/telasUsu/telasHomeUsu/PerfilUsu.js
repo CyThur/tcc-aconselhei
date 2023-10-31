@@ -6,43 +6,50 @@ import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonP from '../../BtnImgPicker';
-import ImageViewer from '../../ImgPickerViewer';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
-import { stylesP } from '../../telasAdv/telasHome/StylesPerfil';
-import { storage, db, listFiles, uploadToFirebase } from '../../firebase.config';
+import { stylesP } from './StylesPerfil';
+import { storage, db } from '../../firebase.config';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
-import TesteFotoLista from "../../testeListaFotos";
+import * as FileSystem from 'expo-file-system';
 
 
 const PerfilUsu = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
-  const [image, setImage] = useState(null);
-  const [files, setFiles] = useState([]);
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
   const [stateTelefone, setStateTelefone] = useState('');
-
-  const placeholderImage = '../../../assets/userSemFoto.png';
+  const [hasImage, setHasImage] = useState(false)
+  const [userData, setUserData] = useState([])
 
   useEffect(() => {
-    listFiles().then((listResp) => {
-      const files = listResp.map((value) => {
-        return { name: value.fullPath };
-      });
 
-      setFiles(files);
-    });
+    const auth = getAuth();
+    async function pegarData() {
+      const docRef = doc(db, 'advogados', auth.currentUser.uid)
+
+      await getDoc(docRef).then((doc) => {
+
+        if (doc.data().foto != null) {
+          console.log('tem foto')
+          setHasImage(true)
+          setUserData(doc.data())
+        }
+      })
+    }
+
+    pegarData()
   }, []);
 
   /**
    *
    */
-
+  
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -55,17 +62,31 @@ const PerfilUsu = ({ navigation }) => {
       quality: 1,
       allowsMultipleSelection: false,
     });
-
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      Alert.alert(
+        'Confirmação',
+        'Tem certeza de que deseja trocar sua foto de perfil?',
+        [
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancelado'),
+            style: 'cancel',
+          },
+          {
+            text: 'Confirmar',
+            onPress: () => {
+              upload(setSelectedImage(result.assets[0].uri));
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      Alert.alert('Atenção', 'Você não tirou nenhuma foto.');
+      Alert.alert('Atenção', 'Você não escolheu nenhuma foto.');
     }
-  };
 
-  /**
-   *
-   */
+
+  };
 
   const tirarFoto = async () => {
     try {
@@ -76,26 +97,67 @@ const PerfilUsu = ({ navigation }) => {
         quality: 1,
         allowsMultipleSelection: false,
       })
-      if (!cameraResp.canceled) {
-        const { uri } = cameraResp.assets[0];
-        const fileName = uri.split("/").pop();
-        const uploadResp = await uploadToFirebase(uri, fileName, (v) =>
-          console.log(v)
-        );
-        console.log(uploadResp);
-
-        listFiles().then((listResp) => {
-          const files = listResp.map((value) => {
-            return { name: value.fullPath };
-          });
-
-          setFiles(files);
-        });
-      }
+      Alert.alert(
+        'Confirmação',
+        'Tem certeza de que deseja trocar sua foto de perfil?',
+        [
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancelado'),
+            style: 'cancel',
+          },
+          {
+            text: 'Confirmar',
+            onPress: () => {
+              upload(setSelectedImage(cameraResp.assets[0].uri));
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } catch (e) {
-      Alert.alert('Erro', 'A imagem não foi carregada' + e.message);
+      Alert.alert('Atenção', 'Você não tirou nenhuma foto.');
     }
   };
+
+  const upload = async () => {
+    const auth = getAuth()
+    const { uri } = await FileSystem.getInfoAsync(selectedImage);
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        resolve(xhr.response);
+      }
+      xhr.onerror = (e) => {
+        reject(new TypeError('Network request failed'));
+      }
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    })
+
+    const docUserRef = doc(db, 'advogados', auth.currentUser.uid)
+
+    const fileName = ref(storage, auth.currentUser.uid)
+
+    uploadBytes(fileName, blob).then(async () => {
+      getDownloadURL(fileName).then(async (url) => {
+        await updateDoc(docUserRef, {
+          foto: url
+        })
+      })
+    });
+  }
+
+  const deleteFoto = async () => {
+    const auth = getAuth()
+    const fileName = ref(storage, auth.currentUser.uid)
+    deleteObject(fileName).then(() => {
+      console.log('Foto deletada com sucesso!')
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
 
   // if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
   //   Alert.alert(
@@ -130,22 +192,30 @@ const PerfilUsu = ({ navigation }) => {
   }, []);
 
   // salvar as infos
-  const handleSaveData = useCallback(async () => {
+  const salvarEmail = useCallback(async () => {
     const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
+    await verifyBeforeUpdateEmail(auth.currentUser, stateEmail).then(() => {
+      Alert.alert('Atenção', 'Clique no link enviado ao seu novo e-mail para confirmar a alteração!');
+    }).catch((error) => {
+      console.log(error)
+    })
+  }, [stateEmail]);
+
+  const salvarTel = useCallback(async () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth.uid, async (user) => {
       if (user) {
-        const docRef = doc(db, 'usuarios', user.uid)
+        const docRef = doc(db, 'advogados', user.uid)
         await updateDoc(docRef, {
-          email: stateEmail,
           telefone: stateTelefone,
         })
-        Alert.alert('Dado salvo com sucesso!');
+        Alert.alert('Novo telefone salvo com sucesso!');
       } else {
-        console.log('Erro ao atualizar as informações!');
+        console.log('Erro ao atualizar a informação!');
       }
     });
 
-  }, [stateEmail, stateTelefone]);
+  }, [stateTelefone]);
 
   if (state == null) {
     return (
@@ -159,13 +229,12 @@ const PerfilUsu = ({ navigation }) => {
   return (
     <View style={stylesP.containerPerfilAdv}>
       <View style={{ margin: 20, marginTop: -150 }}>
-        <TesteFotoLista files={files} />
-        <AntDesign name="left" size={24} color="#1E5A97" onPress={()=> navigation.navigate('TabRoutesUsu')}/>
+        <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesUsu')} />
         <View style={{ alignItems: 'center', }}>
           <TouchableOpacity onPress={toggleModal}>
             <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
               <ImageBackground
-                source={require(placeholderImage)}
+                source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
                 style={{ height: 120, width: 120, }}
                 imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
               >
@@ -177,7 +246,6 @@ const PerfilUsu = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={stylesP.profileTextPerfilUsu}>{state.nome}</Text>
         </View>
-
         <View style={stylesP.action}>
           <FontAwesome name="envelope-o" size={20} />
           <TextInput
@@ -189,6 +257,7 @@ const PerfilUsu = ({ navigation }) => {
             onChangeText={(text) => setStateEmail(text)}
             style={stylesP.textInputPerfil}
           />
+          <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
         </View>
         <View style={stylesP.action}>
           <FontAwesome name="phone" size={20} />
@@ -201,14 +270,8 @@ const PerfilUsu = ({ navigation }) => {
             style={stylesP.textInputPerfil}
             onChangeText={(text) => setStateTelefone(text)}
           />
+          <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
         </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleSaveData}>
-            <Text style={styles.loginButtonText}>SALVAR</Text>
-          </TouchableOpacity>
-        </View>
-
       </View>
       <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
         <View style={stylesP.modalContentPerfil}>
@@ -217,6 +280,7 @@ const PerfilUsu = ({ navigation }) => {
           <Text style={stylesP.panelSubtitle}>Escolha sua Imagem de perfil</Text>
           <ButtonP label="Tire uma foto" onPress={tirarFoto} />
           <ButtonP theme="primary" label="Importar foto da biblioteca" onPress={pickImageAsync} />
+          <ButtonP theme="secundary" label="Deletar imagem" onPress={deleteFoto} />
           <TouchableOpacity style={stylesP.panelButton} onPress={toggleModal}>
             <Text style={stylesP.panelButtonTitle}>Cancelar</Text>
           </TouchableOpacity>
