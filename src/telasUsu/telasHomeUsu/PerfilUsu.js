@@ -9,7 +9,7 @@ import ButtonP from '../../BtnImgPicker';
 import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
-import { stylesP } from './StylesPerfil';
+import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -20,6 +20,7 @@ const PerfilUsu = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+  const [files, setFiles] = useState([]);
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
@@ -28,10 +29,9 @@ const PerfilUsu = ({ navigation }) => {
   const [userData, setUserData] = useState([])
 
   useEffect(() => {
-
     const auth = getAuth();
     async function pegarData() {
-      const docRef = doc(db, 'advogados', auth.currentUser.uid)
+      const docRef = doc(db, 'usuarios', auth.currentUser.uid)
 
       await getDoc(docRef).then((doc) => {
 
@@ -49,7 +49,7 @@ const PerfilUsu = ({ navigation }) => {
   /**
    *
    */
-  
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -136,7 +136,7 @@ const PerfilUsu = ({ navigation }) => {
       xhr.send(null);
     })
 
-    const docUserRef = doc(db, 'advogados', auth.currentUser.uid)
+    const docUserRef = doc(db, 'usuarios', auth.currentUser.uid)
 
     const fileName = ref(storage, auth.currentUser.uid)
 
@@ -271,6 +271,12 @@ const PerfilUsu = ({ navigation }) => {
             onChangeText={(text) => setStateTelefone(text)}
           />
           <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.loginButton} onPress={''}>
+            <Text style={styles.loginButtonText}>SALVAR</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>

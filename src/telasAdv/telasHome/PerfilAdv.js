@@ -9,7 +9,7 @@ import ButtonP from '../../BtnImgPicker';
 import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
-import { stylesP } from './StylesPerfil';
+import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -28,7 +28,6 @@ const PerfilAdv = ({ navigation }) => {
   const [userData, setUserData] = useState([])
 
   useEffect(() => {
-
     const auth = getAuth();
     async function pegarData() {
       const docRef = doc(db, 'advogados', auth.currentUser.uid)
