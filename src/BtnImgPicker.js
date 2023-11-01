@@ -1,6 +1,6 @@
 import { StyleSheet, View, Pressable, TouchableOpacity, Text } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { stylesP } from './telasAdv/telasHome/StylesPerfil';
+import { stylesP } from './StylesPerfil';
 
 export default function BtnImgPicker({ label, theme, onPress }) {
     if (theme === "primary") {

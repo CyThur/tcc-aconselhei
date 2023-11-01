@@ -36,6 +36,7 @@ export default function CadastroUsu({ navigation }) {
                     const docRef = doc(db, 'usuarios', user.uid)
                     await setDoc(docRef, {
                         nome: nome,
+                        foto: null,
                     });
                 })
                 Alert.alert('Atenção', 'Cadastrado com sucesso!');
