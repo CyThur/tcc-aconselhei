@@ -78,7 +78,6 @@ export default function CadastroAdv({ navigation }) {
                             index: 0,
                             routes: [{ name: 'TabRoutesAdv' }]
                         });
-                        console.log(oabCompleta, numeroCelAdv);
                     }).catch((err) => console.log(err));
                 })
             }) 
