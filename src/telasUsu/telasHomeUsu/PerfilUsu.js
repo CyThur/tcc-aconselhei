@@ -266,7 +266,7 @@ const PerfilUsu = ({ navigation }) => {
           <Text style={stylesP.profileTextPerfilUsu}>{state.nome}</Text>
         </View>
         <View style={stylesP.action}>
-          <FontAwesome name="envelope-o" size={20} />
+          <FontAwesome name="envelope" size={20} color="#1E5A97"/>
           <TextInput
             placeholder={state.email}
             keyboardType="email-address"
@@ -279,7 +279,7 @@ const PerfilUsu = ({ navigation }) => {
           <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
         </View>
         <View style={stylesP.action}>
-          <FontAwesome name="phone" size={20} />
+          <FontAwesome name="phone" size={20} color="#1E5A97"/>
           <TextInput
             placeholder={String(state.telefone)}
             placeholderTextColor="#1E5A97"

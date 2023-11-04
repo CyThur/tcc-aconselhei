@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image } from 'react-native';
+import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
@@ -23,8 +24,34 @@ const PerfilAdv = ({ navigation }) => {
 
   const [stateEmail, setStateEmail] = useState('');
   const [stateTelefone, setStateTelefone] = useState('');
+  const [stateEspecialidade, setStateEspecialidade] = useState([]);
   const [hasImage, setHasImage] = useState(false)
   const [userData, setUserData] = useState([])
+  const [editandoEspecialidade, setEditandoEspecialidade] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [boxStyles, setBoxStyles] = useState({
+    borderRadius: 18,
+    borderColor: '#1E5A97',
+    padding: 10,
+    backgroundColor: '#E1E1DE',
+    width: 320,
+    alignSelf: 'center',
+  });
+  const salvarEspecialidade = useCallback(async () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth.uid, async (user) => {
+      if (user) {
+        const docRef = doc(db, 'advogados', user.uid)
+        await updateDoc(docRef, {
+          categorias: stateEspecialidade,
+        })
+        Alert.alert('Especialidades salvas com sucesso!');
+      } else {
+        console.log('Erro ao atualizar a informação!');
+      }
+    });
+
+  }, [stateEspecialidade]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -196,13 +223,15 @@ const PerfilAdv = ({ navigation }) => {
             const userData = {
               nome: doc.data().nome,
               email: user.email,
-              telefone: doc.data().telefone,
+              numeroCelular: doc.data().numeroCelular,
               oabCompleta: doc.data().oabCompleta,
               faculdade: doc.data().faculdade,
-
+              categorias: doc.data().categorias || [],
+              dias: doc.data().dias || [],
             };
             console.log(doc.data())
             console.log(userData)
+            console.log(doc.data().numeroCelular)
             setState(userData)
           })
         } else {
@@ -229,7 +258,7 @@ const PerfilAdv = ({ navigation }) => {
       if (user) {
         const docRef = doc(db, 'advogados', user.uid)
         await updateDoc(docRef, {
-          telefone: stateTelefone,
+          numeroCelular: stateTelefone,
         })
         Alert.alert('Novo telefone salvo com sucesso!');
       } else {
@@ -247,6 +276,31 @@ const PerfilAdv = ({ navigation }) => {
       />
     )
   }
+
+  //Edição das especialidades
+  const ativarEdicaoEspecialidade = () => {
+    setEditandoEspecialidade(!editandoEspecialidade); //inverte o valor do estado
+  };
+
+  const areas = [
+    { key: 'Direito Ambiental', value: 'Direito Ambiental' },
+    { key: 'Direito Civil', value: 'Direito Civil' },
+    { key: 'Direito do Consumidor', value: 'Direito do Consumidor' },
+    { key: 'Direito Contratual', value: 'Direito Contratual' },
+    { key: 'Direito Desportivo', value: 'Direito Desportivo' },
+    { key: 'Direito Digital', value: 'Direito Digital' },
+    { key: 'Direito Eleitoral', value: 'Direito Eleitoral' },
+    { key: 'Direito Empresarial', value: 'Direito Empresarial' },
+    { key: 'Direito da Família', value: 'Direito da Família' },
+    { key: 'Direitos Humanos', value: 'Direitos Humanos' },
+    { key: 'Direito Imobiliário', value: 'Direito Imobiliário' },
+    { key: 'Direito Penal', value: 'Direito Penal' },
+    { key: 'Direito da Propriedade Intelectual', value: 'Direito da Propriedade Intelectual' },
+    { key: 'Defensoria Pública', value: 'Defensoria Pública' },
+    { key: 'Direito Trabalhista', value: 'Direito Trabalhista' },
+    { key: 'Direito Tributário', value: 'Direito Tributário' },
+];
+  
 
   return (
     <View style={stylesP.containerPerfilAdv}>
@@ -273,7 +327,7 @@ const PerfilAdv = ({ navigation }) => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={stylesP.action}>
-            <FontAwesome name="envelope-o" size={20} />
+            <FontAwesome name="envelope" size={20} color="#1E5A97"/>
             <TextInput
               placeholder={state.email}
               keyboardType="email-address"
@@ -286,9 +340,9 @@ const PerfilAdv = ({ navigation }) => {
             <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
           </View>
           <View style={stylesP.action}>
-            <FontAwesome name="phone" size={20} />
+            <FontAwesome name="phone" size={20} color="#1E5A97"/>
             <TextInput
-              placeholder={String(state.telefone)}
+              placeholder={String(state.numeroCelular)}
               placeholderTextColor="#1E5A97"
               keyboardType='number-pad'
               autoCorrect={false}
@@ -300,12 +354,37 @@ const PerfilAdv = ({ navigation }) => {
           </View>
 
           <View>
-            <Text style={stylesP.labelPerfilAdv}>Área de atuação:</Text>
-            <Text style={{ marginBottom: 30 }}>Arrumar</Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[stylesP.labelPerfilAdv, {width: '93%'}]}>Área de atuação:</Text>
+              <Text style={[stylesP.labelPerfilAdv, {alignSelf: 'flex-end'}]}><AntDesign name="form" size={20} color="#1E5A97" onPress={ativarEdicaoEspecialidade}/></Text>
+            </View>
+            
+            {editandoEspecialidade ? (
+              <View>
+              <MultipleSelectList
+              setSelected={setStateEspecialidade}
+              data={areas}
+              placeholder="Áreas de atuação"
+              label="Áreas de atuação"
+              notFoundText="Área não encontrada"
+              searchPlaceholder="Pesquisar"
+              labelStyles={{ color: '#1E5A97' }}
+              badgeStyles={{ backgroundColor: '#1E5A97' }}
+              boxStyles={boxStyles}
+            />
+
+            <TouchableOpacity onPress={salvarEspecialidade}>
+              <Text>aa</Text>
+            </TouchableOpacity>
+            </View>
+            ) : (
+              <Text style={{ marginBottom: 30 }}>{state.categorias}</Text>
+            )}
+
           </View>
           <View>
             <Text style={stylesP.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
-            <Text style={{ marginBottom: 30 }}>Arrumar</Text>
+            <Text style={{ marginBottom: 30 }}>{state.dias}</Text>
           </View>
           <View>
             <Text style={stylesP.labelPerfilAdv}>

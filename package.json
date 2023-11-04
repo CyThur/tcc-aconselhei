@@ -15,9 +15,15 @@
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
+    "dotenv": "^16.3.1",
     "expo": "^49.0.16",
     "expo-camera": "~13.4.4",
+<<<<<<< HEAD
     "expo-file-system": "~15.4.4",
+=======
+    "expo-constants": "~14.4.2",
+    "expo-file-system": "^15.6.0",
+>>>>>>> f5edd616aaa76c64054c334eb78b2281dc94408a
     "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.5.0",
