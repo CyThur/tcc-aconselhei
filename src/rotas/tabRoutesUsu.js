@@ -53,7 +53,7 @@ export default function TabRoutesUsu() {
                 name="NotificacoesUsu"
                 component={NotificacoesUsu}
                 options={{
-                    tabBarLabel: 'NotificaçõesUsu',
+                    tabBarLabel: 'Notificações',
                     tabBarIcon: ({ color, size, focused }) =>{
                         if(focused){
                             return <Ionicons name="notifications" color={color} size={size} />
