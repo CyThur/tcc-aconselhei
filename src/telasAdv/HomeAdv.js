@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 
 export default function HomeAdv({navigation}) {
+
     return (
         <View style={styles.containerTelas}>
             <View style={styles.logoView}>
