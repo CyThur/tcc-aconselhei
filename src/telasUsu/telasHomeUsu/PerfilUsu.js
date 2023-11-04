@@ -20,7 +20,6 @@ const PerfilUsu = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
-  const [files, setFiles] = useState([]);
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
@@ -115,38 +114,47 @@ const PerfilUsu = ({ navigation }) => {
         ],
         { cancelable: false }
       );
+
     } catch (e) {
-      Alert.alert('Atenção', 'Você não tirou nenhuma foto.');
+      Alert.alert('Erro', 'Algo deu errado.', e);
     }
   };
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//A foto não está mais querendo ir para o banco de dados
+//Acredita-se que o maior problema seja no upload
   const upload = async () => {
     const auth = getAuth()
     const { uri } = await FileSystem.getInfoAsync(selectedImage);
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        resolve(xhr.response);
-      }
-      xhr.onerror = (e) => {
-        reject(new TypeError('Network request failed'));
-      }
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    })
-
     const docUserRef = doc(db, 'usuarios', auth.currentUser.uid)
-
     const fileName = ref(storage, auth.currentUser.uid)
 
-    uploadBytes(fileName, blob).then(async () => {
-      getDownloadURL(fileName).then(async (url) => {
-        await updateDoc(docUserRef, {
-          foto: url
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// if para deletar a foto antes de dar o upload está dando erro
+    if (doc.data().foto != null) {
+      deleteFoto();
+    } else {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        }
+        xhr.onerror = (e) => {
+          reject(new TypeError('Network request failed'));
+        }
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+
+      uploadBytes(fileName, blob).then(async () => {
+        getDownloadURL(fileName).then(async (url) => {
+          await updateDoc(docUserRef, {
+            foto: url
+          })
         })
-      })
-    });
+      });
+    }
   }
 
   const deleteFoto = async () => {
@@ -156,7 +164,18 @@ const PerfilUsu = ({ navigation }) => {
       console.log('Foto deletada com sucesso!')
     }).catch((error) => {
       console.log(error)
-    })
+    });
+
+    const docRef = doc(db, 'usuarios', auth.currentUser.uid);
+    const userData = await getDoc(docRef).then((doc) => doc.data());
+    await updateDoc(docRef, {
+      foto: null
+    }).then(() => {
+      setHasImage(false);
+      setUserData({ ...userData, foto: null });
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   // if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
@@ -205,7 +224,7 @@ const PerfilUsu = ({ navigation }) => {
     const auth = getAuth();
     onAuthStateChanged(auth.uid, async (user) => {
       if (user) {
-        const docRef = doc(db, 'advogados', user.uid)
+        const docRef = doc(db, 'usuarios', user.uid)
         await updateDoc(docRef, {
           telefone: stateTelefone,
         })
@@ -239,7 +258,7 @@ const PerfilUsu = ({ navigation }) => {
                 imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
               >
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
-                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.7, alignSelf: 'center', justifyContent: 'center' }} />
+                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.3, alignSelf: 'center', justifyContent: 'center' }} />
                 </View>
               </ImageBackground>
             </View>

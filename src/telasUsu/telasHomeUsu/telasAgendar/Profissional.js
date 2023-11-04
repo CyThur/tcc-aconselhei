@@ -106,6 +106,9 @@ export default function Profissional({ route, navigation }) {
                 <Text style={styles.txt2}>{speciality}</Text>
             </View>
             <ScrollView style={{ height: '100%', width: '90%' }} showsVerticalScrollIndicator={false}>
+{/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+{/* Como poderia colocar a foto de cada um dos advogados em seu respectivo "quadradinho",
+para que, no momento da escolha, o usuário comum possa ver a foto do advogdo escolhido?  */}
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {list.map((item) => <Advs item={item} />)}
                 </View>
