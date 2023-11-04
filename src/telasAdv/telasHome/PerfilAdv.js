@@ -23,7 +23,7 @@ const PerfilAdv = ({ navigation }) => {
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
-  const [stateTelefone, setStateTelefone] = useState('');
+  const [stateNumCelular, setStateNumCelular] = useState('');
   const [stateEspecialidade, setStateEspecialidade] = useState([]);
   const [hasImage, setHasImage] = useState(false)
   const [userData, setUserData] = useState([])
@@ -37,6 +37,9 @@ const PerfilAdv = ({ navigation }) => {
     width: 320,
     alignSelf: 'center',
   });
+
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //campo das especialidades que também não atualiza no banco de dados, possui a mesma estrutura da atualização dos números de celular
   const salvarEspecialidade = useCallback(async () => {
     const auth = getAuth();
     onAuthStateChanged(auth.uid, async (user) => {
@@ -252,13 +255,16 @@ const PerfilAdv = ({ navigation }) => {
     })
   }, [stateEmail]);
 
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //o número de celular não está sendo atualizado no banco de dados, um problema parecido com o uplaod da foto, o mesmo acontece 
+  //quando tentamos atualizar as especialidades
   const salvarTel = useCallback(async () => {
     const auth = getAuth();
     onAuthStateChanged(auth.uid, async (user) => {
       if (user) {
         const docRef = doc(db, 'advogados', user.uid)
         await updateDoc(docRef, {
-          numeroCelular: stateTelefone,
+          numeroCelular: stateNumCelular,
         })
         Alert.alert('Novo telefone salvo com sucesso!');
       } else {
@@ -266,7 +272,7 @@ const PerfilAdv = ({ navigation }) => {
       }
     });
 
-  }, [stateTelefone]);
+  }, [stateNumCelular]);
 
   if (state == null) {
     return (
@@ -346,9 +352,9 @@ const PerfilAdv = ({ navigation }) => {
               placeholderTextColor="#1E5A97"
               keyboardType='number-pad'
               autoCorrect={false}
-              value={stateTelefone}
+              value={stateNumCelular}
               style={stylesP.textInputPerfil}
-              onChangeText={(text) => setStateTelefone(text)}
+              onChangeText={(text) => setStateNumCelular(text)}
             />
             <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
           </View>
