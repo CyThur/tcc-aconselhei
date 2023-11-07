@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,9 +12,9 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
 import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
-
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
+import DiasDisponiveis from './DiasDisponiveis';
 
 const PerfilAdv = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -391,6 +391,9 @@ const PerfilAdv = ({ navigation }) => {
           <View>
             <Text style={stylesP.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
             <Text style={{ marginBottom: 30 }}>{state.dias}</Text>
+            <View>
+            <DiasDisponiveis />
+            </View>
           </View>
           <View>
             <Text style={stylesP.labelPerfilAdv}>

@@ -14,10 +14,12 @@ Obs: os problemas foram comentados no código indicados por !!!!
 7) API para validação da OAB
 
 #################################################################################################################
-Uma dúvida, vocês estão criando o banco de dados na mão ou estão utilizando migrations?
+
+Uma dúvida, vocês estão criando o banco de dados na mão ou estão utilizando migrations? 
+R: Estamos utilizando o Firestore (dados em geral) e o Storage (apenas para as imagens) como banco de dados, são serviços do Firebase. Acha que seria mais conveniente trocar para uma migrations?
 
 2,4 - Para essas dúvidas imagino que o SNS da Amazon acabe ficando caro com o decorrer do tempo, então recomendo utilizarem uma solução mais convencional que seria a notificação por email:
-- https://react.email/docs/introduction
+- https://react.email/docs/introduction 
 Esse site tem muitos exemplos e é bem prático de configurar:
 - https://react.email/docs/getting-started/automatic-setup
 
@@ -33,8 +35,11 @@ Além de ensinar como configurar as permissões dentro da AWS.
 - https://brightdata.com/products/scraping-browser
 Mas implementar uma ferramenta dessa talvez leve um tempo considerável, além de ser paga. Outras API para validação de OAB são todas pagas.
 
-Por enquanto consegui analisar essas pessoal, conforme for liberando tempo eu vou comentando mais... só para eu ficar por dentro, qual que é a data limite para vocês entregarem esse trabalho?
+Por enquanto consegui analisar essas pessoal, conforme for liberando tempo eu vou comentando mais... só para eu ficar por dentro, qual que é a data limite para vocês entregarem esse trabalho? 
+R: A entrega desse projeto é no dia 24/11, mas queremos MUITO deixar pronto até o dia 15/11
+
 #################################################################################################################
+
 O QUE ESTAMOS ENFRENTANDO
 
 Telas PerfilAdv.js e PerfilUsu.js
