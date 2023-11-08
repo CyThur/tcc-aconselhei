@@ -17,6 +17,7 @@ Obs: os problemas foram comentados no código indicados por !!!!
 
 Uma dúvida, vocês estão criando o banco de dados na mão ou estão utilizando migrations? 
 R: Estamos utilizando o Firestore (dados em geral) e o Storage (apenas para as imagens) como banco de dados, são serviços do Firebase. Acha que seria mais conveniente trocar para uma migrations?
+Migrations é uma forma de gerar os bancos por meio de comandos, não é um serviço em específico, questionei mais para eu conseguir realizar testes com banco local de maneira mais fácil, mas se não tiver sem problemas.
 
 2,4 - Para essas dúvidas imagino que o SNS da Amazon acabe ficando caro com o decorrer do tempo, então recomendo utilizarem uma solução mais convencional que seria a notificação por email:
 - https://react.email/docs/introduction 
@@ -49,9 +50,25 @@ src/telasAdv/telasHome/PerfilAdv
 src/telasUsu/telasHomeUsu/PerfilUsu
 
 Obs1: quando já tem uma foto existente no Firestore - ex: foto:"link"(string) - se tento tirar uma nova foto para substituir a anterior, dá erro.
+------> Poderiam mandar o texto ou um print com o erro?
 
 Obs2: na "const upload", antes a foto estava indo para o Storage, mas agora não sabemos porque não está indo mais
 Dentro dessa const, tem um "if" para que a foto fosse deletada antes de uma nova ser colocada, porém está dando erro (acreditamos que a fonte dos problemas esteja no upload)
+
+Por questão de ambiente eu só consigo testar a versão web no meu PC que possui uma limitação, o FileSystem.getInfoAsync() do expo não tem suporte para a versão Web então não consigo seguir com o teste além disso sem ter que fazer muitas alterações no código:
+
+![image](https://github.com/CyThur/tcc-aconselhei/assets/69431917/665333c3-1e3d-4190-91e4-75dcf12584a3)
+
+> Eu não tenho tanta experiência com React Native, mas encontrei uma possível falha de lógica nesse if de deletar a foto:
+
+![image](https://github.com/CyThur/tcc-aconselhei/assets/69431917/bef3d64c-3c9b-4e7a-9cfb-abcf4c3a33c4)
+
+> Se a foto não for nula ele entra dentro da função deleteFoto que não faz o uploadBytes com o blob e o novo filename, então é como se a nova foto nunca subisse:
+
+![image](https://github.com/CyThur/tcc-aconselhei/assets/69431917/402dc944-0497-40f2-9deb-4f8aa467df8d)
+> Tentem ir debugando o código com console.log até encontrar um ponto em que o código quebre e aí me enviem esse lugar junto com o código aqui para mim. 
+
+
 
 Tela: Profissional.js
 
