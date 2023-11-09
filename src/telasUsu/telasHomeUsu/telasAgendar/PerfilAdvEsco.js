@@ -5,7 +5,7 @@ import { styles } from '../../../Styles';
 import CustomRating from './CustomRating'; // Importe o componente de classificação personalizada
 
 export default function PerfilAdvEsco({ route, navigation }) {
-  const { adv } = route.params;
+  const { adv, id, nomeCerto } = route.params;
 
   // const [rating, setRating] = useState(3.0); // Defina o valor inicial da classificação aqui
 
@@ -50,7 +50,7 @@ export default function PerfilAdvEsco({ route, navigation }) {
         <Text style={styles.infoText}>• Ingressou no aplicativo em 2023.</Text>
         <Text style={styles.infoText}>• Realizou XX consultorias.</Text>
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EscreDuvida', { id: id, nome: nomeCerto })}>
         <Text style={styles.buttonText}>VERIFICAR DISPONIBILIDADE</Text>
       </TouchableOpacity>
     </View>
