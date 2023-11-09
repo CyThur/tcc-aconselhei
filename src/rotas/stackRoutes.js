@@ -11,6 +11,7 @@ import PerfilAdv from '../telasAdv/telasHome/PerfilAdv';
 import ConsulAgen from '../telasAdv/telasHome/ConsulAgen';
 import HistoricoAdv from '../telasAdv/telasHome/HistoricoAdv';
 
+import SolicitaTextoUsu from '../telasAdv/telasSoliciTexto/SolicitaTextoUsu';
 
 import LoginUsu from '../telasUsu/LoginUsu';
 import CadastroUsu from '../telasUsu/CadastroUsu';
@@ -20,6 +21,9 @@ import PerfilUsu from '../telasUsu/telasHomeUsu/PerfilUsu';
 import AgendarConsul from '../telasUsu/telasHomeUsu/AgendarConsul';
 import Profissional from '../telasUsu/telasHomeUsu/telasAgendar/Profissional';
 import PerfilAdvEsco from '../telasUsu/telasHomeUsu/telasAgendar/PerfilAdvEsco';
+
+import EscreDuvida from '../telasUsu/telasHomeUsu/telasAgendar/EscreDuvida';
+
 import HistoricoUsu from '../telasUsu/telasHomeUsu/HistoricoUsu';
 import Planos from '../telasUsu/telasHomeUsu/Planos';
 import TemPlano from '../telasUsu/telasHomeUsu/TemPlano';
@@ -41,7 +45,8 @@ export default function StackRoutes() {
             <Stack.Screen name="ConsulAgen" component={ConsulAgen} />
             <Stack.Screen name="HistoricoAdv" component={HistoricoAdv} />
 
-
+            <Stack.Screen name="SolicitaTextoUsu" component={SolicitaTextoUsu} />
+            
             <Stack.Screen name="LoginUsu" component={LoginUsu} />
             <Stack.Screen name="CadastroUsu" component={CadastroUsu} />
            
@@ -50,6 +55,9 @@ export default function StackRoutes() {
             <Stack.Screen name="AgendarConsul" component={AgendarConsul} />
             <Stack.Screen name="Profissional" component={Profissional} />
             <Stack.Screen name="PerfilAdvEsco" component={PerfilAdvEsco} />
+
+            <Stack.Screen name="EscreDuvida" component={EscreDuvida} />
+            
             <Stack.Screen name="HistoricoUsu" component={HistoricoUsu} />
             <Stack.Screen name="Planos" component={Planos} />
             <Stack.Screen name="TemPlano" component={TemPlano}/>

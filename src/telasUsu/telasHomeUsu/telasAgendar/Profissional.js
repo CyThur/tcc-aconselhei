@@ -3,8 +3,9 @@ import { Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../../Styles';
 import { db } from '../../../firebase.config.js';
+import { getAuth } from 'firebase/auth';
 
-import { collection, doc, query, getDocs, where } from 'firebase/firestore'
+import { collection, doc, query, getDocs, where, getDoc } from 'firebase/firestore'
 
 export default function Profissional({ route, navigation }) {
 
@@ -13,22 +14,47 @@ export default function Profissional({ route, navigation }) {
     const q = query(colRef, where('categorias', 'array-contains', speciality));
 
     const [list, setList] = useState([]);
+    const [nomeUser, setNomeUser] = useState('djskdjsk')
+
+    const user = getAuth()
+
+
+    async function pegarNomeUsuario() {
+        const docRef = doc(db, 'usuarios', user.currentUser.uid)
+
+        getDoc(docRef).then((doc) => {
+            setNomeUser(doc.data().nome)
+        })
+    }
 
     async function pegarDadosFiltrados() {
         await getDocs(q).then((snapshot) => {
+            const arr = []
             snapshot.forEach((doc) => {
-                setList((prev) => {
-                    const copyState = [...prev, doc.data()]
-                    return copyState
-                })
-                console.log(list)
+                // setList((prev) => {
+
+                //     const copyState = [...prev, doc.data()]
+                //     return copyState
+                // })
+
+                const obj = {
+                    data: doc.data(),
+                    id: doc.id
+                }
+                arr.push(obj)
             })
+
+            setList(arr)
+            console.log(arr)
         }).catch((err) => console.log(err))
     }
 
     useEffect(() => {
         pegarDadosFiltrados()
+    }, [])
 
+    useEffect(() => {
+        pegarNomeUsuario()
     }, [])
 
     if (list.length == 0) {
@@ -66,11 +92,11 @@ export default function Profissional({ route, navigation }) {
         );
     }
 
-    function Advs({ item }) {
+    function Advs({ item, id, nome }) {
         return (
             <TouchableOpacity
                 style={styles.card}
-                onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item })}
+                onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item, id: id, nomeCerto: nome })}
             >
                 <Text style={styles.name2}>{item.nome}</Text>
             </TouchableOpacity>
@@ -106,11 +132,8 @@ export default function Profissional({ route, navigation }) {
                 <Text style={styles.txt2}>{speciality}</Text>
             </View>
             <ScrollView style={{ height: '100%', width: '90%' }} showsVerticalScrollIndicator={false}>
-{/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-{/* Como poderia colocar a foto de cada um dos advogados em seu respectivo "quadradinho",
-para que, no momento da escolha, o usuário comum possa ver a foto do advogdo escolhido?  */}
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {list.map((item) => <Advs item={item} />)}
+                    {list.map((item) => <Advs item={item.data} id={item.id} nome={nomeUser} />)}
                 </View>
             </ScrollView>
 
