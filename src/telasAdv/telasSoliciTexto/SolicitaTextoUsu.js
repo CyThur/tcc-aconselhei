@@ -1,14 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from '../../firebase.config.js';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Image, TextInput } from 'react-native';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { addDoc, doc, updateDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
+import { auth, db } from '../../firebase.config.js';
 import { styles } from '../../Styles.js';
 
-
-export default function EscreverDuvida({ navigation, route }) {
+export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
-  const { id, nome, texto } = route.params
+  const { id, nome, texto, cate } = route.params
+  const [idUser, setIdUser] = useState('')
+  const [nomeUser, setNomeUser] = useState('')
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [inputText, setInputText] = useState('');
+
+  async function pegarNomeAdv() {
+    const docRef = doc(db, 'advogados', user.currentUser.uid)
+
+    await getDoc(docRef).then((doc) => {
+      setNomeUser(doc.data().nome)
+    })
+  }
+
+  useEffect(() => {
+    pegarNomeAdv()
+    onAuthStateChanged(auth, async (user) => {
+      const docRef = doc(db, 'advogados', user.uid, 'solicitacoes', id)
+      await getDoc(docRef).then((doc) => {
+        setIdUser(doc.data().id)
+      })
+    })
+  }, [])
+
+
+  const EnviaParaUsuAceita = async () => {
+    try {
+      const docRef = collection(db, 'usuarios', idUser, 'solicitAceita');
+      await addDoc(docRef, {
+        nome: nomeUser,
+        texto: texto,
+        deUsu: nome,
+        espe: cate,
+        status: 'aceita',
+      }).then((doc) => {
+
+      });
+
+    } catch (error) {
+      console.error('Erro ao enviar solicitação:', error);
+    }
+  }
+
+  const EnviaJustiRecusada = async () => {
+    const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
+    try {
+      const docRef = collection(db, 'usuarios', idUser, 'solicitRecusadaNotifi');
+      await addDoc(docRef, {
+        nome: nomeUser,
+        texto: inputText,
+        paraUsu: nome,
+        espe: cate,
+        status: 'recusada',
+      }).then((doc) => {
+      });
+      deleteDoc(docRefde)
+      setModalVisible(false);
+      setInputText('');
+      navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
+      Alert.alert('Atenção', 'Justificação enviada com sucesso!')
+
+    } catch (error) {
+      console.error('Erro ao enviar solicitação:', error);
+    }
+  }
 
 
   function TextoDoUsu() {
@@ -18,11 +82,11 @@ export default function EscreverDuvida({ navigation, route }) {
           <Text style={stylesN.nomeTxt}>{nome}</Text>
 
           {/* Exemplo... ainda não está pegando as especialidades */}
-          <Text style={stylesN.especiTxt}>Direito da Família</Text>
+          <Text style={stylesN.especiTxt}>{cate}</Text>
         </View>
 
         <View style={stylesN.containerTexto}>
-          <ScrollView >
+          <ScrollView style={{ width: 300 }}>
             <Text style={stylesN.textoTxt}>{texto}</Text>
           </ScrollView>
         </View>
@@ -32,17 +96,17 @@ export default function EscreverDuvida({ navigation, route }) {
           updateDoc(docRef, {
             status: 'aceita'
           }).then(() => {
-            console.log('aceita')
+            console.log('aceita');
+            EnviaParaUsuAceita();
           })
 
-          navigation.navigate('TabRoutesAdv')
+          navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
           Alert.alert('Atenção', 'Confira sua tela de agendamentos para ver a solicitação aceita!')
         }}>
           <Text style={styles.loginButtonText}>ACEITAR</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.button, { marginBottom: 90 }]} onPress={() => {
-          const docRef = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
           Alert.alert(
             'Confirmação',
             'Tem certeza de que deseja recusar esta consultoria?',
@@ -54,11 +118,7 @@ export default function EscreverDuvida({ navigation, route }) {
               },
               {
                 text: 'Confirmar',
-                onPress: () => {
-                  deleteDoc(docRef)
-                  navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
-                  Alert.alert('Atenção', 'Solicitação recusada com sucesso!')
-                },
+                onPress: () => { setModalVisible(true) },
               },
             ],
             { cancelable: false }
@@ -66,6 +126,37 @@ export default function EscreverDuvida({ navigation, route }) {
         }}>
           <Text style={styles.loginButtonText}>RECUSAR</Text>
         </TouchableOpacity>
+
+        <Modal visible={modalVisible}  >
+          <View style={styles.containerTelas}>
+            <View style={styles.logoView}>
+              <Image
+                style={styles.logo2}
+                source={require('../../../assets/aconselhei1.png')}
+              />
+            </View>
+            <View style={{ width: '80%', alignSelf: 'center', }}>
+              <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Por favor, justifique a rejeição.</Text>
+            </View>
+            <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+              <TextInput
+                placeholder="Digite aqui..."
+                onChangeText={(text) => setInputText(text)}
+                value={inputText}
+                multiline
+                style={{ borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
+                  <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={EnviaJustiRecusada}>
+                  <Text style={styles.buttonText}>Enviar</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </Modal>
       </View>
     )
   }
@@ -116,7 +207,7 @@ const stylesN = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
     height: '60%',
-    width: '98%',
+    width: '150%',
     padding: 15,
   },
 

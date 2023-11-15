@@ -50,9 +50,9 @@ export default function CadastroAdv({ navigation }) {
 
     const cadastrar = async (data) => {
 
-        const { email, senha, numeroCelAdv, nomeadv, ufOab, oab, oabCompleta = ufOab + oab, instituicao, } = data;
+        const { email, senha, nomeadv, ufOab, oab, oabCompleta = ufOab + oab, instituicao, } = data;
 
-        console.log(email, senha, numeroCelAdv, nomeadv, ufOab, oab, oabCompleta, instituicao, categories, selected)
+        console.log(email, senha, nomeadv, ufOab, oab, oabCompleta, instituicao, categories, selected)
         //CRIAR UM USUARIO COM O MESMO ID DO AUTHENTICATION (FAZER RELACIONAMENTO)
 
         createUserWithEmailAndPassword(auth, email, senha)
@@ -70,7 +70,6 @@ export default function CadastroAdv({ navigation }) {
                         categorias: categories,
                         dias: selected,
                         oabCompleta: oabCompleta,
-                        numeroCelular: numeroCelAdv,
                         foto: null,
                     }).then(() => {
                         Alert.alert('Atenção', 'Cadastro realizado com sucesso!');
@@ -125,7 +124,7 @@ export default function CadastroAdv({ navigation }) {
                 <ScrollView style={{ paddingTop: 20, width: '90%' }} showsVerticalScrollIndicator={false}>
                     <View style={styles.inputContainer}>
 
-                        <Text style={styles.text2}>INFORMAÇÕES BÁSICAS</Text>
+                        <Text style={[styles.text2, {marginTop: 0}]}>INFORMAÇÕES BÁSICAS</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                             <FontAwesome name="user" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.nomeadv ? 3.5 : 16 }]} />
                             <Controller
@@ -148,29 +147,6 @@ export default function CadastroAdv({ navigation }) {
                             />
                         </View>
                         {errors.nomeadv && <Text style={styles.inputLoginError}>{errors.nomeadv?.message}</Text>}
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
-                            <FontAwesome name="phone" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.numeroCelAdv ? 3.5 : 16 }]} />
-                            <Controller
-                                control={control}
-                                name="numeroCelAdv"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <TextInput
-                                        style={[
-                                            styles.inputList2, {
-                                                borderWidth: errors.numeroCelAdv ? 1.5 : 1,
-                                                borderColor: errors.numeroCelAdv ? '#f23535' : '#1E5A97',
-                                                marginBottom: errors.numeroCelAdv ? 5 : 16
-                                            }]}
-                                        placeholder="Número de celular"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        onBlur={onBlur}
-                                    />
-                                )}
-                            />
-                        </View>
-                        {errors.numeroCelAdv && <Text style={styles.inputLoginError}>{errors.numeroCelAdv?.message}</Text>}
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                             <FontAwesome name="envelope" size={20} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.email ? 3.5 : 16 }]} />

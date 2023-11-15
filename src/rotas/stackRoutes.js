@@ -9,9 +9,10 @@ import CadastroAdv from '../telasAdv/CadastroAdv';
 import TabRoutesUsu from './tabRoutesUsu';
 import PerfilAdv from '../telasAdv/telasHome/PerfilAdv';
 import ConsulAgen from '../telasAdv/telasHome/ConsulAgen';
+import TextoSolicitAgenda from '../telasComuns/TextoSolicitAgenda';
 import HistoricoAdv from '../telasAdv/telasHome/HistoricoAdv';
-
 import SolicitaTextoUsu from '../telasAdv/telasSoliciTexto/SolicitaTextoUsu';
+
 
 import LoginUsu from '../telasUsu/LoginUsu';
 import CadastroUsu from '../telasUsu/CadastroUsu';
@@ -19,6 +20,9 @@ import CadastroUsu from '../telasUsu/CadastroUsu';
 import TabRoutesAdv from './tabRoutesAdv';
 import PerfilUsu from '../telasUsu/telasHomeUsu/PerfilUsu';
 import AgendarConsul from '../telasUsu/telasHomeUsu/AgendarConsul';
+
+import TextoAgendaUsu from '../telasComuns/TextoAgendaUsu';
+
 import Profissional from '../telasUsu/telasHomeUsu/telasAgendar/Profissional';
 import PerfilAdvEsco from '../telasUsu/telasHomeUsu/telasAgendar/PerfilAdvEsco';
 
@@ -43,8 +47,8 @@ export default function StackRoutes() {
             <Stack.Screen name="TabRoutesAdv" component={TabRoutesAdv} />
             <Stack.Screen name="PerfilAdv" component={PerfilAdv} />
             <Stack.Screen name="ConsulAgen" component={ConsulAgen} />
+            <Stack.Screen name="TextoSolicitAgenda" component={TextoSolicitAgenda} />
             <Stack.Screen name="HistoricoAdv" component={HistoricoAdv} />
-
             <Stack.Screen name="SolicitaTextoUsu" component={SolicitaTextoUsu} />
             
             <Stack.Screen name="LoginUsu" component={LoginUsu} />
@@ -53,6 +57,7 @@ export default function StackRoutes() {
             <Stack.Screen name="TabRoutesUsu" component={TabRoutesUsu} />
             <Stack.Screen name="PerfilUsu" component={PerfilUsu} />
             <Stack.Screen name="AgendarConsul" component={AgendarConsul} />
+            <Stack.Screen name="TextoAgendaUsu" component={TextoAgendaUsu} />
             <Stack.Screen name="Profissional" component={Profissional} />
             <Stack.Screen name="PerfilAdvEsco" component={PerfilAdvEsco} />
 
