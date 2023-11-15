@@ -47,15 +47,29 @@ export default function Inicial({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('SolicitaTextoUsu', { nome: item.data.nome, texto: item.data.texto, id: item.id })
+          navigation.navigate('SolicitaTextoUsu', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate })
           console.log(item.id)
         }}
       >
-        <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+          alignSelf: 'center',
+          
+          alignItems: 'center',
+        }}>
+          <View style={{width: 270}}>
+            <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
+            <Text style={styleN.especiTxt}>{item.data.cate}</Text>
+          </View>
 
-        {/* Exemplo... ainda não está pegando as especialidades */}
-        <Text style={styleN.especiTxt}>Direito da Família</Text>
-
+          {/* Precisa fazer que pegue o dia da semana e o horário */}
+          <View>
+            <Text style={styleN.diaTxt}>Sexta</Text>
+            <Text style={styleN.horaTxt}>12:30</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     )
   }
@@ -116,5 +130,18 @@ const styleN = StyleSheet.create({
   especiTxt: {
     fontSize: 15,
     color: '#4F4F4F',
+  },
+
+  diaTxt: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    marginTop: -10,
+  },
+
+  horaTxt: {
+    fontSize: 13,
+    color: '#000',
+    marginBottom: 15,
   },
 });

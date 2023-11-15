@@ -5,12 +5,10 @@ import { styles } from '../../../Styles';
 import CustomRating from './CustomRating'; // Importe o componente de classificação personalizada
 
 export default function PerfilAdvEsco({ route, navigation }) {
-  const { adv, id, nomeCerto } = route.params;
+  const { adv, id, nomeCerto, speciality  } = route.params;
 
   // const [rating, setRating] = useState(3.0); // Defina o valor inicial da classificação aqui
-
-  const placeholderImage = '../../../../assets/userSemFoto.png';
-
+  const [hasImage, setHasImage] = useState(false)
   return (
     <View style={styles.containerTelas}>
       <View style={styles.logoView}>
@@ -37,7 +35,8 @@ export default function PerfilAdvEsco({ route, navigation }) {
       <View style={styles.header}>
         <View style={{ marginTop: '10%', height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
           <Image
-            source={require(placeholderImage)}
+            source={{ uri: hasImage ? adv.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+            // source={ {uri: adv.foto} }
             style={{ height: 120, width: 120, borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
           // imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
           />
@@ -48,9 +47,8 @@ export default function PerfilAdvEsco({ route, navigation }) {
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>• Formado(a) em Direito na {adv.faculdade}.</Text>
         <Text style={styles.infoText}>• Ingressou no aplicativo em 2023.</Text>
-        <Text style={styles.infoText}>• Realizou XX consultorias.</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EscreDuvida', { id: id, nome: nomeCerto })}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EscreDuvida', { id: id, nome: nomeCerto, speciality  })}>
         <Text style={styles.buttonText}>VERIFICAR DISPONIBILIDADE</Text>
       </TouchableOpacity>
     </View>

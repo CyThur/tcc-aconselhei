@@ -14,7 +14,7 @@ export default function Profissional({ route, navigation }) {
     const q = query(colRef, where('categorias', 'array-contains', speciality));
 
     const [list, setList] = useState([]);
-    const [nomeUser, setNomeUser] = useState('djskdjsk')
+    const [nomeUser, setNomeUser] = useState('')
 
     const user = getAuth()
 
@@ -96,7 +96,7 @@ export default function Profissional({ route, navigation }) {
         return (
             <TouchableOpacity
                 style={styles.card}
-                onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item, id: id, nomeCerto: nome })}
+                onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item, id: id, nomeCerto: nome, speciality })}
             >
                 <Text style={styles.name2}>{item.nome}</Text>
             </TouchableOpacity>

@@ -1,77 +1,157 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
-import DatePicker from 'react-native-modern-datepicker';
-import { getToday, getFormatedDate } from 'react-native-modern-datepicker';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet } from 'react-native';
+import { getFirestore, doc, updateDoc, collection, query, getDocs, where, deleteDoc } from "firebase/firestore";
+import { auth, db } from '../firebase.config.js';
+import { getAuth } from 'firebase/auth';
+
 import { AntDesign } from '@expo/vector-icons';
 
 import { styles } from '../Styles';
 
 
-export default function AgendaUsu() {
+export default function AgendaUsu({ navigation }) {
 
-  const today = new Date();
-  const startDate = getFormatedDate(today.setDate(today.getDate()), 'YYYY/MM/DD')
-  const [date, setDate] = useState('12/12/2023') //date variable
+  const user = getAuth()
 
-  function handleChange(propDate) {
-    setDate(propDate)
+  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+  const q = query(colRef, where('status', '==', 'aceita'));
+
+  const [list, setList] = useState([]);
+
+  async function pegarDadosFiltrados() {
+    await getDocs(q).then((snapshot) => {
+      const arr = []
+      snapshot.forEach((doc) => {
+        const obj = {
+          data: doc.data(),
+          id: doc.id
+        }
+        arr.push(obj)
+      })
+      setList(arr)
+    }).catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    pegarDadosFiltrados()
+  }, [])
+
+
+  if (list.length == 0) {
+    return (
+      <View style={styles.containerTelas}>
+        <View style={styles.logoView}>
+          <Image
+            style={styles.logo2}
+            source={require('../../assets/aconselhei1.png')}
+          />
+        </View>
+        <Text style={styles.navOption}>AGENDAMENTOS</Text>
+        <View style={{ height: '65%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+          <Text style={styles.txt3}>Você ainda não agendou nenhuma consultoria.</Text>
+        </View>
+      </View>
+    );
+  }
+
+  function Solicita({ item }) {
+    return (
+      <TouchableOpacity
+        style={styleN.buttonSoli}
+        onPress={() => {
+          navigation.navigate('TextoAgendaUsu', { nomeUsu: item.data.deUsu, nomeAdv: item.data.nome, texto: item.data.texto, espe: item.data.espe })
+        }}
+      >
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+          alignSelf: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{ width: 270 }}>
+            <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
+            <Text style={styleN.especiTxt}>{item.data.espe}</Text>
+          </View>
+
+          {/* Precisa fazer que pegue o dia da semana e o horário */}
+          <View>
+            <Text style={styleN.diaTxt}>Sexta</Text>
+            <Text style={styleN.horaTxt}>12:30</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
   }
 
   return (
-    <View style={styles.containerAgendaAdv}>
+    <View style={styles.containerTelas}>
       <View style={styles.logoView}>
         <Image
           style={styles.logo2}
           source={require('../../assets/aconselhei1.png')}
         />
       </View>
-
-
-      <ScrollView style={{ height: '100%', marginTop: '-3%' }} showsVerticalScrollIndicator={false}>
-        <View style={styles.centeredViewAgendaAdv}>
-          <View style={styles.modalViewAgendaAdv}>
-            <DatePicker
-              mode='calendar'
-              minimumDate={startDate}
-              selected={date}
-              onDateChange={handleChange}
-              style={styles.datePickerAgendaAdv}
-            />
-          </View>
-        </View>
-
-        <View>
-          <Text style={[styles.navOption, { marginBottom: 20 }]}>AGENDAMENTOS</Text>
-          <View style={styles.containerTelas}>
-            <View style={{ width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', marginTop: '10%', marginBottom: '10%' }}>
-              <Text style={styles.txt3}>Você ainda não agendou nenhuma consultoria.</Text>
-            </View>
-            {/* <View style={styles.appointmentContainerAgendaUsu}>
-            <View style={styles.appointmentInfoAgendaUsu}>
-              <Text style={styles.dayAgendaUsu}>SEGUNDA</Text>
-              <Text style={styles.dateAgendaUsu}>10/10</Text>
-            </View>
-            <Text style={styles.timeAgendaUsu}>11:00</Text>
-            <Text style={styles.nameAgendaUsu}>Dra. Marina Riboli</Text>
-            <Text style={styles.descriptionAgendaUsu}>Direito do consumidor</Text>
-          </View> */}
-          </View>
-          {/* <View style={styles.appointmentContainerAgendaUsu}>
-            <View style={styles.appointmentInfoAgendaUsu}>
-              <Text style={styles.dayAgendaUsu}>QUARTA</Text>
-              <Text style={styles.dateAgendaUsu}>12/10</Text>
-            </View>
-            <Text style={styles.timeAgendaUsu}>12:30</Text>
-            <Text style={styles.nameAgendaUsu}>Dr. Fabrício Freitas</Text>
-            <Text style={styles.descriptionAgendaUsu}>Direito do trabalho</Text>
-          </View> */}
-
-
+      <Text style={styles.navOption}>AGENDAMENTOS</Text>
+      <ScrollView style={{ marginTop: '6%', paddingBottom: 10, height: '60%', width: '90%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', alignSelf: 'center' }}>
+          {list.map((item) => <Solicita item={item} />)}
         </View>
       </ScrollView>
-    </View >
 
+    </View>
 
   );
 }
+
+const styleN = StyleSheet.create({
+  buttonSoli: {
+    width: '100%',
+    height: 100,
+    backgroundColor: '#C0C0C0',
+    marginBottom: 10,
+    padding: 15,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#4F4F4F',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5, especiTxt: {
+      fontSize: 15,
+      color: 'gray',
+      marginBottom: 15,
+    },
+    shadowRadius: 3.84,
+    elevation: 8,
+  },
+
+  nomeSoli: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5
+  },
+
+  especiTxt: {
+    fontSize: 15,
+    color: '#4F4F4F',
+  },
+
+  diaTxt: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    marginTop: -10,
+  },
+
+  horaTxt: {
+    fontSize: 13,
+    color: '#000',
+    marginBottom: 15,
+  },
+});

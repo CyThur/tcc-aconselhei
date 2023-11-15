@@ -392,7 +392,7 @@ const PerfilAdv = ({ navigation }) => {
             <Text style={stylesP.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
             <Text style={{ marginBottom: 30 }}>{state.dias}</Text>
             <View>
-            <DiasDisponiveis />
+            
             </View>
           </View>
           <View>

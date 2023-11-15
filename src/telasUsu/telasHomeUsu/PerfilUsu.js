@@ -23,7 +23,6 @@ const PerfilUsu = ({ navigation }) => {
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
-  const [stateTelefone, setStateTelefone] = useState('');
   const [hasImage, setHasImage] = useState(false)
   const [userData, setUserData] = useState([])
 
@@ -196,7 +195,6 @@ const PerfilUsu = ({ navigation }) => {
             const userData = {
               nome: doc.data().nome,
               email: user.email,
-              telefone: doc.data().telefone,
             };
             console.log(doc.data())
             console.log(userData)
@@ -219,22 +217,6 @@ const PerfilUsu = ({ navigation }) => {
       console.log(error)
     })
   }, [stateEmail]);
-
-  const salvarTel = useCallback(async () => {
-    const auth = getAuth();
-    onAuthStateChanged(auth.uid, async (user) => {
-      if (user) {
-        const docRef = doc(db, 'usuarios', user.uid)
-        await updateDoc(docRef, {
-          telefone: stateTelefone,
-        })
-        Alert.alert('Novo telefone salvo com sucesso!');
-      } else {
-        console.log('Erro ao atualizar a informação!');
-      }
-    });
-
-  }, [stateTelefone]);
 
   if (state == null) {
     return (
@@ -276,24 +258,11 @@ const PerfilUsu = ({ navigation }) => {
             onChangeText={(text) => setStateEmail(text)}
             style={stylesP.textInputPerfil}
           />
-          <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
-        </View>
-        <View style={stylesP.action}>
-          <FontAwesome name="phone" size={20} color="#1E5A97"/>
-          <TextInput
-            placeholder={String(state.telefone)}
-            placeholderTextColor="#1E5A97"
-            keyboardType='number-pad'
-            autoCorrect={false}
-            value={stateTelefone}
-            style={stylesP.textInputPerfil}
-            onChangeText={(text) => setStateTelefone(text)}
-          />
-          <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
+          {/* <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} /> */}
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginButton} onPress={''}>
+          <TouchableOpacity style={styles.loginButton} onPress={salvarEmail}>
             <Text style={styles.loginButtonText}>SALVAR</Text>
           </TouchableOpacity>
         </View>
