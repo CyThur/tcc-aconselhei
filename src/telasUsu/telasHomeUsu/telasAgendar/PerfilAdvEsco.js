@@ -48,7 +48,7 @@ export default function PerfilAdvEsco({ route, navigation }) {
         <Text style={styles.infoText}>• Formado(a) em Direito na {adv.faculdade}.</Text>
         <Text style={styles.infoText}>• Ingressou no aplicativo em 2023.</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdvHorarios', { id: id, nome: nomeCerto })}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdvHorarios', { id: id, nome: nomeCerto, speciality })}>
         <Text style={styles.buttonText}>VERIFICAR DISPONIBILIDADE</Text>
       </TouchableOpacity>
     </View>

@@ -32,7 +32,7 @@ const PerfilAdv = ({ navigation }) => {
   const [editandoEspecialidade, setEditandoEspecialidade] = useState(false);
   const [editandoHorario, setEditandoHorario] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [diaSelecionado, setDiaSelecionado] = useState(null);
+  const [diaSelecionado, setDiaSelecionado] = useState([]);
   const [boxStyles, setBoxStyles] = useState({
     borderRadius: 18,
     borderColor: '#1E5A97',
@@ -428,13 +428,13 @@ const PerfilAdv = ({ navigation }) => {
                 await updateDoc(userDoc, {
                   [`horario${diaSelecionado}`]: deleteField(),
                 });
-                Alert.alert(`Os horários de disponibilidade na ${diaSelecionado.toLowerCase()}-feira foram apagados!`);
+                Alert.alert(`Os horários de disponibilidade na ${diaSelecionado}-feira foram apagados!`);
               }
             }
           ]
         );
       } else {
-        Alert.alert(`Não há horários na ${diaSelecionado.toLowerCase()}-feira para serem apagados!`);
+        Alert.alert(`Não há horários na ${diaSelecionado}-feira para serem apagados!`);
       }
     } 
   }
@@ -442,7 +442,7 @@ const PerfilAdv = ({ navigation }) => {
   const fraseProBotao = () => {
     let variacaoDaFrase = null;
     if (diaSelecionado) {
-      variacaoDaFrase = `Edite seus horários de disponibilidade na ${diaSelecionado.toLowerCase()}-feira`;
+      variacaoDaFrase = `Edite seus horários de disponibilidade na ${diaSelecionado}-feira`;
       return (
         <TouchableOpacity
           style={{ backgroundColor: '#1E5A97', borderRadius: 5, width: '80%', alignSelf: 'flex-start', margin: 10, padding: 5, alignItems: 'center' }}
@@ -561,7 +561,7 @@ const PerfilAdv = ({ navigation }) => {
             <View>
               <Text style={stylesP.labelPerfilAdv}>Horários disponíveis para consultoria:</Text>
 
-              <Text style={stylesP.labelPerfilAdv}>Seus horários de disponibilidade na {diaSelecionado.toLowerCase()} são</Text>
+              <Text style={stylesP.labelPerfilAdv}>Seus horários de disponibilidade na {diaSelecionado} são</Text>
 
               {/* botão pra apresentar os horários de disponibilidade */}
               {editandoHorario === false ? (
