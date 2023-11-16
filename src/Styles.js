@@ -385,6 +385,7 @@ export const styles = StyleSheet.create({
   containerAgendarConsul: {
     flex: 1,
     backgroundColor: 'white',
+    paddingTop: '20%',
   },
 
   tituloAgendarConsul: {

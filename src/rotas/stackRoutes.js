@@ -25,6 +25,7 @@ import TextoAgendaUsu from '../telasComuns/TextoAgendaUsu';
 
 import Profissional from '../telasUsu/telasHomeUsu/telasAgendar/Profissional';
 import PerfilAdvEsco from '../telasUsu/telasHomeUsu/telasAgendar/PerfilAdvEsco';
+import AdvHorarios from '../telasUsu/telasHomeUsu/telasAgendar/AdvHorarios';
 
 import EscreDuvida from '../telasUsu/telasHomeUsu/telasAgendar/EscreDuvida';
 
@@ -60,6 +61,7 @@ export default function StackRoutes() {
             <Stack.Screen name="TextoAgendaUsu" component={TextoAgendaUsu} />
             <Stack.Screen name="Profissional" component={Profissional} />
             <Stack.Screen name="PerfilAdvEsco" component={PerfilAdvEsco} />
+            <Stack.Screen name="AdvHorarios" component={AdvHorarios} />
 
             <Stack.Screen name="EscreDuvida" component={EscreDuvida} />
             
