@@ -12,7 +12,7 @@ export default function AdvHorarios({ navigation, route }) {
     const [stateHorariosSexta, setStateHorariosSexta] = useState([]);
     const [stateHorariosSabado, setStateHorariosSabado] = useState([]);
     const [dias, setDias] = useState([]);
-    const { id, nome } = route.params;
+    const { id, nome, speciality } = route.params;
 
     useEffect(() => {
         const fetchDias = async () => {
@@ -62,7 +62,7 @@ export default function AdvHorarios({ navigation, route }) {
                         <TouchableOpacity
                             key={i + index}
                             style={styles.btnAgendarConsul}
-                            onPress={() => console.log(`${horario} apertado`)}
+                            onPress={() => navigation.navigate('EscreverDuvida', { id: id, nome, speciality })}
                         >
                             <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
                         </TouchableOpacity>
