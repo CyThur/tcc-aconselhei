@@ -78,7 +78,14 @@ export default function CadastroAdv({ navigation }) {
                         });
                     }).catch((err) => console.log(err));
                 })
-            }) 
+            })
+            .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                    Alert.alert('Atenção', 'Este e-mail já está em uso');
+                } else {
+                    console.log(error.message);
+                }
+            }); 
     };
 
     const areas = [
@@ -317,57 +324,56 @@ export default function CadastroAdv({ navigation }) {
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            onPress={() => {
-                                // Verifica se tem pelo menos uma área selecionada
-                                if (categories.length === 0) {
-                                    setBoxStyles({
-                                        borderRadius: 18,
-                                        borderColor: 'red',
-                                        padding: 10,
-                                        backgroundColor: '#E1E1DE',
-                                        width: 320,
-                                        alignSelf: 'center',
-                                    });
-                                    setErrorMessage('Defina ao menos uma área de atuação');
-                                } else {
-                                    setBoxStyles({
-                                        borderRadius: 18,
-                                        borderColor: '#1E5A97',
-                                        padding: 10,
-                                        backgroundColor: '#E1E1DE',
-                                        width: 320,
-                                        alignSelf: 'center',
-                                    });
-                                    setErrorMessage('');
-                                }
-                                if (selected.length === 0) {
-                                    setDiasStyles({
-                                        borderRadius: 18,
-                                        borderColor: 'red',
-                                        padding: 10,
-                                        backgroundColor: '#E1E1DE',
-                                        width: 320,
-                                        alignSelf: 'center',
-                                    });
-                                    setDiasErrorMessage('Escolha ao menos um dia da semana');
-                                } else {
-                                    setDiasStyles({
-                                        borderRadius: 18,
-                                        borderColor: '#1E5A97',
-                                        padding: 10,
-                                        backgroundColor: '#E1E1DE',
-                                        width: 320,
-                                        alignSelf: 'center',
-                                    });
-                                    setDiasErrorMessage('');
-                                }
-                                if (categories.length > 0 && selected.length > 0) {
-                                    console.log('Submitting form');
-                                    handleSubmit(cadastrar);
-                                }
-                            }}
-
                             style={styles.loginButton}
+                            onPress={
+                            //     // Verifica se tem pelo menos uma área selecionada
+                            //     if (categories.length === 0) {
+                            //         setBoxStyles({
+                            //             borderRadius: 18,
+                            //             borderColor: 'red',
+                            //             padding: 10,
+                            //             backgroundColor: '#E1E1DE',
+                            //             width: 320,
+                            //             alignSelf: 'center',
+                            //         });
+                            //         setErrorMessage('Defina ao menos uma área de atuação');
+                            //     } else {
+                            //         setBoxStyles({
+                            //             borderRadius: 18,
+                            //             borderColor: '#1E5A97',
+                            //             padding: 10,
+                            //             backgroundColor: '#E1E1DE',
+                            //             width: 320,
+                            //             alignSelf: 'center',
+                            //         });
+                            //         setErrorMessage('');
+                            //     }
+                            //     if (selected.length === 0) {
+                            //         setDiasStyles({
+                            //             borderRadius: 18,
+                            //             borderColor: 'red',
+                            //             padding: 10,
+                            //             backgroundColor: '#E1E1DE',
+                            //             width: 320,
+                            //             alignSelf: 'center',
+                            //         });
+                            //         setDiasErrorMessage('Escolha ao menos um dia da semana');
+                            //     } else {
+                            //         setDiasStyles({
+                            //             borderRadius: 18,
+                            //             borderColor: '#1E5A97',
+                            //             padding: 10,
+                            //             backgroundColor: '#E1E1DE',
+                            //             width: 320,
+                            //             alignSelf: 'center',
+                            //         });
+                            //         setDiasErrorMessage('');
+                            //     }
+                            //     if (categories.length > 0 && selected.length > 0) {
+                                    handleSubmit(cadastrar)
+                            //         console.log('Submitting form');
+                                // }
+                            }
                         >
                             <Text style={styles.loginButtonText}>CADASTRAR</Text>
                         </TouchableOpacity>

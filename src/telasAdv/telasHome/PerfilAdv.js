@@ -14,7 +14,6 @@ import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
-import DiasDisponiveis from './DiasDisponiveis';
 
 const PerfilAdv = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
