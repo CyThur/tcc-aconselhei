@@ -14,7 +14,15 @@ export default function SolicitaTextoUsu({ navigation, route }) {
   const [idUser, setIdUser] = useState('')
   const [nomeUser, setNomeUser] = useState('')
   const [modalVisible, setModalVisible] = useState(false);
+  const [inputText, setInputText] = useState('');
 
+  async function pegarNomeAdv() {
+    const docRef = doc(db, 'advogados', user.currentUser.uid)
+
+    await getDoc(docRef).then((doc) => {
+      setNomeUser(doc.data().nome)
+    })
+  }
   useEffect(() => {
     pegarNomeAdv()
     onAuthStateChanged(auth, async (user) => {
@@ -42,6 +50,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
   });
 
   const EnviaParaUsuAceita = async (data) => {
+    const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
     const { textoRejeicao } = data
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitAceita');
@@ -54,8 +63,8 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         horario: horario,
         texto: textoRejeicao,
       }).then((doc) => {
-
       });
+      deleteDoc(docRefde);
 
     } catch (error) {
       console.error('Erro ao enviar solicitação:', error);
@@ -77,7 +86,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         texto: textoRejeicao,
       }).then((doc) => {
       });
-      deleteDoc(docRefde)
+      deleteDoc(docRefde);
       setModalVisible(false);
       navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
@@ -93,8 +102,6 @@ export default function SolicitaTextoUsu({ navigation, route }) {
       <View style={styles.telasAdv}>
         <View style={stylesN.containerNome}>
           <Text style={stylesN.nomeTxt}>{nome}</Text>
-
-          {/* Exemplo... ainda não está pegando as especialidades */}
           <Text style={stylesN.especiTxt}>{cate}</Text>
         </View>
 
@@ -139,61 +146,45 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         }}>
           <Text style={styles.loginButtonText}>RECUSAR</Text>
         </TouchableOpacity>
-
-        <Modal visible={modalVisible}  >
-          <View style={styles.containerTelas}>
-            <View style={styles.logoView}>
-              <Image
-                style={styles.logo2}
-                source={require('../../../assets/aconselhei1.png')}
-              />
-            </View>
-            <View style={{ width: '80%', alignSelf: 'center', }}>
-              <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Por favor, justifique a rejeição.</Text>
-            </View>
-            <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-
-              <Controller
-                control={control}
-                name="textoRejeicao"
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    style={[
-                      {borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center'}, {
-                        borderWidth: errors.textoRejeicao ? 1.5 : 1,
-                        borderColor: errors.textoRejeicao ? '#f23535' : '#1E5A97',
-                        marginBottom: errors.textoRejeicao ? 5 : 16
-                      }]}
-                    placeholder="Motivo..."
-                    value={value}
-                    onChangeText={onChange}
-                  />
-                )}
-              />
-              {errors.textoRejeicao && <Text style={{ fontSize: 13, color: '#f23535', marginBottom: 10 }}>{errors.textoRejeicao.message}</Text>}
-
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
-                  <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={handleSubmit(EnviaJustiRecusada)}>
-                  <Text style={styles.buttonText}>Enviar</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </View>
-        </Modal>
       </View>
     )
   }
 
   return (
     <View style={styles.containerTelas}>
-
       <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', alignSelf: 'center' }}>
         <TextoDoUsu />
       </View>
-
+      <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.containerTelas}>
+          <View style={styles.logoView}>
+            <Image
+              style={styles.logo2}
+              source={require('../../../assets/aconselhei1.png')}
+            />
+          </View>
+          <View style={{ width: '80%', alignSelf: 'center', }}>
+            <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Por favor, justifique a rejeição.</Text>
+          </View>
+          <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+            <TextInput
+              placeholder="Digite aqui..."
+              onChangeText={(text) => setInputText(text)}
+              value={inputText}
+              multiline
+              style={{ borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}
+            />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
+              <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
+                <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={EnviaJustiRecusada}>
+                <Text style={styles.buttonText}>Enviar</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
     </View>
 
   );
@@ -208,7 +199,7 @@ const stylesN = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: 'gray',
     width: 300,
-    marginTop: 35,
+    marginTop: 70,
     marginBottom: 20,
   },
 
@@ -232,7 +223,7 @@ const stylesN = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     marginBottom: 20,
-    height: '60%',
+    height: '50%',
     width: '150%',
     padding: 15,
   },

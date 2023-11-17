@@ -12,7 +12,7 @@ export default function NotificacoesAdv() {
         />
       </View>
       <Text style={styles.navOption}>NOTIFICAÇÕES</Text>
-      <ScrollView style={{ marginTop: '60%', paddingBottom: 10, height: '60%', width: '60%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ marginTop: '69%', paddingBottom: 10, height: '65%', width: '70%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
         <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', alignSelf: 'center' }}>
           {/* {list.map((item) => <Solicita item={item} />)} */}
           <Text style={styles.txt3}>Ainda não há nenhuma notificação.</Text>
