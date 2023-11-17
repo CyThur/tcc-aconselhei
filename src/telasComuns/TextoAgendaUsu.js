@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { dgetFirestore, addDoc, doc, updateDoc, collection, query, getDocs, setDoc, where, deleteDoc, getDoc } from "firebase/firestore";
-import { auth, db } from '../firebase.config.js';
+import React from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { getAuth } from 'firebase/auth';
 import { styles } from '../Styles.js';
 
 export default function TextoAgendaUsu({ route }) {
@@ -23,6 +21,10 @@ export default function TextoAgendaUsu({ route }) {
                     <ScrollView style={{ width: 300 }}>
                         <Text style={stylesN.textoTxt}>{texto}</Text>
                     </ScrollView>
+                </View>
+
+                <View style={{ justifyContent: 'center', alignItems: 'center', width: '70%', alignSelf: 'center' }}>
+                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold' }}>Aguarde o link da reunião que será enviado no dia e horário marcado.</Text>
                 </View>
             </View>
         )
@@ -49,7 +51,7 @@ const stylesN = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'gray',
         width: 300,
-        marginTop: 35,
+        marginTop: 45,
         marginBottom: 20,
     },
 

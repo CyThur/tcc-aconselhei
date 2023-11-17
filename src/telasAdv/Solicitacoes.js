@@ -35,7 +35,14 @@ export default function Inicial({ navigation }) {
   if (list.length == 0) {
     return (
       <View style={styles.containerTelas}>
-        <View style={{ height: '100%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+        <View style={styles.logoView}>
+          <Image
+            style={styles.logo2}
+            source={require('../../assets/aconselhei1.png')}
+          />
+        </View>
+        <Text style={styles.navOption}>SOLICITAÇÕES</Text>
+        <View style={{ height: '73%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
           <Text style={styles.txt3}>Ainda não há nenhuma solicitação.</Text>
         </View>
       </View>
@@ -56,10 +63,10 @@ export default function Inicial({ navigation }) {
           width: '100%',
           height: '100%',
           alignSelf: 'center',
-          
+
           alignItems: 'center',
         }}>
-          <View style={{width: 270}}>
+          <View style={{ width: 270 }}>
             <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
             <Text style={styleN.especiTxt}>{item.data.cate}</Text>
           </View>

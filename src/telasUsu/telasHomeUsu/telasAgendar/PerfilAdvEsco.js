@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../../Styles';
-import CustomRating from './CustomRating'; // Importe o componente de classificação personalizada
+import CustomRating from './CustomRating'; 
 
 export default function PerfilAdvEsco({ route, navigation }) {
   const { adv, id, nomeCerto, speciality  } = route.params;
 
   // const [rating, setRating] = useState(3.0); // Defina o valor inicial da classificação aqui
-  const [hasImage, setHasImage] = useState(false)
+  const [hasImage, setHasImage] = useState(adv.foto ? true : false);
   return (
     <View style={styles.containerTelas}>
       <View style={styles.logoView}>
@@ -36,9 +36,7 @@ export default function PerfilAdvEsco({ route, navigation }) {
         <View style={{ marginTop: '10%', height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
           <Image
             source={{ uri: hasImage ? adv.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
-            // source={ {uri: adv.foto} }
             style={{ height: 120, width: 120, borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
-          // imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
           />
         </View>
         {/* <CustomRating rating={rating} /> */}

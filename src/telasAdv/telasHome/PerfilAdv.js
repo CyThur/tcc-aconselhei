@@ -23,7 +23,6 @@ const PerfilAdv = ({ navigation }) => {
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
-  const [stateNumCelular, setStateNumCelular] = useState('');
   const [stateEspecialidade, setStateEspecialidade] = useState([]);
   const [stateHorario, setStateHorario] = useState([]);
   const [horariosSelecionados, setHorariosSelecionados] = useState([]);
@@ -42,8 +41,8 @@ const PerfilAdv = ({ navigation }) => {
     alignSelf: 'center',
   });
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //campo das especialidades que também não atualiza no banco de dados, possui a mesma estrutura da atualização dos números de celular
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //campo das especialidades não atualiza no banco de dados
   const salvarEspecialidade = useCallback(async () => {
     const auth = getAuth();
     onAuthStateChanged(auth.uid, async (user) => {
@@ -87,6 +86,16 @@ const PerfilAdv = ({ navigation }) => {
   };
 
   const pickImageAsync = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permission.status !== 'granted') {
+      Alert.alert(
+        'Atenção',
+        'Você precisa permitir o acesso à galeria para usar essa função.',
+        [{ text: 'Permitir', onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() }],
+      );
+      return;
+    }
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -96,16 +105,12 @@ const PerfilAdv = ({ navigation }) => {
     });
     if (!result.canceled) {
       Alert.alert(
-        'Confirmação',
+        'Atenção',
         'Tem certeza de que deseja trocar sua foto de perfil?',
         [
+          { text: 'Não', style: 'cancel' },
           {
-            text: 'Cancelar',
-            onPress: () => console.log('Cancelado'),
-            style: 'cancel',
-          },
-          {
-            text: 'Confirmar',
+            text: 'Sim',
             onPress: () => {
               upload(setSelectedImage(result.assets[0].uri));
             },
@@ -121,8 +126,17 @@ const PerfilAdv = ({ navigation }) => {
   };
 
   const tirarFoto = async () => {
-
     try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permission.status !== 'granted') {
+        Alert.alert(
+          'Atenção',
+          'Você precisa permitir o acesso à câmera para usar essa função.',
+          [{ text: 'Permitir', onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() }],
+        );
+        return;
+      }
 
       const cameraResp = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
@@ -131,64 +145,58 @@ const PerfilAdv = ({ navigation }) => {
         quality: 1,
         allowsMultipleSelection: false,
       })
-      Alert.alert(
-        'Confirmação',
-        'Tem certeza de que deseja trocar sua foto de perfil?',
-        [
-          {
-            text: 'Cancelar',
-            onPress: () => console.log('Cancelado'),
-            style: 'cancel',
-          },
-          {
-            text: 'Confirmar',
-            onPress: () => {
-
-              upload(setSelectedImage(cameraResp.assets[0].uri));
+      if (cameraResp.canceled) {
+        Alert.alert('Aviso', 'Nenhuma foto tirada');
+      } else {
+        Alert.alert(
+          'Atenção',
+          'Tem certeza de que deseja trocar sua foto de perfil?',
+          [
+            { text: 'Não', style: 'cancel' },
+            {
+              text: 'Sim',
+              onPress: () => { upload(setSelectedImage(cameraResp.assets[0].uri)); },
             },
-          },
-        ],
-        { cancelable: false }
-      );
+          ],
+          { cancelable: false }
+        );
+      }
     } catch (e) {
-      Alert.alert('Atenção', 'Você não tirou nenhuma foto.');
+      Alert.alert('Erro', 'Algo deu errado.', e);
     }
   };
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //A foto não está mais querendo ir para o banco de dados
-  //Acredita-se que o maior problema seja no upload
+
   const upload = async () => {
     const auth = getAuth()
     const { uri } = await FileSystem.getInfoAsync(selectedImage);
     const docUserRef = doc(db, 'advogados', auth.currentUser.uid)
     const fileName = ref(storage, auth.currentUser.uid)
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // if para deletar a foto antes de dar o upload está dando erro
-    if (doc.data().foto != null) {
-      deleteFoto();
-    } else {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          resolve(xhr.response);
-        }
-        xhr.onerror = (e) => {
-          reject(new TypeError('Network request failed'));
-        }
-        xhr.responseType = 'blob';
-        xhr.open('GET', uri, true);
-        xhr.send(null);
-      });
-      uploadBytes(fileName, blob).then(async () => {
-        getDownloadURL(fileName).then(async (url) => {
-          await updateDoc(docUserRef, {
-            foto: url
-          })
+    await updateDoc(docUserRef, {
+      foto: null
+    });
+
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        resolve(xhr.response);
+      }
+      xhr.onerror = (e) => {
+        reject(new TypeError('Network request failed'));
+      }
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    uploadBytes(fileName, blob).then(async () => {
+      getDownloadURL(fileName).then(async (url) => {
+        await updateDoc(docUserRef, {
+          foto: url
         })
-      });
-    }
+      })
+    });
   }
 
   const deleteFoto = async () => {
@@ -211,13 +219,6 @@ const PerfilAdv = ({ navigation }) => {
       console.error(error);
     });
   }
-
-  // if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
-  //   Alert.alert(
-  //     'Atenção',
-  //     'Você precisa permitir o acesso à câmera para usar essa função.',
-  //     [{ text: 'Permitir', onPress: () => requestPermission() }],);
-  // }
 
   //pegar infos dos advs
   useEffect(() => {
@@ -258,25 +259,6 @@ const PerfilAdv = ({ navigation }) => {
     })
   }, [stateEmail]);
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //o número de celular não está sendo atualizado no banco de dados, um problema parecido com o uplaod da foto, o mesmo acontece 
-  //quando tentamos atualizar as especialidades
-  const salvarTel = useCallback(async () => {
-    const auth = getAuth();
-    onAuthStateChanged(auth.uid, async (user) => {
-      if (user) {
-        const docRef = doc(db, 'advogados', user.uid)
-        await updateDoc(docRef, {
-          numeroCelular: stateNumCelular,
-        })
-        Alert.alert('Novo telefone salvo com sucesso!');
-      } else {
-        console.log('Erro ao atualizar a informação!');
-      }
-    });
-
-  }, [stateNumCelular]);
-
   if (state == null) {
     return (
       <Image
@@ -292,8 +274,8 @@ const PerfilAdv = ({ navigation }) => {
   };
 
   const areas = [
-    { key: 'Direito Ambiental', value: 'Direito Ambiental' }, 
-    { key: 'Direito Civil', value: 'Direito Civil' }, 
+    { key: 'Direito Ambiental', value: 'Direito Ambiental' },
+    { key: 'Direito Civil', value: 'Direito Civil' },
     { key: 'Direito do Consumidor', value: 'Direito do Consumidor' },
     { key: 'Direito Contratual', value: 'Direito Contratual' },
     { key: 'Direito Desportivo', value: 'Direito Desportivo' },
@@ -309,7 +291,7 @@ const PerfilAdv = ({ navigation }) => {
     { key: 'Direito Trabalhista', value: 'Direito Trabalhista' },
     { key: 'Direito Tributário', value: 'Direito Tributário' },
   ];
-  
+
   const horarios = [
     '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45',
     '9:00', '9:15', '9:30', '9:45', '10:00', '10:15', '10:30', '10:45',
@@ -436,7 +418,7 @@ const PerfilAdv = ({ navigation }) => {
       } else {
         Alert.alert(`Não há horários na ${diaSelecionado}-feira para serem apagados!`);
       }
-    } 
+    }
   }
 
   const fraseProBotao = () => {
@@ -470,8 +452,7 @@ const PerfilAdv = ({ navigation }) => {
 
   return (
     <View style={stylesP.containerPerfilAdv}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ margin: 20, marginTop: 150 }}>
+        <View style={{ margin: 20, marginTop: 200 }}>
           <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
           <View style={{ alignItems: 'center', }}>
             <TouchableOpacity onPress={toggleModal}>
@@ -505,19 +486,6 @@ const PerfilAdv = ({ navigation }) => {
                 style={stylesP.textInputPerfil}
               />
               <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
-            </View>
-            <View style={stylesP.action}>
-              <FontAwesome name="phone" size={20} color="#1E5A97" />
-              <TextInput
-                placeholder={String(state.numeroCelular)}
-                placeholderTextColor="#1E5A97"
-                keyboardType='number-pad'
-                autoCorrect={false}
-                value={stateNumCelular}
-                style={stylesP.textInputPerfil}
-                onChangeText={(text) => setStateNumCelular(text)}
-              />
-              <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarTel} />
             </View>
 
             <View>
@@ -592,7 +560,7 @@ const PerfilAdv = ({ navigation }) => {
             </View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.loginButton} onPress={''}>
+              <TouchableOpacity style={[styles.loginButton, {marginBottom: 150}]} onPress={''}>
                 <Text style={styles.loginButtonText}>SALVAR</Text>
               </TouchableOpacity>
             </View>
@@ -611,7 +579,7 @@ const PerfilAdv = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </Modal>
-      </ScrollView>
+      
     </View>
   );
 };

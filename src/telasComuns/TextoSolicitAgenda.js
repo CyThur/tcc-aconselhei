@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { dgetFirestore, addDoc, doc, updateDoc, collection, query, getDocs, setDoc, where, deleteDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.config.js';
 import { styles } from '../Styles.js';
 
@@ -79,7 +79,7 @@ const stylesN = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'gray',
         width: 300,
-        marginTop: 35,
+        marginTop: 45,
         marginBottom: 20,
     },
 

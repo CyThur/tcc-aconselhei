@@ -41,7 +41,6 @@ export default function CadastroAdv({ navigation }) {
         ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida'),
         oab: yup.string().required('Informe o número da OAB').min(6, 'Número inválido').max(6, 'Número inválido'),
         instituicao: yup.string().required('Informe a instituição onde se formou'),
-        numeroCelAdv: yup.string().required('Informe seu número de celular'),
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({
