@@ -73,7 +73,7 @@ export default function AdvHorarios({ navigation, route }) {
     }, [])
 
     const disponibilidadeDia = (dia, horariosDia, index) => {
-        if (horariosDia !== undefined) {
+        if (horariosDia !== null) {
             const botaoHorariosDia = () => {
                 const botoesPorLinha = 4;
                 const botoes = [];
@@ -83,7 +83,7 @@ export default function AdvHorarios({ navigation, route }) {
                         <TouchableOpacity
                             key={i + index}
                             style={styles.btnAgendarConsul}
-                            onPress={() =>  {setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario);}}
+                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); }}
                         >
                             <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
                         </TouchableOpacity>
@@ -98,16 +98,14 @@ export default function AdvHorarios({ navigation, route }) {
 
                 return botoes;
             };
+            console.log(horariosDia);
 
             if (dias.includes(dia)) {
-                if (dias) {
-
-                }
                 return (
                     <View>
                         <Text style={styles.dataAgendarConsul}>{dias && dias[index] ? dias[index].toUpperCase() + "-FEIRA" : "Nenhum dia disponível"}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                            {horariosDia && horariosDia.length > 0 ? (
+                            {horariosDia ? (
                                 <View>
                                     {botaoHorariosDia()}
                                 </View>
@@ -118,6 +116,8 @@ export default function AdvHorarios({ navigation, route }) {
                     </View>
                 )
             }
+        } else {
+            { <Text>Nenhum horário disponível</Text> }
         }
     };
 

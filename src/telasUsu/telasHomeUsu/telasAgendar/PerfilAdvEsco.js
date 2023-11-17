@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../../Styles';
-import CustomRating from './CustomRating'; 
+import CustomRating from './CustomRating';
 
 export default function PerfilAdvEsco({ route, navigation }) {
-  const { adv, id, nomeCerto, speciality  } = route.params;
+  const { adv, id, nomeCerto, speciality } = route.params;
 
   // const [rating, setRating] = useState(3.0); // Defina o valor inicial da classificação aqui
   const [hasImage, setHasImage] = useState(adv.foto ? true : false);
@@ -46,7 +46,7 @@ export default function PerfilAdvEsco({ route, navigation }) {
         <Text style={styles.infoText}>• Formado(a) em Direito na {adv.faculdade}.</Text>
         <Text style={styles.infoText}>• Ingressou no aplicativo em 2023.</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdvHorarios', { id: id, nome: nomeCerto, speciality })}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdvHorarios', { id: id, nome: adv.nome, speciality })}>
         <Text style={styles.buttonText}>VERIFICAR DISPONIBILIDADE</Text>
       </TouchableOpacity>
     </View>

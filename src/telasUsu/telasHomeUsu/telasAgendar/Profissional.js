@@ -93,6 +93,7 @@ export default function Profissional({ route, navigation }) {
     }
 
     function Advs({ item, id, nome }) {
+        console.log(item);
         return (
             <TouchableOpacity
                 style={styles.card}
