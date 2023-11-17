@@ -4,23 +4,16 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, doc, updateDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase.config.js';
 import { styles } from '../../Styles.js';
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
-  const { id, nome, texto, cate } = route.params
+  const { id, nome, texto, cate, diaDaSemana, horario } = route.params
   const [idUser, setIdUser] = useState('')
   const [nomeUser, setNomeUser] = useState('')
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [inputText, setInputText] = useState('');
-
-  async function pegarNomeAdv() {
-    const docRef = doc(db, 'advogados', user.currentUser.uid)
-
-    await getDoc(docRef).then((doc) => {
-      setNomeUser(doc.data().nome)
-    })
-  }
 
   useEffect(() => {
     pegarNomeAdv()
@@ -32,16 +25,34 @@ export default function SolicitaTextoUsu({ navigation, route }) {
     })
   }, [])
 
+  async function pegarNomeAdv() {
+    const docRef = doc(db, 'advogados', user.currentUser.uid)
 
-  const EnviaParaUsuAceita = async () => {
+    await getDoc(docRef).then((doc) => {
+      setNomeUser(doc.data().nome)
+    })
+  }
+
+  const schema = yup.object().shape({
+    textoRejeicao: yup.string().required('Campo obrigatório')
+  })
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  const EnviaParaUsuAceita = async (data) => {
+    const { textoRejeicao } = data
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitAceita');
       await addDoc(docRef, {
         nome: nomeUser,
-        texto: texto,
         deUsu: nome,
         espe: cate,
         status: 'aceita',
+        diaDaSemana: diaDaSemana,
+        horario: horario,
+        texto: textoRejeicao,
       }).then((doc) => {
 
       });
@@ -51,21 +62,23 @@ export default function SolicitaTextoUsu({ navigation, route }) {
     }
   }
 
-  const EnviaJustiRecusada = async () => {
+  const EnviaJustiRecusada = async (data) => {
+    const { textoRejeicao } = data
     const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitRecusadaNotifi');
       await addDoc(docRef, {
         nome: nomeUser,
-        texto: inputText,
         paraUsu: nome,
         espe: cate,
         status: 'recusada',
+        diaDaSemana: diaDaSemana,
+        horario: horario,
+        texto: textoRejeicao,
       }).then((doc) => {
       });
       deleteDoc(docRefde)
       setModalVisible(false);
-      setInputText('');
       navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
 
@@ -139,18 +152,31 @@ export default function SolicitaTextoUsu({ navigation, route }) {
               <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Por favor, justifique a rejeição.</Text>
             </View>
             <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-              <TextInput
-                placeholder="Digite aqui..."
-                onChangeText={(text) => setInputText(text)}
-                value={inputText}
-                multiline
-                style={{ borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}
+
+              <Controller
+                control={control}
+                name="textoRejeicao"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    style={[
+                      {borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center'}, {
+                        borderWidth: errors.textoRejeicao ? 1.5 : 1,
+                        borderColor: errors.textoRejeicao ? '#f23535' : '#1E5A97',
+                        marginBottom: errors.textoRejeicao ? 5 : 16
+                      }]}
+                    placeholder="Motivo..."
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                )}
               />
+              {errors.textoRejeicao && <Text style={{ fontSize: 13, color: '#f23535', marginBottom: 10 }}>{errors.textoRejeicao.message}</Text>}
+
               <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
                 <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                   <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={EnviaJustiRecusada}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={handleSubmit(EnviaJustiRecusada)}>
                   <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
               </View>

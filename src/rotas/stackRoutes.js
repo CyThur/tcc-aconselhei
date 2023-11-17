@@ -63,7 +63,7 @@ export default function StackRoutes() {
             <Stack.Screen name="PerfilAdvEsco" component={PerfilAdvEsco} />
             <Stack.Screen name="AdvHorarios" component={AdvHorarios} />
 
-            <Stack.Screen name="EscreDuvida" component={EscreDuvida} />
+            <Stack.Screen name="EscreverDuvida" component={EscreDuvida} />
             
             <Stack.Screen name="HistoricoUsu" component={HistoricoUsu} />
             <Stack.Screen name="Planos" component={Planos} />
