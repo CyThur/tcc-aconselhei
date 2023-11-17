@@ -28,7 +28,7 @@ export default function HistoricoUsu({ navigation }) {
         </View>
       </View>
       <Text style={styles.navOption}>HISTÓRICO</Text>
-      <View style={{ height: '60%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+      <View style={{ height: '65%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
         <Text style={styles.txt3}>Você ainda não recebeu nenhuma consultoria.</Text>
       </View>
     </View>

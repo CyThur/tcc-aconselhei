@@ -939,7 +939,7 @@ export const styles = StyleSheet.create({
   },
   card: {
     width: 150,
-    height: 150,
+    height: 200,
     borderWidth: 2,
     borderRadius: 10,
     padding: 10,
@@ -953,7 +953,7 @@ export const styles = StyleSheet.create({
 
   name2: {
     fontSize: 20,
-    marginRight: '10%',
+    marginTop: 10,
     fontWeight: 'bold',
     color: '#1E5A97',
     textAlign: 'center',

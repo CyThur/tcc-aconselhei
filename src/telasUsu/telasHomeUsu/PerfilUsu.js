@@ -53,6 +53,17 @@ const PerfilUsu = ({ navigation }) => {
   };
 
   const pickImageAsync = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permission.status !== 'granted') {
+      Alert.alert(
+        'Atenção',
+        'Você precisa permitir o acesso à galeria para usar essa função.',
+        [{ text: 'Permitir', onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() }],
+      );
+      return;
+    }
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -62,16 +73,12 @@ const PerfilUsu = ({ navigation }) => {
     });
     if (!result.canceled) {
       Alert.alert(
-        'Confirmação',
+        'Atenção',
         'Tem certeza de que deseja trocar sua foto de perfil?',
         [
+          { text: 'Não', style: 'cancel' },
           {
-            text: 'Cancelar',
-            onPress: () => console.log('Cancelado'),
-            style: 'cancel',
-          },
-          {
-            text: 'Confirmar',
+            text: 'Sim',
             onPress: () => {
               upload(setSelectedImage(result.assets[0].uri));
             },
@@ -88,6 +95,17 @@ const PerfilUsu = ({ navigation }) => {
 
   const tirarFoto = async () => {
     try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permission.status !== 'granted') {
+        Alert.alert(
+          'Atenção',
+          'Você precisa permitir o acesso à câmera para usar essa função.',
+          [{ text: 'Permitir', onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() }],
+        );
+        return;
+      }
+
       const cameraResp = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -95,65 +113,58 @@ const PerfilUsu = ({ navigation }) => {
         quality: 1,
         allowsMultipleSelection: false,
       })
-      Alert.alert(
-        'Confirmação',
-        'Tem certeza de que deseja trocar sua foto de perfil?',
-        [
-          {
-            text: 'Cancelar',
-            onPress: () => console.log('Cancelado'),
-            style: 'cancel',
-          },
-          {
-            text: 'Confirmar',
-            onPress: () => {
-              upload(setSelectedImage(cameraResp.assets[0].uri));
+      if (cameraResp.canceled) {
+        Alert.alert('Aviso', 'Nenhuma foto tirada');
+      } else {
+        Alert.alert(
+          'Atenção',
+          'Tem certeza de que deseja trocar sua foto de perfil?',
+          [
+            { text: 'Não', style: 'cancel' },
+            {
+              text: 'Sim',
+              onPress: () => { upload(setSelectedImage(cameraResp.assets[0].uri)); },
             },
-          },
-        ],
-        { cancelable: false }
-      );
-
+          ],
+          { cancelable: false }
+        );
+      }
     } catch (e) {
       Alert.alert('Erro', 'Algo deu errado.', e);
     }
   };
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//A foto não está mais querendo ir para o banco de dados
-//Acredita-se que o maior problema seja no upload
+
   const upload = async () => {
     const auth = getAuth()
     const { uri } = await FileSystem.getInfoAsync(selectedImage);
     const docUserRef = doc(db, 'usuarios', auth.currentUser.uid)
     const fileName = ref(storage, auth.currentUser.uid)
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// if para deletar a foto antes de dar o upload está dando erro
-    if (doc.data().foto != null) {
-      deleteFoto();
-    } else {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          resolve(xhr.response);
-        }
-        xhr.onerror = (e) => {
-          reject(new TypeError('Network request failed'));
-        }
-        xhr.responseType = 'blob';
-        xhr.open('GET', uri, true);
-        xhr.send(null);
-      });
+    await updateDoc(docUserRef, {
+      foto: null
+    });
 
-      uploadBytes(fileName, blob).then(async () => {
-        getDownloadURL(fileName).then(async (url) => {
-          await updateDoc(docUserRef, {
-            foto: url
-          })
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        resolve(xhr.response);
+      }
+      xhr.onerror = (e) => {
+        reject(new TypeError('Network request failed'));
+      }
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    uploadBytes(fileName, blob).then(async () => {
+      getDownloadURL(fileName).then(async (url) => {
+        await updateDoc(docUserRef, {
+          foto: url
         })
-      });
-    }
+      })
+    });
   }
 
   const deleteFoto = async () => {
@@ -176,13 +187,6 @@ const PerfilUsu = ({ navigation }) => {
       console.error(error);
     });
   }
-
-  // if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
-  //   Alert.alert(
-  //     'Atenção',
-  //     'Você precisa permitir o acesso à câmera para usar essa função.',
-  //     [{ text: 'Permitir', onPress: () => requestPermission() }],);
-  // }
 
   //pegar infos dos beneficiados
   useEffect(() => {
@@ -248,7 +252,7 @@ const PerfilUsu = ({ navigation }) => {
           <Text style={stylesP.profileTextPerfilUsu}>{state.nome}</Text>
         </View>
         <View style={stylesP.action}>
-          <FontAwesome name="envelope" size={20} color="#1E5A97"/>
+          <FontAwesome name="envelope" size={20} color="#1E5A97" />
           <TextInput
             placeholder={state.email}
             keyboardType="email-address"
