@@ -100,6 +100,9 @@ export default function AdvHorarios({ navigation, route }) {
             };
 
             if (dias.includes(dia)) {
+                if (dias) {
+
+                }
                 return (
                     <View>
                         <Text style={styles.dataAgendarConsul}>{dias && dias[index] ? dias[index].toUpperCase() + "-FEIRA" : "Nenhum dia disponível"}</Text>
