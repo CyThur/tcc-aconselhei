@@ -47,7 +47,7 @@ export default function Inicial({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('SolicitaTextoUsu', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate })
+          navigation.navigate('SolicitaTextoUsu', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate, diaDaSemana: item.data.diaDaSemana, horario: item.data.horario })
           console.log(item.id)
         }}
       >
@@ -66,8 +66,8 @@ export default function Inicial({ navigation }) {
 
           {/* Precisa fazer que pegue o dia da semana e o horário */}
           <View>
-            <Text style={styleN.diaTxt}>Sexta</Text>
-            <Text style={styleN.horaTxt}>12:30</Text>
+            <Text style={styleN.diaTxt}>{item.data.diaDaSemana}</Text>
+            <Text style={styleN.horaTxt}>{item.data.horario}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -136,7 +136,7 @@ const styleN = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 2,
-    marginTop: -10,
+    marginTop: 12,
   },
 
   horaTxt: {

@@ -363,7 +363,8 @@ export default function CadastroAdv({ navigation }) {
                                     setDiasErrorMessage('');
                                 }
                                 if (categories.length > 0 && selected.length > 0) {
-                                    handleSubmit(cadastrar)();
+                                    console.log('Submitting form');
+                                    handleSubmit(cadastrar);
                                 }
                             }}
 

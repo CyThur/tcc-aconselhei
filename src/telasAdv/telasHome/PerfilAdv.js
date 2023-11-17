@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -25,14 +25,16 @@ const PerfilAdv = ({ navigation }) => {
   const [stateEmail, setStateEmail] = useState('');
   const [stateNumCelular, setStateNumCelular] = useState('');
   const [stateEspecialidade, setStateEspecialidade] = useState([]);
-  const [stateHorario, setStateHorario] = useState([]);
+  const [stateHorarios, setStateHorarios] = useState([]);
   const [horariosSelecionados, setHorariosSelecionados] = useState([]);
+  const [botaoHorarioPressionado, setBotaoHorarioPressionado] = useState({});
   const [hasImage, setHasImage] = useState(false)
   const [userData, setUserData] = useState([])
   const [editandoEspecialidade, setEditandoEspecialidade] = useState(false);
   const [editandoHorario, setEditandoHorario] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [diaSelecionado, setDiaSelecionado] = useState([]);
+  const [diaSelecionado, setDiaSelecionado] = useState(null);
+
   const [boxStyles, setBoxStyles] = useState({
     borderRadius: 18,
     borderColor: '#1E5A97',
@@ -248,6 +250,41 @@ const PerfilAdv = ({ navigation }) => {
     getUserData();
   }, []);
 
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const fetchHorarios = async () => {
+          const advogadoDoc = doc(db, "advogados", user.uid);
+          const advogadoDocData = await getDoc(advogadoDoc);
+          console.log(doc(db, "advogados", user.uid));
+          if (advogadoDocData.exists()) {
+            setStateHorarios({
+              Segunda: advogadoDocData.data().horarioSegunda,
+              Terça: advogadoDocData.data().horarioTerça,
+              Quarta: advogadoDocData.data().horarioQuarta,
+              Quinta: advogadoDocData.data().horarioQuinta,
+              Sexta: advogadoDocData.data().horarioSexta,
+              Sábado: advogadoDocData.data().horarioSabado,
+              Domingo: advogadoDocData.data().horarioDomingo,
+            })
+            console.log(stateHorarios);
+            // SE PRECISAR TESTAR
+            //  console.log(`${dias[0]}: ${stateHorariosSegunda}`)
+            //  console.log(`${dias[1]}: ${stateHorariosTerca}`);
+            //  console.log(`${dias[2]}: ${stateHorariosQuarta}`);
+            //  console.log(`${dias[3]}: ${stateHorariosQuinta}`);
+            //  console.log(`${dias[4]}: ${stateHorariosSexta}`);
+            //  console.log(`${dias[5]}: ${stateHorariosSabado}`);
+          }
+        }
+        fetchHorarios();
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   // salvar as infos
   const salvarEmail = useCallback(async () => {
     const auth = getAuth();
@@ -292,8 +329,8 @@ const PerfilAdv = ({ navigation }) => {
   };
 
   const areas = [
-    { key: 'Direito Ambiental', value: 'Direito Ambiental' }, 
-    { key: 'Direito Civil', value: 'Direito Civil' }, 
+    { key: 'Direito Ambiental', value: 'Direito Ambiental' },
+    { key: 'Direito Civil', value: 'Direito Civil' },
     { key: 'Direito do Consumidor', value: 'Direito do Consumidor' },
     { key: 'Direito Contratual', value: 'Direito Contratual' },
     { key: 'Direito Desportivo', value: 'Direito Desportivo' },
@@ -309,7 +346,7 @@ const PerfilAdv = ({ navigation }) => {
     { key: 'Direito Trabalhista', value: 'Direito Trabalhista' },
     { key: 'Direito Tributário', value: 'Direito Tributário' },
   ];
-  
+
   const horarios = [
     '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45',
     '9:00', '9:15', '9:30', '9:45', '10:00', '10:15', '10:30', '10:45',
@@ -359,7 +396,11 @@ const PerfilAdv = ({ navigation }) => {
       const botoesLinha = linhaBotoes.map((horario, index) => (
         <TouchableOpacity
           key={i + index}
-          style={[{ backgroundColor: '#1E5A97', borderRadius: 25, width: '18%', alignSelf: 'center', margin: 5, marginHorizontal: 7, alignItems: 'center' }, index > 0 && { marginLeft: 10 }]}
+          style={[
+            stylesPA.botaoHorario, 
+            index > 0 && { marginLeft: 15 }, 
+            botaoHorarioPressionado[horario] && { backgroundColor: 'green'}
+          ]}
           onPress={() => botaoHorarioSelecionado(horario)}
         >
           <Text style={{ margin: 10, textAlign: 'center', color: 'white', fontSize: 15 }}>{horario}</Text>
@@ -378,6 +419,7 @@ const PerfilAdv = ({ navigation }) => {
 
   const botaoHorarioSelecionado = (horario) => {
     const horarioJaSelecionado = horariosSelecionados.includes(horario);
+    setBotaoHorarioPressionado(prevState => ({ ...prevState, [horario]: !prevState[horario] }));
 
     if (horariosSelecionados.length === 0) {
       setHorariosSelecionados([horario]);
@@ -400,7 +442,8 @@ const PerfilAdv = ({ navigation }) => {
         await updateDoc(userDoc, {
           [`horario${diaSelecionado}`]: horariosSelecionados,
         });
-        Alert.alert('Horários salvos com sucesso!');
+        Alert.alert('Horários salvos com sucesso!', 'Em breve seus horários de disponibilidade para esse dia serão atualizados');
+        setEditandoHorario(false);
       } else {
         Alert.alert('Nenhum horário foi selecionado!');
       }
@@ -429,6 +472,8 @@ const PerfilAdv = ({ navigation }) => {
                   [`horario${diaSelecionado}`]: deleteField(),
                 });
                 Alert.alert(`Os horários de disponibilidade na ${diaSelecionado}-feira foram apagados!`);
+                setHorariosSelecionados([]);
+                setEditandoHorario(false);
               }
             }
           ]
@@ -436,19 +481,19 @@ const PerfilAdv = ({ navigation }) => {
       } else {
         Alert.alert(`Não há horários na ${diaSelecionado}-feira para serem apagados!`);
       }
-    } 
+    }
   }
 
   const fraseProBotao = () => {
     let variacaoDaFrase = null;
     if (diaSelecionado) {
-      variacaoDaFrase = `Edite seus horários de disponibilidade na ${diaSelecionado}-feira`;
+      variacaoDaFrase = `Editar horários de ${diaSelecionado.toLowerCase()}-feira`; //PAROU AQUI, PRECISA CORRIGIR A FRASE "SEUS HORARIOS DE DISPONIBILIDADE NA ?? SÃO" PARA SO APARECER QUANDO diaSelecionado EXISTIR, E ARRUMAR OS toLowerCase()
       return (
         <TouchableOpacity
-          style={{ backgroundColor: '#1E5A97', borderRadius: 5, width: '80%', alignSelf: 'flex-start', margin: 10, padding: 5, alignItems: 'center' }}
+          style={{ backgroundColor: '#1E5A97', borderRadius: 5, width: '80%', alignSelf: 'flex-start', margin: 10, marginLeft: 0, padding: 5, alignItems: 'center' }}
           onPress={() => trocarEstadoEdicao()}
         >
-          <Text style={{ color: 'white', fontSize: 15, }}>{variacaoDaFrase}</Text>
+          <Text style={{ color: 'white', fontSize: 16, padding: 3 }}>{variacaoDaFrase}</Text>
         </TouchableOpacity>
       )
     } else {
@@ -466,7 +511,6 @@ const PerfilAdv = ({ navigation }) => {
     setHorariosSelecionados([]);
     console.log(diaSelecionado, horariosSelecionados)
   }
-
 
   return (
     <View style={stylesP.containerPerfilAdv}>
@@ -561,7 +605,13 @@ const PerfilAdv = ({ navigation }) => {
             <View>
               <Text style={stylesP.labelPerfilAdv}>Horários disponíveis para consultoria:</Text>
 
-              <Text style={stylesP.labelPerfilAdv}>Seus horários de disponibilidade na {diaSelecionado} são</Text>
+              {diaSelecionado !== null && stateHorarios[diaSelecionado] !== undefined ? (
+                <Text style={stylesPA.textStateHorarios}>
+                  Seus horários de disponibilidade na {diaSelecionado.toLowerCase()}-feira são: {`${stateHorarios[diaSelecionado].join(' | ')}`}
+                </Text>
+              ) : (
+                <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>
+              )}
 
               {/* botão pra apresentar os horários de disponibilidade */}
               {editandoHorario === false ? (
@@ -572,6 +622,16 @@ const PerfilAdv = ({ navigation }) => {
 
                 <View style={{ flexDirection: 'column' }}>
                   {botaoPraCadaHorario()}
+
+                  {horariosSelecionados.length > 0 ? (
+                    <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
+                      Horários selecionados: {horariosSelecionados.join(' | ')}
+                    </Text>
+                  ) : (
+                    <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
+                      Horários selecionados: nenhum
+                    </Text>
+                  )}
 
                   <TouchableOpacity
                     style={{ backgroundColor: '#1E5A97', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 30, }}
@@ -617,3 +677,22 @@ const PerfilAdv = ({ navigation }) => {
 };
 
 export default PerfilAdv;
+
+
+const stylesPA = StyleSheet.create({
+  textStateHorarios: {
+    fontSize: 15,
+    color: '#505050',
+    marginVertical: 7
+  },
+
+  botaoHorario: {
+    backgroundColor: '#1E5A97', 
+    borderRadius: 25, 
+    width: '18%', 
+    alignSelf: 'center',
+     margin: 5, 
+     marginHorizontal: 7, 
+     alignItems: 'center'
+  }
+})

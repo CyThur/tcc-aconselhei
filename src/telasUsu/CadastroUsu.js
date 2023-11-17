@@ -45,6 +45,13 @@ export default function CadastroUsu({ navigation }) {
                     routes: [{ name: 'TabRoutesUsu' }]
                 })
             })
+            .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                    Alert.alert('Atenção', 'Este e-mail já está em uso');
+                } else {
+                    console.log(error.message);
+                }
+            });
     }
 
     return (
