@@ -4,9 +4,6 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, doc, updateDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase.config.js';
 import { styles } from '../../Styles.js';
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
 
 export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
@@ -41,17 +38,8 @@ export default function SolicitaTextoUsu({ navigation, route }) {
     })
   }
 
-  const schema = yup.object().shape({
-    textoRejeicao: yup.string().required('Campo obrigatório')
-  })
-
-  const { control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
-
-  const EnviaParaUsuAceita = async (data) => {
+  const EnviaParaUsuAceita = async () => {
     const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
-    const { textoRejeicao } = data
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitAceita');
       await addDoc(docRef, {
@@ -61,7 +49,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         status: 'aceita',
         diaDaSemana: diaDaSemana,
         horario: horario,
-        texto: textoRejeicao,
+        texto: inputText,
       }).then((doc) => {
       });
       deleteDoc(docRefde);
@@ -71,8 +59,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
     }
   }
 
-  const EnviaJustiRecusada = async (data) => {
-    const { textoRejeicao } = data
+  const EnviaJustiRecusada = async () => {
     const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitRecusadaNotifi');
@@ -83,7 +70,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         status: 'recusada',
         diaDaSemana: diaDaSemana,
         horario: horario,
-        texto: textoRejeicao,
+        texto: inputText,
       }).then((doc) => {
       });
       deleteDoc(docRefde);
