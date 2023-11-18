@@ -24,7 +24,7 @@ export default function HomeAdv({navigation}) {
                     <Text style={styles.buttonHomeText}>Consultorias agendadas</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('HistoricoAdv')} style={styles.buttonHomeCard}>
-                    <Ionicons name="newspaper" size={45} color="white" />
+                    <Ionicons name="newspaper" size={45} color="white"/>
                     <Text style={styles.buttonHomeText}>Histórico</Text>
                 </TouchableOpacity>
             </View>

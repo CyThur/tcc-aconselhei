@@ -265,7 +265,7 @@ const PerfilAdv = ({ navigation }) => {
               Quarta: advogadoDocData.data().horarioQuarta,
               Quinta: advogadoDocData.data().horarioQuinta,
               Sexta: advogadoDocData.data().horarioSexta,
-              Sábado: advogadoDocData.data().horarioSabado,
+              Sábado: advogadoDocData.data().horarioSábado,
               Domingo: advogadoDocData.data().horarioDomingo,
             })
             console.log(stateHorarios);
@@ -452,7 +452,7 @@ const PerfilAdv = ({ navigation }) => {
                 await updateDoc(userDoc, {
                   [`horario${diaSelecionado}`]: deleteField(),
                 });
-                Alert.alert(`Os horários de disponibilidade na ${diaSelecionado}-feira foram apagados!`);
+                Alert.alert(`Os horários de disponibilidade no dia de ${diaSelecionado} foram apagados!`);
                 setHorariosSelecionados([]);
                 setEditandoHorario(false);
               }
@@ -460,7 +460,7 @@ const PerfilAdv = ({ navigation }) => {
           ]
         );
       } else {
-        Alert.alert(`Não há horários na ${diaSelecionado}-feira para serem apagados!`);
+        Alert.alert(`Não há horários no dia de ${diaSelecionado} para serem apagados!`);
       }
     }
   }
@@ -468,7 +468,7 @@ const PerfilAdv = ({ navigation }) => {
   const fraseProBotao = () => {
     let variacaoDaFrase = null;
     if (diaSelecionado) {
-      variacaoDaFrase = `Editar horários de ${diaSelecionado.toLowerCase()}-feira`; //PAROU AQUI, PRECISA CORRIGIR A FRASE "SEUS HORARIOS DE DISPONIBILIDADE NA ?? SÃO" PARA SO APARECER QUANDO diaSelecionado EXISTIR, E ARRUMAR OS toLowerCase()
+      variacaoDaFrase = `Editar horários de ${diaSelecionado.toLowerCase()}`; 
       return (
         <TouchableOpacity
           style={{ backgroundColor: '#1E5A97', borderRadius: 5, width: '80%', alignSelf: 'flex-start', margin: 10, marginLeft: 0, padding: 5, alignItems: 'center' }}
@@ -574,7 +574,7 @@ const PerfilAdv = ({ navigation }) => {
 
               {diaSelecionado !== null && stateHorarios[diaSelecionado] !== undefined ? (
                 <Text style={stylesPA.textStateHorarios}>
-                  Seus horários de disponibilidade na {diaSelecionado.toLowerCase()}-feira são: {`${stateHorarios[diaSelecionado].join(' | ')}`}
+                  Seus horários de disponibilidade no dia de {diaSelecionado.toLowerCase()} são: {`${stateHorarios[diaSelecionado].join(' | ')}`}
                 </Text>
               ) : (
                 <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>

@@ -20,8 +20,12 @@ export default function AdvHorarios({ navigation, route }) {
     const [stateDiaDaSemana, setStateDiaDaSemana] = useState('');
     const [stateHorario, setStateHorario] = useState([]);
 
+    const diasIndices = dias.reduce((acc, dia, index) => {
+        acc[dia] = index;
+        return acc;
+    }, {});
     const auth = getAuth();
-    const { id, nome, speciality } = route.params;
+    const { id, nome, speciality, nomeAdv } = route.params;
 
     useEffect(() => {
         const fetchDias = async () => {
@@ -47,7 +51,7 @@ export default function AdvHorarios({ navigation, route }) {
                 setStateHorariosQuarta(advogadoDocData.data().horarioQuarta);
                 setStateHorariosQuinta(advogadoDocData.data().horarioQuinta);
                 setStateHorariosSexta(advogadoDocData.data().horarioSexta);
-                setStateHorariosSabado(advogadoDocData.data().horarioSabado);
+                setStateHorariosSabado(advogadoDocData.data().horarioSábado);
                 setStateHorariosDomingo(advogadoDocData.data().horarioDomingo);
                 // SE PRECISAR TESTAR
                 //  console.log(`${dias[0]}: ${stateHorariosSegunda}`)
@@ -83,7 +87,7 @@ export default function AdvHorarios({ navigation, route }) {
                         <TouchableOpacity
                             key={i + index}
                             style={styles.btnAgendarConsul}
-                            onPress={() =>  {setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario);}}
+                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); }}
                         >
                             <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
                         </TouchableOpacity>
@@ -100,14 +104,11 @@ export default function AdvHorarios({ navigation, route }) {
             };
 
             if (dias.includes(dia)) {
-                if (dias) {
-
-                }
                 return (
                     <View>
-                        <Text style={styles.dataAgendarConsul}>{dias && dias[index] ? dias[index].toUpperCase() + "-FEIRA" : "Nenhum dia disponível"}</Text>
+                        <Text style={styles.dataAgendarConsul}>{dias && dias[index] ? dias[index].toUpperCase() : "Nenhum dia disponível"}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                            {horariosDia && horariosDia.length > 0 ? (
+                            {horariosDia && horariosDia.length > 0 ? ( //tenta horariosDia === undefined ou null
                                 <View>
                                     {botaoHorariosDia()}
                                 </View>
@@ -154,15 +155,15 @@ export default function AdvHorarios({ navigation, route }) {
                 resizeMode="contain"
             />
 
-            <Text style={styles.tituloAgendarConsul}>{nome}</Text>
+            <Text style={styles.tituloAgendarConsul}>{nomeAdv}</Text>
 
-            {disponibilidadeDia("Segunda", stateHorariosSegunda, 0)}
-            {disponibilidadeDia("Terça", stateHorariosTerca, 1)}
-            {disponibilidadeDia("Quarta", stateHorariosQuarta, 2)}
-            {disponibilidadeDia("Quinta", stateHorariosQuinta, 3)}
-            {disponibilidadeDia("Sexta", stateHorariosSexta, 4)}
-            {disponibilidadeDia("Sábado", stateHorariosSabado, 5)}
-            {disponibilidadeDia("Domingo", stateHorariosDomingo, 6)}
+            {disponibilidadeDia("Segunda", stateHorariosSegunda, diasIndices["Segunda"])}
+            {disponibilidadeDia("Terça", stateHorariosTerca, diasIndices["Terça"])}
+            {disponibilidadeDia("Quarta", stateHorariosQuarta, diasIndices["Quarta"])}
+            {disponibilidadeDia("Quinta", stateHorariosQuinta, diasIndices["Quinta"])}
+            {disponibilidadeDia("Sexta", stateHorariosSexta, diasIndices["Sexta"])}
+            {disponibilidadeDia("Sábado", stateHorariosSabado, diasIndices["Sábado"])}
+            {disponibilidadeDia("Domingo", stateHorariosDomingo, diasIndices["Domingo"])}
 
             <Modal visible={modalVisible} animationType="slide">
                 <View style={styles.containerTelas}>
