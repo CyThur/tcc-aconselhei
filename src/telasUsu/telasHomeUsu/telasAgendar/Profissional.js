@@ -18,6 +18,8 @@ export default function Profissional({ route, navigation }) {
 
     const user = getAuth()
 
+    const [advogadosComHorarios, setAdvogadosComHorarios] = useState([]);
+
 
     async function pegarNomeUsuario() {
         const docRef = doc(db, 'usuarios', user.currentUser.uid)
@@ -49,12 +51,34 @@ export default function Profissional({ route, navigation }) {
         }).catch((err) => console.log(err))
     }
 
+    async function fetchHorarios(id) {
+        const advogadoDoc = doc(db, "advogados", id);
+        const advogadoDocData = await getDoc(advogadoDoc);
+        if (advogadoDocData.exists()) {
+            const horarios = advogadoDocData.data()
+            return ['horarioSegunda', 'horarioTerça', 'horarioQuarta', 'horarioQuinta', 'horarioSexta', 'horarioSábado', 'horarioDomingo'].some(dia => horarios.hasOwnProperty(dia) && horarios[dia] !== undefined && horarios[dia].length > 0);
+        }
+        return false;
+    }
+
     useEffect(() => {
-        pegarDadosFiltrados()
-    }, [])
+        const fetchAllHorarios = async () => {
+            const promises = list.map(item => fetchHorarios(item.id));
+            const resultados = await Promise.all(promises);
+            const advogados = list.filter((_, index) => resultados[index]);
+            setAdvogadosComHorarios(advogados);
+            //PRA TESTAR
+            // console.log("PROMESSAS:", promises, "RESULTADOS:", resultados, "ADVOGADOS:", advogados)
+        };
+
+        if (list.length > 0) {
+            fetchAllHorarios();
+        }
+    }, [list]);
 
     useEffect(() => {
         pegarNomeUsuario()
+        pegarDadosFiltrados()
     }, [])
 
     if (list.length == 0) {
@@ -133,7 +157,10 @@ export default function Profissional({ route, navigation }) {
             </View>
             <ScrollView style={{ height: '100%', width: '90%' }} showsVerticalScrollIndicator={false}>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {list.map((item) => <Advs item={item.data} id={item.id} nome={nomeUser} />)}
+                    {advogadosComHorarios.map((item) => {
+                        return <Advs item={item.data} id={item.id} nome={nomeUser} />
+                    })}
+
                 </View>
             </ScrollView>
 

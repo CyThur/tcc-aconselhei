@@ -87,7 +87,8 @@ export default function AdvHorarios({ navigation, route }) {
                         <TouchableOpacity
                             key={i + index}
                             style={styles.btnAgendarConsul}
-                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); }}
+                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario);}} 
+                            //TESTE: console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); DENTRO DA LINHA ACIMA
                         >
                             <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
                         </TouchableOpacity>
@@ -106,15 +107,12 @@ export default function AdvHorarios({ navigation, route }) {
             if (dias.includes(dia)) {
                 return (
                     <View>
-                        <Text style={styles.dataAgendarConsul}>{dias && dias[index] ? dias[index].toUpperCase() : "Nenhum dia disponível"}</Text>
+                        <Text style={styles.dataAgendarConsul}>{dias[index].toUpperCase()}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                            {horariosDia && horariosDia.length > 0 ? ( //tenta horariosDia === undefined ou null
-                                <View>
-                                    {botaoHorariosDia()}
-                                </View>
-                            ) : (
-                                <Text>Nenhum horário disponível</Text>
-                            )}
+                            <View>
+                                {botaoHorariosDia()}
+                            </View>
+
                         </View>
                     </View>
                 )
