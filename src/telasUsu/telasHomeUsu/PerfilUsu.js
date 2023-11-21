@@ -242,11 +242,8 @@ const PerfilUsu = ({ navigation }) => {
                 source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
                 style={{ height: 120, width: 120, }}
                 imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
-              >
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
-                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.3, alignSelf: 'center', justifyContent: 'center' }} />
-                </View>
-              </ImageBackground>
+              />
+
             </View>
           </TouchableOpacity>
           <Text style={stylesP.profileTextPerfilUsu}>{state.nome}</Text>

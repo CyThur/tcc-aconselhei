@@ -377,9 +377,9 @@ const PerfilAdv = ({ navigation }) => {
         <TouchableOpacity
           key={i + index}
           style={[
-            stylesPA.botaoHorario, 
-            index > 0 && { marginLeft: 15 }, 
-            botaoHorarioPressionado[horario] && { backgroundColor: 'green'}
+            stylesPA.botaoHorario,
+            index > 0 && { marginLeft: 15 },
+            botaoHorarioPressionado[horario] && { backgroundColor: 'green' }
           ]}
           onPress={() => botaoHorarioSelecionado(horario)}
         >
@@ -467,7 +467,7 @@ const PerfilAdv = ({ navigation }) => {
   const fraseProBotao = () => {
     let variacaoDaFrase = null;
     if (diaSelecionado) {
-      variacaoDaFrase = `Editar horários de ${diaSelecionado.toLowerCase()}`; 
+      variacaoDaFrase = `Editar horários de ${diaSelecionado.toLowerCase()}`;
       return (
         <TouchableOpacity
           style={{ backgroundColor: '#1E5A97', borderRadius: 5, width: '80%', alignSelf: 'flex-start', margin: 10, marginLeft: 0, padding: 5, alignItems: 'center' }}
@@ -494,144 +494,140 @@ const PerfilAdv = ({ navigation }) => {
 
   return (
     <View style={stylesP.containerPerfilAdv}>
-        <View style={{ margin: 20, marginTop: 200 }}>
-          <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
-          <View style={{ alignItems: 'center', }}>
-            <TouchableOpacity onPress={toggleModal}>
-              <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
-                <ImageBackground
-                  source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
-                  style={{ height: 120, width: 120, }}
-                  imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
-                >
-                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
-                    <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.8, alignSelf: 'center', justifyContent: 'center' }} />
-                  </View>
-                </ImageBackground>
-              </View>
-            </TouchableOpacity>
-            <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
-            <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
-            <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
-          </View>
-
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={stylesP.action}>
-              <FontAwesome name="envelope" size={20} color="#1E5A97" />
-              <TextInput
-                placeholder={state.email}
-                keyboardType="email-address"
-                placeholderTextColor="#1E5A97"
-                autoCorrect={false}
-                value={stateEmail}
-                onChangeText={(text) => setStateEmail(text)}
-                style={stylesP.textInputPerfil}
+      <View style={{ margin: 20, marginTop: 200 }}>
+        <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
+        <View style={{ alignItems: 'center', }}>
+          <TouchableOpacity onPress={toggleModal}>
+            <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+              <ImageBackground
+                source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+                style={{ height: 120, width: 120, }}
+                imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
               />
-              <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
             </View>
-
-            <View>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[stylesP.labelPerfilAdv, { width: '93%' }]}>Área de atuação:</Text>
-                <Text style={[stylesP.labelPerfilAdv, { alignSelf: 'flex-end' }]}><AntDesign name="form" size={20} color="#1E5A97" onPress={ativarEdicaoEspecialidade} /></Text>
-              </View>
-
-              {editandoEspecialidade ? (
-                <View>
-                  <MultipleSelectList
-                    setSelected={setStateEspecialidade}
-                    data={areas}
-                    placeholder="Áreas de atuação"
-                    label="Áreas de atuação"
-                    notFoundText="Área não encontrada"
-                    searchPlaceholder="Pesquisar"
-                    labelStyles={{ color: '#1E5A97' }}
-                    badgeStyles={{ backgroundColor: '#1E5A97' }}
-                    boxStyles={boxStyles}
-                  />
-
-                  <TouchableOpacity onPress={salvarEspecialidade}>
-                    <Text>Em teoria seria o botão de salvar</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View style={{ flexDirection: 'column' }}>
-                  {especialidadesSelecionadas()}
-                </View>
-              )}
-            </View>
-
-            <View>
-              <Text style={stylesP.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
-              <View style={{ flexDirection: 'row' }}>
-                {botaoPraCadaDia()}
-              </View>
-            </View>
-
-            <View>
-              <Text style={stylesP.labelPerfilAdv}>Horários disponíveis para consultoria:</Text>
-
-              {diaSelecionado !== null && stateHorarios[diaSelecionado] !== undefined ? (
-                <Text style={stylesPA.textStateHorarios}>
-                  Seus horários de disponibilidade no dia de {diaSelecionado.toLowerCase()} são: {`${stateHorarios[diaSelecionado].join(' | ')}`}
-                </Text>
-              ) : (
-                <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>
-              )}
-
-              {/* botão pra apresentar os horários de disponibilidade */}
-              {editandoHorario === false ? (
-                <View style={{marginBottom: 120}}>
-                  {fraseProBotao()}
-                </View>
-              ) : (
-
-                <View style={{ flexDirection: 'column' }}>
-                  {botaoPraCadaHorario()}
-
-                  {horariosSelecionados.length > 0 ? (
-                    <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
-                      Horários selecionados: {horariosSelecionados.join(' | ')}
-                    </Text>
-                  ) : (
-                    <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
-                      Horários selecionados: nenhum
-                    </Text>
-                  )}
-
-                  <TouchableOpacity
-                    style={{ backgroundColor: '#1E5A97', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 30, }}
-                    onPress={salvarHorarios}
-                  >
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>SALVAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
-                    onPress={apagarHorarios}
-                  >
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-            </View>
-          </ScrollView>
+          </TouchableOpacity>
+          <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
+          <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
+          <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
         </View>
-        <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
-          <View style={stylesP.modalContentPerfil}>
-            <View style={stylesP.modalHeader} />
-            <Text style={stylesP.panelTitle}>Carregar foto</Text>
-            <Text style={stylesP.panelSubtitle}>Escolha sua Imagem de perfil</Text>
-            <ButtonP label="Tire uma foto" onPress={tirarFoto} />
-            <ButtonP theme="primary" label="Importar foto da biblioteca" onPress={pickImageAsync} />
-            <ButtonP theme="secundary" label="Deletar imagem" onPress={deleteFoto} />
-            <TouchableOpacity style={stylesP.panelButton} onPress={toggleModal}>
-              <Text style={stylesP.panelButtonTitle}>Cancelar</Text>
-            </TouchableOpacity>
+
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={stylesP.action}>
+            <FontAwesome name="envelope" size={20} color="#1E5A97" />
+            <TextInput
+              placeholder={state.email}
+              keyboardType="email-address"
+              placeholderTextColor="#1E5A97"
+              autoCorrect={false}
+              value={stateEmail}
+              onChangeText={(text) => setStateEmail(text)}
+              style={stylesP.textInputPerfil}
+            />
+            <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} />
           </View>
-        </Modal>
-      
+
+          <View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[stylesP.labelPerfilAdv, { width: '93%' }]}>Área de atuação:</Text>
+              <Text style={[stylesP.labelPerfilAdv, { alignSelf: 'flex-end' }]}><AntDesign name="form" size={20} color="#1E5A97" onPress={ativarEdicaoEspecialidade} /></Text>
+            </View>
+
+            {editandoEspecialidade ? (
+              <View>
+                <MultipleSelectList
+                  setSelected={setStateEspecialidade}
+                  data={areas}
+                  placeholder="Áreas de atuação"
+                  label="Áreas de atuação"
+                  notFoundText="Área não encontrada"
+                  searchPlaceholder="Pesquisar"
+                  labelStyles={{ color: '#1E5A97' }}
+                  badgeStyles={{ backgroundColor: '#1E5A97' }}
+                  boxStyles={boxStyles}
+                />
+
+                <TouchableOpacity onPress={salvarEspecialidade}>
+                  <Text>Em teoria seria o botão de salvar</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{ flexDirection: 'column' }}>
+                {especialidadesSelecionadas()}
+              </View>
+            )}
+          </View>
+
+          <View>
+            <Text style={stylesP.labelPerfilAdv}>Dias disponíveis para consultoria:</Text>
+            <View style={{ flexDirection: 'row' }}>
+              {botaoPraCadaDia()}
+            </View>
+          </View>
+
+          <View>
+            <Text style={stylesP.labelPerfilAdv}>Horários disponíveis para consultoria:</Text>
+
+            {diaSelecionado !== null && stateHorarios[diaSelecionado] !== undefined ? (
+              <Text style={stylesPA.textStateHorarios}>
+                Seus horários de disponibilidade no dia de {diaSelecionado.toLowerCase()} são: {`${stateHorarios[diaSelecionado].join(' | ')}`}
+              </Text>
+            ) : (
+              <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>
+            )}
+
+            {/* botão pra apresentar os horários de disponibilidade */}
+            {editandoHorario === false ? (
+              <View style={{ marginBottom: 120 }}>
+                {fraseProBotao()}
+              </View>
+            ) : (
+
+              <View style={{ flexDirection: 'column' }}>
+                {botaoPraCadaHorario()}
+
+                {horariosSelecionados.length > 0 ? (
+                  <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
+                    Horários selecionados: {horariosSelecionados.join(' | ')}
+                  </Text>
+                ) : (
+                  <Text style={[stylesPA.textStateHorarios, { marginTop: 15, marginLeft: 10 }]}>
+                    Horários selecionados: nenhum
+                  </Text>
+                )}
+
+                <TouchableOpacity
+                  style={{ backgroundColor: '#1E5A97', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 30, }}
+                  onPress={salvarHorarios}
+                >
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>SALVAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
+                  onPress={apagarHorarios}
+                >
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+          </View>
+        </ScrollView>
+      </View>
+      <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
+        <View style={stylesP.modalContentPerfil}>
+          <View style={stylesP.modalHeader} />
+          <Text style={stylesP.panelTitle}>Carregar foto</Text>
+          <Text style={stylesP.panelSubtitle}>Escolha sua Imagem de perfil</Text>
+          <ButtonP label="Tire uma foto" onPress={tirarFoto} />
+          <ButtonP theme="primary" label="Importar foto da biblioteca" onPress={pickImageAsync} />
+          <ButtonP theme="secundary" label="Deletar imagem" onPress={deleteFoto} />
+          <TouchableOpacity style={stylesP.panelButton} onPress={toggleModal}>
+            <Text style={stylesP.panelButtonTitle}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
     </View>
   );
 };
@@ -647,12 +643,12 @@ const stylesPA = StyleSheet.create({
   },
 
   botaoHorario: {
-    backgroundColor: '#1E5A97', 
-    borderRadius: 25, 
-    width: '18%', 
+    backgroundColor: '#1E5A97',
+    borderRadius: 25,
+    width: '18%',
     alignSelf: 'center',
-     margin: 5, 
-     marginHorizontal: 7, 
-     alignItems: 'center'
+    margin: 5,
+    marginHorizontal: 7,
+    alignItems: 'center'
   }
 })
