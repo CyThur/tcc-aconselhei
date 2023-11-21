@@ -25,7 +25,10 @@ export default function AdvHorarios({ navigation, route }) {
         return acc;
     }, {});
     const auth = getAuth();
-    const { id, nome, speciality, nomeAdv } = route.params;
+    const { id, nome, nomeAdv, speciality, foto } = route.params;
+
+    const [hasImage, setHasImage] = useState(foto ? true : false);
+
 
     useEffect(() => {
         const fetchDias = async () => {
@@ -145,14 +148,12 @@ export default function AdvHorarios({ navigation, route }) {
     return (
         <View style={styles.containerAgendarConsul}>
 
-            <Image
-                source={{
-                    uri: 'https://cdn-icons-png.flaticon.com/512/3364/3364044.png',
-                }}
-                style={styles.bannerAgendarConsul}
-                resizeMode="contain"
-            />
-
+            <View style={{ marginTop: '10%', height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
+                <Image
+                    source={{ uri: hasImage ? foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+                    style={{ height: 120, width: 120, borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
+                />
+            </View>
             <Text style={styles.tituloAgendarConsul}>{nomeAdv}</Text>
 
             {disponibilidadeDia("Segunda", stateHorariosSegunda, diasIndices["Segunda"])}

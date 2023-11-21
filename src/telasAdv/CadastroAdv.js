@@ -85,7 +85,7 @@ export default function CadastroAdv({ navigation }) {
                 } else {
                     console.log(error.message);
                 }
-            }); 
+            });
     };
 
     const areas = [
@@ -130,7 +130,7 @@ export default function CadastroAdv({ navigation }) {
                 <ScrollView style={{ paddingTop: 20, width: '90%' }} showsVerticalScrollIndicator={false}>
                     <View style={styles.inputContainer}>
 
-                        <Text style={[styles.text2, {marginTop: 0}]}>INFORMAÇÕES BÁSICAS</Text>
+                        <Text style={[styles.text2, { marginTop: 0 }]}>INFORMAÇÕES BÁSICAS</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                             <FontAwesome name="user" size={25} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.nomeadv ? 3.5 : 16 }]} />
                             <Controller
@@ -325,55 +325,54 @@ export default function CadastroAdv({ navigation }) {
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={styles.loginButton}
-                            onPress={
-                            //     // Verifica se tem pelo menos uma área selecionada
-                            //     if (categories.length === 0) {
-                            //         setBoxStyles({
-                            //             borderRadius: 18,
-                            //             borderColor: 'red',
-                            //             padding: 10,
-                            //             backgroundColor: '#E1E1DE',
-                            //             width: 320,
-                            //             alignSelf: 'center',
-                            //         });
-                            //         setErrorMessage('Defina ao menos uma área de atuação');
-                            //     } else {
-                            //         setBoxStyles({
-                            //             borderRadius: 18,
-                            //             borderColor: '#1E5A97',
-                            //             padding: 10,
-                            //             backgroundColor: '#E1E1DE',
-                            //             width: 320,
-                            //             alignSelf: 'center',
-                            //         });
-                            //         setErrorMessage('');
-                            //     }
-                            //     if (selected.length === 0) {
-                            //         setDiasStyles({
-                            //             borderRadius: 18,
-                            //             borderColor: 'red',
-                            //             padding: 10,
-                            //             backgroundColor: '#E1E1DE',
-                            //             width: 320,
-                            //             alignSelf: 'center',
-                            //         });
-                            //         setDiasErrorMessage('Escolha ao menos um dia da semana');
-                            //     } else {
-                            //         setDiasStyles({
-                            //             borderRadius: 18,
-                            //             borderColor: '#1E5A97',
-                            //             padding: 10,
-                            //             backgroundColor: '#E1E1DE',
-                            //             width: 320,
-                            //             alignSelf: 'center',
-                            //         });
-                            //         setDiasErrorMessage('');
-                            //     }
-                            //     if (categories.length > 0 && selected.length > 0) {
-                                    handleSubmit(cadastrar)
-                            //         console.log('Submitting form');
-                                // }
-                            }
+                            onPress={() => {
+                                // Verifica se tem pelo menos uma área selecionada
+                                if (categories.length === 0) {
+                                    setBoxStyles({
+                                        borderRadius: 18,
+                                        borderColor: 'red',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setErrorMessage('Defina ao menos uma área de atuação');
+                                } else {
+                                    setBoxStyles({
+                                        borderRadius: 18,
+                                        borderColor: '#1E5A97',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setErrorMessage('');
+                                }
+                                if (selected.length === 0) {
+                                    setDiasStyles({
+                                        borderRadius: 18,
+                                        borderColor: 'red',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setDiasErrorMessage('Escolha ao menos um dia da semana');
+                                } else {
+                                    setDiasStyles({
+                                        borderRadius: 18,
+                                        borderColor: '#1E5A97',
+                                        padding: 10,
+                                        backgroundColor: '#E1E1DE',
+                                        width: 320,
+                                        alignSelf: 'center',
+                                    });
+                                    setDiasErrorMessage('');
+                                }
+                                if (categories.length > 0 && selected.length > 0) {
+                                    handleSubmit(cadastrar)();
+                                }
+                            }}
                         >
                             <Text style={styles.loginButtonText}>CADASTRAR</Text>
                         </TouchableOpacity>

@@ -9,7 +9,9 @@ import { collection, doc, query, getDocs, where, getDoc } from 'firebase/firesto
 
 export default function Profissional({ route, navigation }) {
 
-    const { speciality } = route.params;
+    const {speciality } = route.params;
+    const [hasImage, setHasImage] = useState(false);
+
     const colRef = collection(db, 'advogados');
     const q = query(colRef, where('categorias', 'array-contains', speciality));
 
@@ -33,12 +35,6 @@ export default function Profissional({ route, navigation }) {
         await getDocs(q).then((snapshot) => {
             const arr = []
             snapshot.forEach((doc) => {
-                // setList((prev) => {
-
-                //     const copyState = [...prev, doc.data()]
-                //     return copyState
-                // })
-
                 const obj = {
                     data: doc.data(),
                     id: doc.id
@@ -122,6 +118,12 @@ export default function Profissional({ route, navigation }) {
                 style={styles.card}
                 onPress={() => navigation.navigate('PerfilAdvEsco', { adv: item, id: id, nomeCerto: nome, speciality })}
             >
+                <View style={{ marginTop: '10%', height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image
+                        source={{ uri: item && item.foto ? item.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+                        style={{ height: 120, width: 120, borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
+                    />
+                </View>
                 <Text style={styles.name2}>{item.nome}</Text>
             </TouchableOpacity>
         )
