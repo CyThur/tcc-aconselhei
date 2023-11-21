@@ -39,7 +39,6 @@ export default function SolicitaTextoUsu({ navigation, route }) {
   }
 
   const EnviaParaUsuAceita = async () => {
-    const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitAceita');
       await addDoc(docRef, {
@@ -49,10 +48,9 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         status: 'aceita',
         diaDaSemana: diaDaSemana,
         horario: horario,
-        texto: inputText,
+        texto: texto,
       }).then((doc) => {
       });
-      deleteDoc(docRefde);
 
     } catch (error) {
       console.error('Erro ao enviar solicitação:', error);
@@ -75,6 +73,9 @@ export default function SolicitaTextoUsu({ navigation, route }) {
       });
       deleteDoc(docRefde);
       setModalVisible(false);
+
+
+
       navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
 

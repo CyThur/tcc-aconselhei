@@ -70,8 +70,6 @@ export default function Inicial({ navigation }) {
             <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
             <Text style={styleN.especiTxt}>{item.data.cate}</Text>
           </View>
-
-          {/* Precisa fazer que pegue o dia da semana e o horário */}
           <View>
             <Text style={styleN.diaTxt}>{item.data.diaDaSemana}</Text>
             <Text style={styleN.horaTxt}>{item.data.horario}</Text>

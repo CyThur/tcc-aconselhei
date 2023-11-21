@@ -36,7 +36,7 @@ export default function NotificacoesUsu() {
 
   useEffect(() => {
     pegarDadosFiltrados()
-  }, []);  
+  }, []);
 
   //deletar notificação
   const pressDurationThreshold = 1000;
@@ -63,6 +63,10 @@ export default function NotificacoesUsu() {
   const handleDelete = () => {
     const docRef = doc(db, 'usuarios', user.currentUser.uid, 'solicitRecusadaNotifi', id)
     deleteDoc(docRef).then(() => { })
+
+    // Atualizar a lista de notificações
+    setList((prevList) => prevList.filter((notification) => notification.id !== id));
+
     console.log('Notificação excluída!');
     Alert.alert('Notificação excluída com sucesso!');
   };
@@ -116,7 +120,7 @@ export default function NotificacoesUsu() {
         <Text style={styleN.txt3}>Resposta:</Text>
 
         <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
-          <Text style={[styleN.txt, {marginBottom: 20}]}>{item.data.texto} </Text>
+          <Text style={[styleN.txt, { marginBottom: 20 }]}>{item.data.texto} </Text>
         </ScrollView>
 
       </View>

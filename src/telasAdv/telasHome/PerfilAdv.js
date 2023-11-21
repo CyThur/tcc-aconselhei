@@ -18,7 +18,6 @@ import * as FileSystem from 'expo-file-system';
 const PerfilAdv = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
   const [state, setState] = useState(null);
 
   const [stateEmail, setStateEmail] = useState('');
