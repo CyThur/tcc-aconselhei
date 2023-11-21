@@ -7,6 +7,7 @@ import { getAuth } from 'firebase/auth';
 
 export default function Inicial({ navigation }) {
   const user = getAuth()
+  uid = user.currentUser.uid
 
   const colRef = collection(db, 'advogados', user.currentUser.uid, 'solicitacoes');
   const q = query(colRef, where('status', '==', 'pendente'));
@@ -24,6 +25,8 @@ export default function Inicial({ navigation }) {
         arr.push(obj)
       })
       setList(arr)
+      // Atualizar a lista de solicitações
+      setList((prevList) => prevList.filter((solicitacao) => solicitacao.uid !== user.currentUser.uid));
     }).catch((err) => console.log(err))
   }
 
@@ -54,7 +57,18 @@ export default function Inicial({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('SolicitaTextoUsu', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate, diaDaSemana: item.data.diaDaSemana, horario: item.data.horario })
+          navigation.navigate('SolicitaTextoUsu', { 
+            nome: item.data.nome, 
+            texto: item.data.texto, 
+            id: item.id, 
+            cate: item.data.cate, 
+            diaDaSemana: item.data.diaDaSemana, 
+            horario: item.data.horario,
+            
+            onUpdate: () => {
+              pegarDadosFiltrados()
+            }
+          })
           console.log(item.id)
         }}
       >
