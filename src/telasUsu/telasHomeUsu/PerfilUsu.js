@@ -87,7 +87,7 @@ const PerfilUsu = ({ navigation }) => {
         { cancelable: false }
       );
     } else {
-      Alert.alert('Atenção', 'Você não escolheu nenhuma foto.');
+      Alert.alert('Atenção', 'Nenhuma foto escolhida.');
     }
 
 
@@ -262,7 +262,6 @@ const PerfilUsu = ({ navigation }) => {
             onChangeText={(text) => setStateEmail(text)}
             style={stylesP.textInputPerfil}
           />
-          {/* <AntDesign name="check" size={18} color="#1E5A97" onPress={salvarEmail} /> */}
         </View>
 
         <View style={styles.buttonContainer}>

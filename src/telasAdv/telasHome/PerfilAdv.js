@@ -505,7 +505,7 @@ const PerfilAdv = ({ navigation }) => {
                   imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
                 >
                   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
-                    <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.3, alignSelf: 'center', justifyContent: 'center' }} />
+                    <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.8, alignSelf: 'center', justifyContent: 'center' }} />
                   </View>
                 </ImageBackground>
               </View>
@@ -581,7 +581,7 @@ const PerfilAdv = ({ navigation }) => {
 
               {/* botão pra apresentar os horários de disponibilidade */}
               {editandoHorario === false ? (
-                <View>
+                <View style={{marginBottom: 120}}>
                   {fraseProBotao()}
                 </View>
               ) : (
@@ -615,12 +615,6 @@ const PerfilAdv = ({ navigation }) => {
                 </View>
               )}
 
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.loginButton, {marginBottom: 150}]} onPress={''}>
-                <Text style={styles.loginButtonText}>SALVAR</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
