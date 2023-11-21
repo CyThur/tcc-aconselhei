@@ -7,7 +7,7 @@ import { styles } from '../../Styles.js';
 
 export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
-  const { id, nome, texto, cate, diaDaSemana, horario } = route.params
+  const { id, nome, texto, cate, diaDaSemana, horario, onUpdate } = route.params
   const [idUser, setIdUser] = useState('')
   const [nomeUser, setNomeUser] = useState('')
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,6 +52,10 @@ export default function SolicitaTextoUsu({ navigation, route }) {
       }).then((doc) => {
       });
 
+      if (onUpdate) {
+        onUpdate();
+      }
+
     } catch (error) {
       console.error('Erro ao enviar solicitação:', error);
     }
@@ -73,9 +77,9 @@ export default function SolicitaTextoUsu({ navigation, route }) {
       });
       deleteDoc(docRefde);
       setModalVisible(false);
-
-
-
+      if (onUpdate) {
+        onUpdate();
+      }
       navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
 
