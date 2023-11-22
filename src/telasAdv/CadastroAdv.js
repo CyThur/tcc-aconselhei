@@ -245,7 +245,7 @@ export default function CadastroAdv({ navigation }) {
                                             }]}
                                         placeholder="UF: XX"
                                         value={value}
-                                        onChangeText={onChange}
+                                        onChangeText={(text) => onChange(text.toUpperCase())}
                                         onBlur={onBlur}
                                     />
                                 )}
@@ -264,6 +264,7 @@ export default function CadastroAdv({ navigation }) {
                                                 borderColor: errors.oab ? '#f23535' : '#1E5A97'
                                             }]}
                                         placeholder="Número da OAB"
+                                        keyboardType='numeric'
                                         value={value}
                                         onChangeText={onChange}
                                         onBlur={onBlur}

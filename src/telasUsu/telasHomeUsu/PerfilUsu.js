@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Text, TextInput, TouchableOpacity, Alert, ImageBackground, Image, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonP from '../../BtnImgPicker';
 import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
-import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { styles } from '../../Styles';
 import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
@@ -43,6 +43,40 @@ const PerfilUsu = ({ navigation }) => {
 
     pegarData()
   }, []);
+
+  const excluirConta = async () => {
+    Alert.alert(
+      "Excluir Conta",
+      "Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Excluir",
+          onPress: async () => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+
+            if (user) {
+              // Excluir dados do Firestore
+              const userDoc = doc(db, "usuarios", user.uid);
+              await deleteDoc(userDoc);
+
+              // Excluir conta do Firebase Authentication
+              await user.delete();
+
+              Alert.alert('Conta excluída com sucesso!');
+              navigation.navigate('Inicio');
+            } else {
+              Alert.alert('Erro ao excluir conta!');
+            }
+          }
+        }
+      ]
+    );
+  }
 
   /**
    *
@@ -260,13 +294,18 @@ const PerfilUsu = ({ navigation }) => {
             style={stylesP.textInputPerfil}
           />
         </View>
-
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginButton} onPress={salvarEmail}>
             <Text style={styles.loginButtonText}>SALVAR</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      <TouchableOpacity onPress={excluirConta} style={stylesPA.deleteButton}>
+        <Icon name="trash" size={20} color="#f23535" />
+        <Text style={stylesPA.deleteButtonText}>Excluir Conta</Text>
+      </TouchableOpacity>
+
       <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
         <View style={stylesP.modalContentPerfil}>
           <View style={stylesP.modalHeader} />
@@ -285,3 +324,23 @@ const PerfilUsu = ({ navigation }) => {
 };
 
 export default PerfilUsu;
+
+const stylesPA = StyleSheet.create({
+  deleteButton: {
+    right: 10,
+    bottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: -50,
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  deleteButtonText: {
+    color: '#f23535',
+    fontSize: 16,
+    marginLeft: 5,
+  },
+})
