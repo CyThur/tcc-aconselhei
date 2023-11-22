@@ -3,7 +3,13 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Ima
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, doc, updateDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase.config.js';
+
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import { styles } from '../../Styles.js';
+
 
 export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
@@ -12,6 +18,14 @@ export default function SolicitaTextoUsu({ navigation, route }) {
   const [nomeUser, setNomeUser] = useState('')
   const [modalVisible, setModalVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+
+  const schema = yup.object().shape({
+    inputText: yup.string().required('Campo vazio.'),
+  });
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
 
   async function pegarNomeAdv() {
     const docRef = doc(db, 'advogados', user.currentUser.uid)
@@ -61,7 +75,8 @@ export default function SolicitaTextoUsu({ navigation, route }) {
     }
   }
 
-  const EnviaJustiRecusada = async () => {
+  const EnviaJustiRecusada = async (data) => {
+    const { inputText } = data;
     const docRefde = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', id)
     try {
       const docRef = collection(db, 'usuarios', idUser, 'solicitRecusadaNotifi');
@@ -159,18 +174,35 @@ export default function SolicitaTextoUsu({ navigation, route }) {
             <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Por favor, justifique a rejeição.</Text>
           </View>
           <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-            <TextInput
-              placeholder="Digite aqui..."
-              onChangeText={(text) => setInputText(text)}
-              value={inputText}
-              multiline
-              style={{ borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}
+
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={[
+                    stylesN.input, {
+                      borderWidth: errors.inputText ? 1.5 : 1,
+                      borderColor: errors.inputText ? '#f23535' : '#1E5A97',
+                      marginBottom: errors.inputText ? 5 : 16
+                    }]}
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="Digite aqui..."
+                  multiline
+                  autoCapitalize="none"
+                />
+              )}
+              name="inputText"
+              defaultValue=""
             />
+            {errors.inputText && <Text style={[styles.inputLoginError, { marginLeft: '10%' }]}>{errors.inputText.message}</Text>}
+
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
               <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                 <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={EnviaJustiRecusada}>
+              <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={handleSubmit(EnviaJustiRecusada)}>
                 <Text style={styles.buttonText}>Enviar</Text>
               </TouchableOpacity>
             </View>
@@ -219,9 +251,17 @@ const stylesN = StyleSheet.create({
     width: '150%',
     padding: 15,
   },
-
   textoTxt: {
     fontSize: 15,
     color: '#000',
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    width: '80%',
+    marginBottom: 20,
+    marginTop: 20,
+    alignSelf: 'center',
   },
 });

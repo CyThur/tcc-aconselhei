@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableWithoutFeedback, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { styles } from '../Styles.js';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,11 +12,32 @@ import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/aut
 
 export default function CadastroUsu({ navigation }) {
 
-    const schema = yup.object({
+    const [dataNascimento, setDataNascimento] = useState('');
+
+    const validateAge = (dataNascimento) => {
+        const [day, month, year] = dataNascimento.split("/");
+        const birthDate = new Date(year, month - 1, day);
+        const currentDate = new Date();
+        const diff = currentDate - birthDate;
+        const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    
+        return age >= 18;
+    };
+    
+
+    const handleDateChange = (text) => {
+        if (text.length === 2 || text.length === 5) {
+            text = text + '/';
+        }
+        return text;
+    };
+
+    const schema = yup.object().shape({
         nome: yup.string().required('Informe seu nome'),
         email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
         senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres'),
-        reSenha: yup.string().required('Confirme a senha digitada').min(8, 'Pelo menos 8 caracteres').oneOf([yup.ref('senha'), null], 'As senhas devem ser iguais')
+        reSenha: yup.string().required('Confirme a senha digitada').min(8, 'Pelo menos 8 caracteres').oneOf([yup.ref('senha'), null], 'As senhas devem ser iguais'),
+        data: yup.string().required('Informe sua data de nascimento').min(10, 'Data incorreta').test('valida-data', 'Você deve ter pelo menos 18 anos para se cadastrar.', validateAge)
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -26,32 +47,36 @@ export default function CadastroUsu({ navigation }) {
     const cadastrar = async (data) => {
 
         const { email, senha, nome } = data;
-        //CRIAR UM USUARIO COM O MESMO ID DO AUTHENTICATION (FAZER RELACIONAMENTO)
 
-        createUserWithEmailAndPassword(auth, email, senha, nome)
-            .then(() => {
-                onAuthStateChanged(auth, async (user) => {
-                    // CRIANDO UM DOCUMENTO EM UMA COLEÇÃO
-
-                    const docRef = doc(db, 'usuarios', user.uid)
-                    await setDoc(docRef, {
-                        nome: nome,
-                        foto: null,
-                    });
+        if (Object.keys(errors).length > 0) {
+        } else {
+            createUserWithEmailAndPassword(auth, email, senha)
+                .then(async (userCredential) => {
+                    const user = userCredential.user;
+                    try {
+                        const docRef = doc(db, 'usuarios', user.uid)
+                        await setDoc(docRef, {
+                            nome: nome,
+                            foto: null,
+                            dataNascimento: data.data,
+                        });
+                        Alert.alert('Atenção', 'Cadastrado com sucesso!');
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'TabRoutesUsu' }]
+                        });
+                    } catch (error) {
+                        console.error("Error signing up: ", error);
+                    }
                 })
-                Alert.alert('Atenção', 'Cadastrado com sucesso!');
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'TabRoutesUsu' }]
-                })
-            })
-            .catch((error) => {
-                if (error.code === 'auth/email-already-in-use') {
-                    Alert.alert('Atenção', 'Este e-mail já está em uso');
-                } else {
-                    console.log(error.message);
-                }
-            });
+                .catch((error) => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        Alert.alert('Atenção', 'Este e-mail já está em uso');
+                    } else {
+                        console.log(error.message);
+                    }
+                });
+        }
     }
 
     return (
@@ -162,15 +187,38 @@ export default function CadastroUsu({ navigation }) {
                             />
                         </View>
                         {errors.reSenha && <Text style={styles.inputLoginError}>{errors.reSenha?.message}</Text>}
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+                            <FontAwesome name="calendar" size={20} color="#1E5A97" style={[{ marginRight: 10 }, { marginBottom: errors.data ? 2 : 16 }]} />
+                            <Controller
+                                control={control}
+                                name="data"
+                                rules={{ validate: validateAge }}
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <TextInput
+                                        style={[
+                                            styles.inputLogin, {
+                                                borderWidth: errors.data ? 1.5 : 1,
+                                                borderColor: errors.data ? '#f23535' : '#1E5A97',
+                                                marginBottom: errors.data ? 5 : 16
+                                            }]}
+                                        placeholder="Data de nascimento"
+                                        keyboardType='numeric'
+                                        value={value}
+                                        onChangeText={(text) => {
+                                            const newText = handleDateChange(text);
+                                            onChange(newText);
+                                        }}
+                                        onBlur={onBlur}
+                                        maxLength={10}
+                                    />
+                                )}
+                            />
+                        </View>
+                        {errors.data && <Text style={styles.inputLoginError}>{errors.data?.message}</Text>}
                     </View>
 
                     <View style={styles.buttonContainer}>
-                        <Text style={styles.textLegendaCad}>Data de nascimento:</Text>
-
-                        <View style={styles.inputCad}>
-                            <Calendario />
-                        </View>
-
                         <Text style={styles.politica}>
                             Ao clicar no botão "CADASTRAR", você concorda expressa e
                             integralmente com a nossa Política de Privacidade e Política de

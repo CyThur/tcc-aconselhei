@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, FlatList } from 'react-native';
 import { doc, collection, query, getDocs, getDoc, where, deleteDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase.config.js';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -49,24 +49,28 @@ export default function NotificacoesUsu() {
   const handlePressOut = () => {
     clearTimeout(buttonPressTimer.current);
   };
-  const showDeleteConfirmation = () => {
+
+  const showDeleteConfirmation = (id) => {
+    
     Alert.alert(
       'Excluir Notificação',
       'Tem certeza de que deseja excluir esta notificação?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Excluir', onPress: handleDelete },
+        { text: 'Excluir', onPress: () => handleDelete(id) },
       ],
       { cancelable: true }
     );
   };
-  const handleDelete = () => {
+  
+  // Altere a função handleDelete para aceitar um id
+  const handleDelete = (id) => {
     const docRef = doc(db, 'usuarios', user.currentUser.uid, 'solicitRecusadaNotifi', id)
     deleteDoc(docRef).then(() => { })
-
+    
     // Atualizar a lista de notificações
     setList((prevList) => prevList.filter((notification) => notification.id !== id));
-
+    
     console.log('Notificação excluída!');
     Alert.alert('Notificação excluída com sucesso!');
   };
@@ -97,10 +101,7 @@ export default function NotificacoesUsu() {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <View style={{
-
-
-          }}>
+          <View>
             <View style={{ width: '100%' }}>
               <View style={{ backgroundColor: '#1E5A97', alignItems: 'center', width: '100%', borderTopEndRadius: 14, borderTopStartRadius: 14, paddingTop: 10, }}>
                 <Text style={styleN.nomeSoli}>IMPORTANTE</Text>
@@ -142,6 +143,27 @@ export default function NotificacoesUsu() {
           {list.map((item) => <Solicita item={item} />)}
         </View>
       </ScrollView>
+      <FlatList
+      data={list} // assumindo que 'list' é o seu array de notificações
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          onPressIn={() => {
+            buttonPressTimer.current = setTimeout(() => {
+              showDeleteConfirmation(item.id);
+            }, pressDurationThreshold);
+          }}
+          onPressOut={() => {
+            clearTimeout(buttonPressTimer.current);
+          }}
+        >
+          <List.Item
+            title={item.data.nome}
+            description={item.data.texto}
+          />
+        </TouchableOpacity>
+      )}
+    />
 
     </View>
 

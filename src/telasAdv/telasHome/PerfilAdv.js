@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Image, StyleSheet } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonP from '../../BtnImgPicker';
 import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
-import { getDoc, doc, updateDoc, deleteField } from 'firebase/firestore';
-import { styles } from '../../Styles';
+import { getDoc, doc, updateDoc, deleteField, deleteDoc } from 'firebase/firestore';
 import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -76,6 +75,40 @@ const PerfilAdv = ({ navigation }) => {
 
     pegarData()
   }, []);
+
+  const excluirConta = async () => {
+    Alert.alert(
+      "Excluir Conta",
+      "Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        { 
+          text: "Excluir", 
+          onPress: async () => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+  
+            if (user) {
+              // Excluir dados do Firestore
+              const userDoc = doc(db, "advogados", user.uid);
+              await deleteDoc(userDoc);
+  
+              // Excluir conta do Firebase Authentication
+              await user.delete();
+  
+              Alert.alert('Conta excluída com sucesso!');
+              navigation.navigate('Inicio');
+            } else {
+              Alert.alert('Erro ao excluir conta!');
+            }
+          } 
+        }
+      ]
+    );
+  }
 
   /**
    *
@@ -412,7 +445,6 @@ const PerfilAdv = ({ navigation }) => {
   };
 
 
-
   const salvarHorarios = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -424,6 +456,7 @@ const PerfilAdv = ({ navigation }) => {
         });
         Alert.alert('Horários salvos com sucesso!', 'Em breve seus horários de disponibilidade para esse dia serão atualizados');
         setEditandoHorario(false);
+        navigation.navigate('TabRoutesAdv');
       } else {
         Alert.alert('Nenhum horário foi selecionado!');
       }
@@ -577,7 +610,7 @@ const PerfilAdv = ({ navigation }) => {
 
             {/* botão pra apresentar os horários de disponibilidade */}
             {editandoHorario === false ? (
-              <View style={{ marginBottom: 120 }}>
+              <View style={{ marginBottom: 20 }}>
                 {fraseProBotao()}
               </View>
             ) : (
@@ -603,7 +636,7 @@ const PerfilAdv = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
+                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, marginBottom: 130 }}
                   onPress={apagarHorarios}
                 >
                   <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
@@ -612,6 +645,12 @@ const PerfilAdv = ({ navigation }) => {
             )}
 
           </View>
+
+          <TouchableOpacity onPress={excluirConta} style={stylesPA.deleteButton}>
+            <Icon name="trash" size={20} color="#f23535" />
+            <Text style={stylesPA.deleteButtonText}>Excluir Conta</Text>
+          </TouchableOpacity>
+
         </ScrollView>
       </View>
       <Modal isVisible={isModalVisible} style={stylesP.modalPerfil} backdropOpacity={0.8} backdropColor="#fff" onBackdropPress={toggleModal}>
@@ -641,7 +680,6 @@ const stylesPA = StyleSheet.create({
     color: '#505050',
     marginVertical: 7
   },
-
   botaoHorario: {
     backgroundColor: '#1E5A97',
     borderRadius: 25,
@@ -650,5 +688,21 @@ const stylesPA = StyleSheet.create({
     margin: 5,
     marginHorizontal: 7,
     alignItems: 'center'
-  }
+  },
+  deleteButton: {
+    bottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 120,
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  deleteButtonText: {
+    color: '#f23535',
+    fontSize: 16,
+    marginLeft: 5,
+  },
 })
