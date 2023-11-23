@@ -648,7 +648,7 @@ const PerfilAdv = ({ navigation }) => {
 
           <TouchableOpacity onPress={excluirConta} style={stylesPA.deleteButton}>
             <Icon name="trash" size={20} color="#f23535" />
-            <Text style={stylesPA.deleteButtonText}>Excluir Conta</Text>
+            <Text style={stylesPA.deleteButtonText}>Excluir conta</Text>
           </TouchableOpacity>
 
         </ScrollView>
