@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
@@ -88,26 +86,26 @@ const PerfilAdv = ({ navigation }) => {
           text: "Cancelar",
           style: "cancel"
         },
-        { 
-          text: "Excluir", 
+        {
+          text: "Excluir",
           onPress: async () => {
             const auth = getAuth();
             const user = auth.currentUser;
-  
+
             if (user) {
               // Excluir dados do Firestore
               const userDoc = doc(db, "advogados", user.uid);
               await deleteDoc(userDoc);
-  
+
               // Excluir conta do Firebase Authentication
               await user.delete();
-  
+
               Alert.alert('Conta excluída com sucesso!');
               navigation.navigate('Inicio');
             } else {
               Alert.alert('Erro ao excluir conta!');
             }
-          } 
+          }
         }
       ]
     );
@@ -531,26 +529,26 @@ const PerfilAdv = ({ navigation }) => {
 
   return (
     <View style={stylesP.containerPerfilAdv}>
-        <View style={{ margin: 20, marginTop: 200 }}>
-          <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
-          <View style={{ alignItems: 'center', }}>
-            <TouchableOpacity onPress={toggleModal}>
-              <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
-                <ImageBackground
-                  source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
-                  style={{ height: 120, width: 120, }}
-                  imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
-                >
-                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
-                    <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.8, alignSelf: 'center', justifyContent: 'center' }} />
-                  </View>
-                </ImageBackground>
-              </View>
-            </TouchableOpacity>
-            <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
-            <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
-            <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
-          </View>
+      <View style={{ margin: 20, marginTop: 200 }}>
+        <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
+        <View style={{ alignItems: 'center', }}>
+          <TouchableOpacity onPress={toggleModal}>
+            <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+              <ImageBackground
+                source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+                style={{ height: 120, width: 120, }}
+                imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
+              >
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
+                  <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.8, alignSelf: 'center', justifyContent: 'center' }} />
+                </View>
+              </ImageBackground>
+            </View>
+          </TouchableOpacity>
+          <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
+          <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
+          <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
+        </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={stylesP.action}>
@@ -616,12 +614,12 @@ const PerfilAdv = ({ navigation }) => {
               <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>
             )}
 
-              {/* botão pra apresentar os horários de disponibilidade */}
-              {editandoHorario === false ? (
-                <View style={{marginBottom: 120}}>
-                  {fraseProBotao()}
-                </View>
-              ) : (
+            {/* botão pra apresentar os horários de disponibilidade */}
+            {editandoHorario === false ? (
+              <View style={{ marginBottom: 120 }}>
+                {fraseProBotao()}
+              </View>
+            ) : (
 
               <View style={{ flexDirection: 'column' }}>
                 {botaoPraCadaHorario()}
@@ -644,7 +642,6 @@ const PerfilAdv = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
                   style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
                   onPress={apagarHorarios}
                 >
@@ -689,8 +686,6 @@ const stylesPA = StyleSheet.create({
     color: '#505050',
     marginVertical: 7
   },
-
-
   botaoHorario: {
     backgroundColor: '#1E5A97',
     borderRadius: 25,
@@ -700,5 +695,4 @@ const stylesPA = StyleSheet.create({
     marginHorizontal: 7,
     alignItems: 'center'
   }
-  }
-})
+});
