@@ -4,10 +4,7 @@ import { doc, collection, query, getDocs, getDoc, where, deleteDoc } from "fireb
 import { auth, db } from '../../firebase.config.js';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-import { AntDesign } from '@expo/vector-icons';
-
 import { styles } from '../../Styles';
-import { set } from 'react-hook-form';
 
 export default function NotificacoesUsu() {
   const user = getAuth()
@@ -51,7 +48,7 @@ export default function NotificacoesUsu() {
   };
 
   const showDeleteConfirmation = (id) => {
-    
+
     Alert.alert(
       'Excluir Notificação',
       'Tem certeza de que deseja excluir esta notificação?',
@@ -62,15 +59,15 @@ export default function NotificacoesUsu() {
       { cancelable: true }
     );
   };
-  
+
   // Altere a função handleDelete para aceitar um id
   const handleDelete = (id) => {
     const docRef = doc(db, 'usuarios', user.currentUser.uid, 'solicitRecusadaNotifi', id)
     deleteDoc(docRef).then(() => { })
-    
+
     // Atualizar a lista de notificações
     setList((prevList) => prevList.filter((notification) => notification.id !== id));
-    
+
     console.log('Notificação excluída!');
     Alert.alert('Notificação excluída com sucesso!');
   };
@@ -93,42 +90,6 @@ export default function NotificacoesUsu() {
     );
   }
 
-  function Solicita({ item }) {
-    return (
-      <View style={styleN.buttonSoli}>
-        <TouchableOpacity
-          style={styleN.buttonSoli2}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-        >
-          <View>
-            <View style={{ width: '100%' }}>
-              <View style={{ backgroundColor: '#1E5A97', alignItems: 'center', width: '100%', borderTopEndRadius: 14, borderTopStartRadius: 14, paddingTop: 10, }}>
-                <Text style={styleN.nomeSoli}>IMPORTANTE</Text>
-              </View>
-
-              <View style={{ margin: 15, flexDirection: 'row', flexWrap: 'wrap', width: '80%', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
-                <Text style={styleN.txt}>{item.data.nome}</Text>
-                <Text style={styleN.txt}> ({item.data.espe})</Text>
-                <Text style={styleN.txt2}> recusou sua solicitação</Text>
-                <Text style={styleN.txt}>!</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-
-        <Text style={styleN.txt3}>Resposta:</Text>
-
-        <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
-          <Text style={[styleN.txt, { marginBottom: 20 }]}>{item.data.texto} </Text>
-        </ScrollView>
-
-      </View>
-
-    )
-  }
-
   return (
     <View style={styles.containerTelas}>
       <View style={styles.logoView}>
@@ -138,32 +99,46 @@ export default function NotificacoesUsu() {
         />
       </View>
       <Text style={styles.navOption}>NOTIFICAÇÕES</Text>
-      <ScrollView style={{ marginTop: '6%', paddingBottom: 10, height: '60%', width: '90%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-        <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', alignSelf: 'center' }}>
-          {list.map((item) => <Solicita item={item} />)}
-        </View>
-      </ScrollView>
-      <FlatList
-      data={list} // assumindo que 'list' é o seu array de notificações
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPressIn={() => {
-            buttonPressTimer.current = setTimeout(() => {
-              showDeleteConfirmation(item.id);
-            }, pressDurationThreshold);
-          }}
-          onPressOut={() => {
-            clearTimeout(buttonPressTimer.current);
-          }}
-        >
-          <List.Item
-            title={item.data.nome}
-            description={item.data.texto}
-          />
-        </TouchableOpacity>
-      )}
-    />
+      <FlatList style={{ marginTop: '6%', paddingBottom: 10, height: '60%', width: '90%', alignSelf: 'center', }}
+        showsVerticalScrollIndicator={false}
+        data={list} // assumindo que 'list' é o seu array de notificações
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+
+          <View style={styleN.buttonSoli}>
+            <TouchableOpacity
+              onPressIn={() => {
+                buttonPressTimer.current = setTimeout(() => {
+                  showDeleteConfirmation(item.id);
+                }, pressDurationThreshold);
+              }}
+              onPressOut={() => {
+                clearTimeout(buttonPressTimer.current);
+              }}
+            >
+              <View>
+                <View style={{ width: '100%' }}>
+                  <View style={{ backgroundColor: '#1E5A97', alignItems: 'center', width: '100%', borderTopEndRadius: 14, borderTopStartRadius: 14, paddingTop: 10, }}>
+                    <Text style={styleN.nomeSoli}>IMPORTANTE</Text>
+                  </View>
+
+                  <View style={{ margin: 15, flexDirection: 'row', flexWrap: 'wrap', width: '80%', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+                    <Text style={styleN.txt}>{item.data.nome}</Text>
+                    <Text style={styleN.txt}> ({item.data.espe})</Text>
+                    <Text style={styleN.txt2}> recusou sua solicitação</Text>
+                    <Text style={styleN.txt}>!</Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <Text style={styleN.txt3}>Resposta:</Text>
+            <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
+              <Text style={[styleN.txt, { marginBottom: 30 }]}>{item.data.texto} </Text>
+            </ScrollView>
+          </View>
+
+        )}
+      />
 
     </View>
 
@@ -175,7 +150,7 @@ const styleN = StyleSheet.create({
     width: '100%',
     height: 300,
     backgroundColor: '#fff',
-    marginBottom: 10,
+    marginBottom: 20,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: '#4F4F4F',
@@ -189,20 +164,21 @@ const styleN = StyleSheet.create({
       height: '100%',
       alignSelf: 'center',
     },
-
-    buttonSoli2: {
-      width: '100%',
-      backgroundColor: '#fff',
-      borderRadius: 15,
-    },
-
-    shadowOpacity: 0.5, especiTxt: {
-      fontSize: 15,
-      color: 'gray',
-      marginBottom: 15,
-    },
+    shadowOpacity: 0.8, 
     shadowRadius: 3.84,
-    elevation: 8,
+    elevation: 3,
+  },
+
+  buttonSoli2: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+  },
+
+  especiTxt: {
+    fontSize: 15,
+    color: 'gray',
+    marginBottom: 15,
   },
 
   nomeSoli: {
@@ -211,18 +187,15 @@ const styleN = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5
   },
-
   txt: {
     fontSize: 15,
     color: '#000',
   },
-
   txt2: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
   },
-
   txt3: {
     fontSize: 15,
     marginTop: 10,
@@ -231,7 +204,6 @@ const styleN = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1E5A97',
   },
-
   especiTxt: {
     fontSize: 15,
     color: '#4F4F4F',
