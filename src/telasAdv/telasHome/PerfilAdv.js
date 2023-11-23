@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonP from '../../BtnImgPicker';
 import { getAuth, onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth';
-import { getDoc, doc, updateDoc, deleteField, deleteDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc, deleteField } from 'firebase/firestore';
+import { styles } from '../../Styles';
 import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -445,6 +448,7 @@ const PerfilAdv = ({ navigation }) => {
   };
 
 
+
   const salvarHorarios = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -456,7 +460,6 @@ const PerfilAdv = ({ navigation }) => {
         });
         Alert.alert('Horários salvos com sucesso!', 'Em breve seus horários de disponibilidade para esse dia serão atualizados');
         setEditandoHorario(false);
-        navigation.navigate('TabRoutesAdv');
       } else {
         Alert.alert('Nenhum horário foi selecionado!');
       }
@@ -528,22 +531,26 @@ const PerfilAdv = ({ navigation }) => {
 
   return (
     <View style={stylesP.containerPerfilAdv}>
-      <View style={{ margin: 20, marginTop: 200 }}>
-        <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
-        <View style={{ alignItems: 'center', }}>
-          <TouchableOpacity onPress={toggleModal}>
-            <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
-              <ImageBackground
-                source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
-                style={{ height: 120, width: 120, }}
-                imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
-              />
-            </View>
-          </TouchableOpacity>
-          <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
-          <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
-          <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
-        </View>
+        <View style={{ margin: 20, marginTop: 200 }}>
+          <AntDesign name="left" size={24} color="#1E5A97" onPress={() => navigation.navigate('TabRoutesAdv')} />
+          <View style={{ alignItems: 'center', }}>
+            <TouchableOpacity onPress={toggleModal}>
+              <View style={{ height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center' }}>
+                <ImageBackground
+                  source={{ uri: hasImage ? userData.foto : 'https://www.pinclipart.com/picdir/big/157-1578186_user-profile-default-image-png-clipart.png' }}
+                  style={{ height: 120, width: 120, }}
+                  imageStyle={{ borderRadius: 60, borderWidth: 1, borderColor: '#000' }}
+                >
+                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', alignContent: 'center' }}>
+                    <Icon name="camera" size={35} color="#fff" style={{ opacity: 0.8, alignSelf: 'center', justifyContent: 'center' }} />
+                  </View>
+                </ImageBackground>
+              </View>
+            </TouchableOpacity>
+            <Text style={stylesP.profileTextPerfilAdv}>{state.nome}</Text>
+            <Text style={stylesP.profileTextPerfilAdvFacul}>{state.faculdade}</Text>
+            <Text style={stylesP.profileTextPerfilAdvOAB}>{state.oabCompleta}</Text>
+          </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={stylesP.action}>
@@ -609,12 +616,12 @@ const PerfilAdv = ({ navigation }) => {
               <Text style={stylesPA.textStateHorarios}>Você ainda não escolheu um dia para visualizar, ou não possui horários para este dia</Text>
             )}
 
-            {/* botão pra apresentar os horários de disponibilidade */}
-            {editandoHorario === false ? (
-              <View style={{ marginBottom: 20 }}>
-                {fraseProBotao()}
-              </View>
-            ) : (
+              {/* botão pra apresentar os horários de disponibilidade */}
+              {editandoHorario === false ? (
+                <View style={{marginBottom: 120}}>
+                  {fraseProBotao()}
+                </View>
+              ) : (
 
               <View style={{ flexDirection: 'column' }}>
                 {botaoPraCadaHorario()}
@@ -637,7 +644,8 @@ const PerfilAdv = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, marginBottom: 130 }}
+                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
+                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
                   onPress={apagarHorarios}
                 >
                   <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
@@ -681,6 +689,8 @@ const stylesPA = StyleSheet.create({
     color: '#505050',
     marginVertical: 7
   },
+
+
   botaoHorario: {
     backgroundColor: '#1E5A97',
     borderRadius: 25,
@@ -689,21 +699,6 @@ const stylesPA = StyleSheet.create({
     margin: 5,
     marginHorizontal: 7,
     alignItems: 'center'
-  },
-  deleteButton: {
-    bottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 120,
-    width: '100%',
-    justifyContent: 'flex-end',
-  },
-  deleteButtonText: {
-    color: '#f23535',
-    fontSize: 16,
-    marginLeft: 5,
-  },
+  }
+  }
 })
