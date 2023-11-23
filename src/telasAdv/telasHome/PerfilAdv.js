@@ -78,7 +78,7 @@ const PerfilAdv = ({ navigation }) => {
 
   const excluirConta = async () => {
     Alert.alert(
-      "Excluir Conta",
+      "Excluir conta",
       "Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.",
       [
         {
@@ -487,6 +487,7 @@ const PerfilAdv = ({ navigation }) => {
                 Alert.alert(`Os horários de disponibilidade no dia de ${diaSelecionado} foram apagados!`);
                 setHorariosSelecionados([]);
                 setEditandoHorario(false);
+                navigation.navigate('TabRoutesAdv');
               }
             }
           ]
