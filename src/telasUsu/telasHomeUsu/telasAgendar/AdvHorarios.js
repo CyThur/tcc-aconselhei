@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput, Alert, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, Alert, Image, ScrollView, StyleSheet } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, collection, getDoc, doc } from "firebase/firestore";
 import { styles } from '../../../Styles';
 import { db } from '../../../firebase.config.js';
 
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 export default function AdvHorarios({ navigation, route }) {
+
+    const schema = yup.object().shape({
+        inputText: yup.string().required('Campo vazio.'),
+    });
+
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    });
+
     const [modalVisible, setModalVisible] = useState(false);
     const [inputText, setInputText] = useState('');
     const [idUser, setIdUser] = useState('');
@@ -90,8 +103,8 @@ export default function AdvHorarios({ navigation, route }) {
                         <TouchableOpacity
                             key={i + index}
                             style={styles.btnAgendarConsul}
-                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario);}} 
-                            //TESTE: console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); DENTRO DA LINHA ACIMA
+                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); }}
+                        //TESTE: console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); DENTRO DA LINHA ACIMA
                         >
                             <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
                         </TouchableOpacity>
@@ -123,7 +136,8 @@ export default function AdvHorarios({ navigation, route }) {
         }
     };
 
-    const handleRequest = async () => {
+    const handleRequest = async (data) => {
+        const { inputText } = data;
         try {
             const docRef = collection(db, 'advogados', id, 'solicitacoes');
             await addDoc(docRef, {
@@ -176,18 +190,33 @@ export default function AdvHorarios({ navigation, route }) {
                         <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>Envie sua solicitação para receber ajuda!</Text>
                     </View>
                     <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-                        <TextInput
-                            placeholder="Detalhe seu problema..."
-                            onChangeText={(text) => setInputText(text)}
-                            value={inputText}
-                            multiline
-                            style={{ borderWidth: 1, borderRadius: 5, padding: 10, width: '80%', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}
+                        <Controller
+                            control={control}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={[
+                                        stylesN.input, {
+                                            borderWidth: errors.inputText ? 1.5 : 1,
+                                            borderColor: errors.inputText ? '#f23535' : '#000',
+                                            marginBottom: errors.inputText ? 5 : 16
+                                        }]}
+                                    onBlur={onBlur}
+                                    onChangeText={value => onChange(value)}
+                                    value={value}
+                                    placeholder="Detalhe seu problema..."
+                                    multiline
+                                    autoCapitalize="none"
+                                />
+                            )}
+                            name="inputText"
+                            defaultValue=""
                         />
+                        {errors.inputText && <Text style={[styles.inputLoginError, { marginLeft: '10%' }]}>{errors.inputText.message}</Text>}
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
                             <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                                 <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={handleRequest}>
+                            <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={handleSubmit(handleRequest)}>
                                 <Text style={styles.buttonText}>Enviar</Text>
                             </TouchableOpacity>
                         </View>
@@ -197,3 +226,15 @@ export default function AdvHorarios({ navigation, route }) {
         </View>
     );
 }
+
+const stylesN = StyleSheet.create({
+    input: {
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        width: '80%',
+        marginBottom: 20,
+        marginTop: 20,
+        alignSelf: 'center',
+    },
+});

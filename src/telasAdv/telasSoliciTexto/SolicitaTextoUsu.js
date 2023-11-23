@@ -90,11 +90,11 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         texto: inputText,
       }).then((doc) => {
       });
-      deleteDoc(docRefde);
-      setModalVisible(false);
       if (onUpdate) {
         onUpdate();
       }
+      deleteDoc(docRefde);
+      setModalVisible(false);
       navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
 
@@ -182,7 +182,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
                   style={[
                     stylesN.input, {
                       borderWidth: errors.inputText ? 1.5 : 1,
-                      borderColor: errors.inputText ? '#f23535' : '#1E5A97',
+                      borderColor: errors.inputText ? '#f23535' : '#000',
                       marginBottom: errors.inputText ? 5 : 16
                     }]}
                   onBlur={onBlur}
