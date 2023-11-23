@@ -221,8 +221,7 @@ export default function CadastroUsu({ navigation }) {
                     <View style={styles.buttonContainer}>
                         <Text style={styles.politica}>
                             Ao clicar no botão "CADASTRAR", você concorda expressa e
-                            integralmente com a nossa Política de Privacidade e Política de
-                            Cookies. Além de aceitar receber notificações quando necessário.
+                            integralmente com a nossa Política de Privacidade e os Termos de Uso. Além de aceitar receber notificações quando necessário.
                         </Text>
 
                         <TouchableOpacity

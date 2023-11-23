@@ -97,6 +97,7 @@ export const styles = StyleSheet.create({
     color: '#f23535',
     marginBottom: '4%',
     marginLeft: '15%',
+    marginRight: '3%',
     fontSize: 15,
   },
   inputCad: {

@@ -324,6 +324,12 @@ export default function CadastroAdv({ navigation }) {
                     </View>
 
                     <View style={styles.buttonContainer}>
+
+                        <Text style={[styles.politica, {marginTop: 5}]}>
+                            Ao clicar no botão "CADASTRAR", você concorda expressa e
+                            integralmente com a nossa Política de Privacidade e os Termos de Uso. Além de aceitar receber notificações quando necessário.
+                        </Text>
+
                         <TouchableOpacity
                             style={styles.loginButton}
                             onPress={() => {
