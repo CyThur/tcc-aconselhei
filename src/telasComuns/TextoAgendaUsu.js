@@ -1,32 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { getAuth } from 'firebase/auth';
+import { getFirestore, updateDoc, collection, query, getDocs, where, deleteDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.config.js';
 import { styles } from '../Styles.js';
 
 export default function TextoAgendaUsu({ route }) {
     const user = getAuth();
-    const { idBene, nomeUsu, nomeAdv, texto, espe, } = route.params //AgendaUsu.js
+const { nomeUsu, nomeAdv, texto, espe, } = route.params;
+const [idUsu, setIdUsu] = useState('');
+const [link, setLink] = useState('');
 
-    function TextoDoUsu() { //PAROU AQUI, PRECISA PEGAR O LINK
+useEffect(() => {
+  onAuthStateChanged(user, async (user) => {
+    if (user) {
+      setIdUsu(user.uid);
+      const docRef = doc(db, 'usuarios', user.uid, 'LinkReuniaoUsu');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setLink(docSnap.data().link);
+      }
+    }
+  });
+}, []);
 
-        const [link, setLink] = useState(null);
+console.log(link);
+console.log(idUsu);
+
+    function TextoDoUsu() {
+       
 
         async function PegarLink() {
-            const docRef = doc(db, 'usuarios', idBene, 'solicitAceita');
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const link = docSnap.data().link;
-                setLink(link);
-                console.log("AQUI O LINK :", link)
-            } else {
-                console.log("No such document!");
-                return null;
+            const docRef = collection(db, 'usuarios', idUsu, 'LinkReuniaoUsu'); // Substitua 'idUsu' pelo ID do usuário
+            const snapshot = await getDocs(docRef);
+            const doc = snapshot.docs.find(doc => doc.data().link); // Encontrar o primeiro documento onde o campo 'link' existe
+            if (doc) {
+                setLink(doc.data().link); // Definir 'link' como uma string
             }
+            console.log(link);
+            console.log(idUsu);
         }
+
 
         useEffect(() => {
             PegarLink();
@@ -48,8 +63,10 @@ export default function TextoAgendaUsu({ route }) {
                 </View>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '70%', alignSelf: 'center' }}>
-                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', textAlign:'center' }}>Aguarde o link da reunião</Text>
-                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold' }}>{link} aa</Text>
+                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', textAlign: 'center' }}>Aguarde o link da reunião que será enviado pelo(a) advogado(a)</Text>
+                </View>
+                <View style={{ justifyContent: 'center', alignItems: 'center', width: '90%', alignSelf: 'center' }}>
+                <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', marginTop: 10 }}>{link}</Text>
                 </View>
             </View>
         )

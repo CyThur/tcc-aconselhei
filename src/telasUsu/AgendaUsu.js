@@ -59,7 +59,7 @@ export default function AgendaUsu({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('TextoAgendaUsu', { idBene: item.id, nomeUsu: item.data.deUsu, nomeAdv: item.data.nome, texto: item.data.texto, espe: item.data.espe })
+          navigation.navigate('TextoAgendaUsu', { nomeUsu: item.data.deUsu, nomeAdv: item.data.nome, texto: item.data.texto, espe: item.data.espe })
         }}
       >
         <View style={{

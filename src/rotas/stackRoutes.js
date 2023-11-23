@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import Inicio from '../telasComuns/Inicio';
 import EsqueSenha from '../telasComuns/EsqueSenha';
+import TermosUso from '../telasComuns/TermosUso';
 
 import LoginAdv from '../telasAdv/LoginAdv';
 import CadastroAdv from '../telasAdv/CadastroAdv';
@@ -41,6 +42,8 @@ export default function StackRoutes() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Inicio" component={Inicio} />
             <Stack.Screen name="EsqueSenha" component={EsqueSenha} />
+            
+            <Stack.Screen name="TermosUso" component={TermosUso} />
 
             <Stack.Screen name="LoginAdv" component={LoginAdv} />
             <Stack.Screen name="CadastroAdv" component={CadastroAdv} />
