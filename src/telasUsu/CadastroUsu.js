@@ -20,10 +20,10 @@ export default function CadastroUsu({ navigation }) {
         const currentDate = new Date();
         const diff = currentDate - birthDate;
         const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-    
+
         return age >= 18;
     };
-    
+
 
     const handleDateChange = (text) => {
         if (text.length === 2 || text.length === 5) {
@@ -219,9 +219,15 @@ export default function CadastroUsu({ navigation }) {
                     </View>
 
                     <View style={styles.buttonContainer}>
-                        <Text style={styles.politica}>
-                            Ao clicar no botão "CADASTRAR", você concorda expressa e
-                            integralmente com a nossa Política de Privacidade e os Termos de Uso. Além de aceitar receber notificações quando necessário.
+                        <Text style={[styles.politica, { marginTop: 5 }]}>
+                            Ao clicar no botão "CADASTRAR", você expressa e concorda integralmente com a nossa {''}
+                            <Text
+                                style={{ color: '#1E5A97', textDecorationLine: 'underline' }}
+                                onPress={() => navigation.navigate('TermosUso')}
+                            >
+                                Política de Privacidade e os Termos de Uso
+                            </Text>
+                            . Além de aceitar receber notificações quando necessário.
                         </Text>
 
                         <TouchableOpacity

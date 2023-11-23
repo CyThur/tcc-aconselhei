@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, Text, TouchableWithoutFeedback, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { styles } from '../Styles.js';
 import { FontAwesome } from '@expo/vector-icons';
@@ -116,6 +116,7 @@ export default function CadastroAdv({ navigation }) {
         { key: 'Sábado', value: 'Sábado' },
         { key: 'Domingo', value: 'Domingo' },
     ];
+
 
     return (
         <TouchableWithoutFeedback>
@@ -325,9 +326,15 @@ export default function CadastroAdv({ navigation }) {
 
                     <View style={styles.buttonContainer}>
 
-                        <Text style={[styles.politica, {marginTop: 5}]}>
-                            Ao clicar no botão "CADASTRAR", você concorda expressa e
-                            integralmente com a nossa Política de Privacidade e os Termos de Uso. Além de aceitar receber notificações quando necessário.
+                        <Text style={[styles.politica, { marginTop: 5 }]}>
+                            Ao clicar no botão "CADASTRAR", você expressa e concorda integralmente com a nossa {''}
+                            <Text
+                                style={{ color: '#1E5A97', textDecorationLine: 'underline' }}
+                                onPress={() => navigation.navigate('TermosUso')}
+                            >
+                                Política de Privacidade e os Termos de Uso
+                            </Text>
+                            . Além de aceitar receber notificações quando necessário.
                         </Text>
 
                         <TouchableOpacity
@@ -388,4 +395,6 @@ export default function CadastroAdv({ navigation }) {
             </View >
         </TouchableWithoutFeedback >
     );
+
+
 }
