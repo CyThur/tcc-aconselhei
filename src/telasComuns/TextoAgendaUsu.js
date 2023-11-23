@@ -1,13 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { getAuth } from 'firebase/auth';
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from '../firebase.config.js';
 import { styles } from '../Styles.js';
 
 export default function TextoAgendaUsu({ route }) {
     const user = getAuth();
-    const { nomeUsu, nomeAdv, texto, espe } = route.params
+    const { idBene, nomeUsu, nomeAdv, texto, espe, } = route.params //AgendaUsu.js
 
-    function TextoDoUsu() {
+    function TextoDoUsu() { //PAROU AQUI, PRECISA PEGAR O LINK
+
+        const [link, setLink] = useState(null);
+
+        async function PegarLink() {
+            const docRef = doc(db, 'usuarios', idBene, 'solicitAceita');
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const link = docSnap.data().link;
+                setLink(link);
+                console.log("AQUI O LINK :", link)
+            } else {
+                console.log("No such document!");
+                return null;
+            }
+        }
+
+        useEffect(() => {
+            PegarLink();
+        }, []);
+
         return (
             <View style={styles.telasAdv}>
                 <View style={stylesN.containerNome}>
@@ -24,7 +48,8 @@ export default function TextoAgendaUsu({ route }) {
                 </View>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '70%', alignSelf: 'center' }}>
-                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', textAlign:'center' }}>Aguarde o link da reunião que será enviado pelo(a) advogado(a).</Text>
+                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', textAlign:'center' }}>Aguarde o link da reunião</Text>
+                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold' }}>{link} aa</Text>
                 </View>
             </View>
         )

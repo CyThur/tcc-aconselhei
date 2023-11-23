@@ -57,14 +57,14 @@ export default function Inicial({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('SolicitaTextoUsu', {
-            nome: item.data.nome,
-            texto: item.data.texto,
-            id: item.id,
-            cate: item.data.cate,
-            diaDaSemana: item.data.diaDaSemana,
+          navigation.navigate('SolicitaTextoUsu', { 
+            nome: item.data.nome, 
+            texto: item.data.texto, 
+            id: item.id, 
+            cate: item.data.cate, 
+            diaDaSemana: item.data.diaDaSemana, 
             horario: item.data.horario,
-
+            
             onUpdate: () => {
               pegarDadosFiltrados()
             }

@@ -3,17 +3,15 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Ima
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, doc, updateDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase.config.js';
-
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
 import { styles } from '../../Styles.js';
 
 
 export default function SolicitaTextoUsu({ navigation, route }) {
   const user = getAuth();
-  const { id, nome, texto, cate, diaDaSemana, horario, onUpdate } = route.params
+  const { id, nome, texto, cate, diaDaSemana, horario, onUpdate } = route.params //Solicitacoes.js
   const [idUser, setIdUser] = useState('')
   const [nomeUser, setNomeUser] = useState('')
   const [modalVisible, setModalVisible] = useState(false);
@@ -95,7 +93,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
       }
       deleteDoc(docRefde);
       setModalVisible(false);
-      navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
+      navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv'})
       Alert.alert('Atenção', 'Justificação enviada com sucesso!')
 
     } catch (error) {
