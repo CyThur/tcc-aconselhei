@@ -24,7 +24,7 @@ export default function TextoAgendaUsu({ route }) {
                 </View>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '70%', alignSelf: 'center' }}>
-                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold' }}>Aguarde o link da reunião que será enviado no dia e horário marcado.</Text>
+                    <Text style={{ color: '#1E5A97', fontSize: 15, fontWeight: 'bold', textAlign:'center' }}>Aguarde o link da reunião que será enviado pelo(a) advogado(a).</Text>
                 </View>
             </View>
         )

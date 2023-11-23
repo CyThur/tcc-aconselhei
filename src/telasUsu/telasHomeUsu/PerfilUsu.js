@@ -46,7 +46,7 @@ const PerfilUsu = ({ navigation }) => {
 
   const excluirConta = async () => {
     Alert.alert(
-      "Excluir Conta",
+      "Excluir conta",
       "Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.",
       [
         {
