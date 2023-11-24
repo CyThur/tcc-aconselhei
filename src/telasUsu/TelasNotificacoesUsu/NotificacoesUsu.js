@@ -10,29 +10,82 @@ export default function NotificacoesUsu() {
   const user = getAuth()
 
   const colRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitRecusadaNotifi');
-  const q = query(colRef, where('status', '==', 'recusada'));
+  const qRecusada = query(colRef, where('status', '==', 'recusada'));
+
+  const colRefAceita = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+  const qAceita = query(colRefAceita, where('status', '==', 'aceita'));
 
   const [list, setList] = useState([]);
-
   const [id, setId] = useState('');
 
-  async function pegarDadosFiltrados() {
-    await getDocs(q).then((snapshot) => {
-      const arr = []
-      snapshot.forEach((doc) => {
-        const obj = {
-          data: doc.data(),
-          id: doc.id
-        }
-        arr.push(obj)
-        setId(doc.id)
-      })
-      setList(arr)
-    }).catch((err) => console.log(err))
-  }
+  // async function pegarNotifiRecusadas() {
+  //   await getDocs(q).then((snapshot) => {
+  //     const arr = []
+  //     snapshot.forEach((doc) => {
+  //       const obj = {
+  //         data: doc.data(),
+  //         id: doc.id
+  //       }
+  //       arr.push(obj)
+  //       setId(doc.id)
+  //     })
+  //     setList(arr)
+  //   }).catch((err) => console.log(err))
+  // }
+
+  // useEffect(() => {
+  //   pegarNotifiRecusadas()
+  // }, []);
+
+  // async function pegarNotifiAceitas() {
+  //   await getDocs(qAceita).then((snapshot) => {
+  //     const arrAceita = []
+  //     snapshot.forEach((doc) => {
+  //       const obj = {
+  //         data: doc.data(),
+  //         id: doc.id
+  //       }
+  //       arrAceita.push(obj)
+  //       setId(doc.id)
+  //     })
+  //     setList(arrAceita)
+  //   }).catch((err) => console.log(err))
+  // }
+
+  // useEffect(() => {
+  //   pegarNotifiAceitas()
+  // }, []);
+
 
   useEffect(() => {
-    pegarDadosFiltrados()
+    async function pegarNotificacoes() {
+      let arr = [];
+      let arrAceita = [];
+
+      await getDocs(qRecusada).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const obj = {
+            data: doc.data(),
+            id: doc.id
+          }
+          arr.push(obj)
+        })
+      }).catch((err) => console.log(err))
+
+      await getDocs(qAceita).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const obj = {
+            data: doc.data(),
+            id: doc.id
+          }
+          arrAceita.push(obj)
+        })
+      }).catch((err) => console.log(err))
+
+      setList([...arr, ...arrAceita]);
+    }
+
+    pegarNotificacoes();
   }, []);
 
   //deletar notificação
@@ -48,7 +101,6 @@ export default function NotificacoesUsu() {
   };
 
   const showDeleteConfirmation = (id) => {
-
     Alert.alert(
       'Excluir Notificação',
       'Tem certeza de que deseja excluir esta notificação?',
@@ -105,7 +157,7 @@ export default function NotificacoesUsu() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
 
-          <View style={styleN.buttonSoli}>
+          <View style={[styleN.buttonSoli, {height: item.data.status == 'aceita' ? 150 : 300} ]}>
             <TouchableOpacity
               onPressIn={() => {
                 buttonPressTimer.current = setTimeout(() => {
@@ -125,16 +177,24 @@ export default function NotificacoesUsu() {
                   <View style={{ margin: 15, flexDirection: 'row', flexWrap: 'wrap', width: '80%', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
                     <Text style={styleN.txt}>{item.data.nome}</Text>
                     <Text style={styleN.txt}> ({item.data.espe})</Text>
-                    <Text style={styleN.txt2}> recusou sua solicitação</Text>
-                    <Text style={styleN.txt}>!</Text>
+                    <Text style={styleN.txt2}>{item.data.status == 'aceita' ?
+                      'aceitou sua solicitação! Em breve você receberá o link para reunião'
+                      :
+                      'recusou sua solicitação!'
+                    }
+                    </Text>
                   </View>
                 </View>
               </View>
             </TouchableOpacity>
-            <Text style={styleN.txt3}>Resposta:</Text>
-            <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
-              <Text style={[styleN.txt, { marginBottom: 30 }]}>{item.data.texto} </Text>
-            </ScrollView>
+            {item.data.status == 'recusada' ? (
+              <View style={{height: '55%'}}>
+              <Text style={styleN.txt3}>Resposta:</Text>
+              <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
+                <Text style={[styleN.txt, { marginBottom: 30 }]}>{item.data.texto} </Text>
+              </ScrollView>
+              </View>
+            ) : null}
           </View>
 
         )}
@@ -164,7 +224,7 @@ const styleN = StyleSheet.create({
       height: '100%',
       alignSelf: 'center',
     },
-    shadowOpacity: 0.8, 
+    shadowOpacity: 0.8,
     shadowRadius: 3.84,
     elevation: 3,
   },
@@ -195,6 +255,7 @@ const styleN = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
+    textAlign: 'center',
   },
   txt3: {
     fontSize: 15,

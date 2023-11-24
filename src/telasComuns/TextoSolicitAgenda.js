@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Image, TextInput, Linking, Share } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, collection, updateDoc, setDoc, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, addDoc, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.config.js';
 import { styles } from '../Styles.js';
 import { useForm, Controller, set } from "react-hook-form";
@@ -12,11 +12,12 @@ import * as yup from 'yup';
 
 export default function TextoSolicitAgenda({ navigation, route }) {
   const user = getAuth();
-  const { id, nome, texto, cate } = route.params
+  const { id, nome, texto, cate, diaDaSemana, horario } = route.params //ConsulAgen.js
   const [idUsu, setIdUsu] = useState('')
   const [nomeUser, setNomeUser] = useState('')
   const [modalVisible, setModalVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [linkConsultoria, setLinkConsultoria] = useState('');
 
   const schema = yup.object().shape({
     link: yup.string().url('Insira um link').required('Campo vazio'),
@@ -75,13 +76,46 @@ export default function TextoSolicitAgenda({ navigation, route }) {
         </View>
 
         {/* ABRIR MODAL */}
-        <TouchableOpacity style={[styles.button, { marginBottom: 90 }]} onPress={() => setModalVisible(true)}>
-          <Text style={styles.loginButtonText}>ENVIAR O LINK DA REUNIÃO</Text>
-        </TouchableOpacity>
-
+        {linkConsultoria ? (
+          <View style={{ width: '87%', height: '13%', alignSelf:'center' }}>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignItems: 'center', alignSelf: 'center', backgroundColor: '#1E5A97',  width: '100%', borderRadius: 16, padding: 10 }}
+              onPress={() => { EntrarReuniao(); console.log('*click*'); }}
+              onLongPress={() => Share.share({ message: linkConsultoria })}>
+              <Text style={{ color: '#1E5A97', fontSize: 16, fontWeight: '500', color: 'white', textAlign:'center' }}>Toque para ir à reunião ou segure para copiar o link</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity style={[styles.button, { marginBottom: 90 }]} onPress={() => setModalVisible(true)}>
+            <Text style={styles.loginButtonText}>ENVIAR O LINK DA REUNIÃO</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }
+
+
+  useEffect(() => {
+    async function PegarLink() {
+      const collectionRef = collection(db, 'advogados', user.currentUser.uid, 'solicitacoes');
+      const q = query(collectionRef, where("cate", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
+      const querySnapshot = await getDocs(q);
+
+      const links = await Promise.all(querySnapshot.docs.map(async (docData) => {
+        const docRefAdv = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docData.id);
+        const docSnap = await getDoc(docRefAdv);
+
+        if (docSnap.exists()) {
+          return docSnap.data().link;
+        }
+      }));
+
+      if (links.length > 0) {
+        setLinkConsultoria(links[0]);
+      }
+    }
+    PegarLink();
+  }, []);
 
   const ValidacaoLink = async (data) => {
     try {
@@ -94,21 +128,44 @@ export default function TextoSolicitAgenda({ navigation, route }) {
   };
 
   const EnviarLink = async (data) => {
-    const docRefAdv = collection(db, 'advogados', user.currentUser.uid, 'LinkReuniao');
-    await addDoc(docRefAdv, {
-      link: data.link
-    });
+    const collectionRef = collection(db, 'advogados', user.currentUser.uid, 'solicitacoes');
+    const q = query(collectionRef, where("cate", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
+    const querySnapshot = await getDocs(q);
 
-    const docRefUsu = collection(db, 'usuarios', idUsu, 'LinkReuniaoUsu')
-    await addDoc(docRefUsu, {
-      link: data.link
-    });
-    console.log("UUUIII: ", docRefAdv.id)
-    setModalVisible(false);
-    setInputText('');
-    navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
-    Alert.alert('Atenção', 'Link enviado com sucesso!')
+    await Promise.all(querySnapshot.docs.map(async (docData) => {
+      const docRefAdv = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docData.id);
+      await updateDoc(docRefAdv, {
+        link: data.link
+      });
+    }));
+
+  //   const docRefUsu = collection(db, 'usuarios', idUsu, 'LinkReuniaoUsu')  ACHO QUE NÃO PRECISA MAIS
+  //   await addDoc(docRefUsu, {
+  //     link: data.link
+  //   });
+  //   setModalVisible(false);
+  //   setInputText('');
+  //   navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
+  //   Alert.alert('Atenção', 'Link enviado com sucesso!')
   }
+
+  const EntrarReuniao = async () => {
+    Linking.openURL(linkConsultoria);
+
+    const collectionRef = collection(db, 'advogados', user.currentUser.uid, 'solicitacoes');
+    const q = query(collectionRef, where("cate", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
+    const querySnapshot = await getDocs(q);
+    
+    const consulRealizadas = await Promise.all(querySnapshot.docs.map(async (docData) => {
+      const docRef = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docData.id);
+      await updateDoc(docRef, {
+        realizada: true
+      });
+
+      console.log("realizada"); 
+    }));
+  }
+
 
   return (
     <View style={styles.containerTelas}>
@@ -204,7 +261,7 @@ const stylesN = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
     marginTop: 15,
-    height: '60%',
+    height: '55%',
     width: '150%',
     padding: 15,
   },

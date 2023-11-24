@@ -61,6 +61,7 @@ export default function SolicitaTextoUsu({ navigation, route }) {
         diaDaSemana: diaDaSemana,
         horario: horario,
         texto: texto,
+        idAdvogado: user.currentUser.uid,
       }).then((doc) => {
       });
 
