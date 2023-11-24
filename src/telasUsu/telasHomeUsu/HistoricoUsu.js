@@ -5,11 +5,15 @@ import { styles } from '../../Styles';
 import { useForm, Controller, set } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { collection, query, getDocs, where, deleteDoc } from "firebase/firestore";
+import { db } from '../../firebase.config.js';
+import { getAuth } from 'firebase/auth';
 
 export default function HistoricoUsu({ navigation }) {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [list, setList] = useState([]);
 
   const schema = yup.object().shape({
     textoDenuncia: yup.string().required('Campo vazio'),
@@ -18,6 +22,82 @@ export default function HistoricoUsu({ navigation }) {
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
+
+  const user = getAuth()
+
+  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+
+  const q = query(colRef, where('status', '==', 'aceita'), where('realizada', '==', true));
+
+  async function pegarDadosFiltrados() {
+    await getDocs(q).then((snapshot) => {
+      const arr = []
+      snapshot.forEach((doc) => {
+        const obj = {
+          data: doc.data(),
+          id: doc.id
+        }
+        arr.push(obj)
+      })
+      setList(arr)
+    }).catch((err) => console.log('Erro:', err))
+  }
+
+  useEffect(() => {
+    pegarDadosFiltrados()
+  }, [])
+
+  function ConsultoriasRealizadas({ item }) {
+    return (
+      <View style={styles.labelContainerHistUsu}>
+        <View style={{ paddingRight: 15 }}>
+          <Text style={styles.dateHistUsu}>{item.data.diaDaSemana}</Text>
+          <Text style={styles.timeHistUsu}>{item.data.horario}</Text>
+          <Text style={styles.timeHistUsu}>{item.data.espe}</Text>
+          <Text style={styles.timeHistUsu}>{item.data.nome}</Text>
+          <Text style={styles.timeHistUsu}>{item.data.texto}</Text>
+          <Text
+            style={[styles.timeHistUsu, { color: 'red', fontWeight: '600', fontSize: 15 }]}
+            onPress={() => setModalVisible(true)}
+          >
+            DENUNCIAR
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
+  if (list.length == 0) {
+    return (
+      <View style={styles.containerTelas}>
+        <View style={styles.logoView}>
+          <View style={{
+            flexDirection: 'row',
+            width: '100%',
+            height: '100%',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <AntDesign
+              name="left"
+              size={20}
+              color="#1E5A97"
+              style={{ marginRight: '7%' }}
+              onPress={() => navigation.navigate('TabRoutesUsu')} />
+            <Image
+              style={styles.logo2}
+              source={require('../../../assets/aconselhei1.png')}
+            />
+          </View>
+        </View>
+        <Text style={styles.navOption}>HISTÓRICO</Text>
+        <View style={{ height: '65%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+          <Text style={styles.txt3}>Você ainda não realizou nenhuma consultoria.</Text>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.containerTelas}>
@@ -35,7 +115,7 @@ export default function HistoricoUsu({ navigation }) {
             size={20}
             color="#1E5A97"
             style={{ marginRight: '7%' }}
-            onPress={() => navigation.navigate('TabRoutesUsu')} />
+            onPress={() => navigation.navigate('TabRoutesAdv')} />
           <Image
             style={styles.logo2}
             source={require('../../../assets/aconselhei1.png')}
@@ -43,57 +123,58 @@ export default function HistoricoUsu({ navigation }) {
         </View>
       </View>
       <Text style={styles.navOption}>HISTÓRICO</Text>
-      <View style={{ height: '65%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
-        <Text style={styles.txt3} onPress={() => setModalVisible(true)}>Você ainda não recebeu nenhuma consultoria.</Text>
-      </View>
-
-      <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.containerTelas}>
-          <View style={styles.logoView}>
-            <Image
-              style={styles.logo2}
-              source={require('../../../assets/aconselhei1.png')}
-            />
-          </View>
-          <View style={{ width: '80%', alignSelf: 'center', }}>
-            <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>O(A) advogado(a) teve má conduta durante a consultoria? Denuncie</Text>
-          </View>
-          <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
-
-            <Controller
-              name="textoDenuncia"
-              control={control}
-              defaultValue=""
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[
-                    stylesN.input, {
-                      borderWidth: errors.textoDenuncia ? 1.5 : 1,
-                      borderColor: errors.textoDenuncia ? '#f23535' : '#000',
-                      marginBottom: errors.textoDenuncia ? 5 : 16
-                    }]}
-                  onBlur={onBlur}
-                  onChangeText={onChange} //value => onChange(value)
-                  value={value}
-                  placeholder="Escreva sua denúncia aqui..."
-                  multiline
-                  autoCapitalize="none"
-                />
-              )}
-            />
-            {errors.link && <Text style={[styles.inputLoginError, { marginLeft: '10%' }]}>{errors.link.message}</Text>}
-
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
-              <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
-                <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={''}>
-                <Text style={styles.buttonText}>Enviar</Text>
-              </TouchableOpacity>
+      <ScrollView style={{ marginTop: '6%', paddingBottom: 10, height: '60%', width: '90%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+        <Modal visible={modalVisible} animationType="slide">
+          <View style={styles.containerTelas}>
+            <View style={styles.logoView}>
+              <Image
+                style={styles.logo2}
+                source={require('../../../assets/aconselhei1.png')}
+              />
             </View>
-          </ScrollView>
+            <View style={{ width: '80%', alignSelf: 'center', }}>
+              <Text style={[styles.navOption, { marginBottom: 10, marginTop: 20, }]}>O(A) advogado(a) teve má conduta durante a consultoria? Denuncie</Text>
+            </View>
+            <ScrollView style={{ marginTop: 20, paddingBottom: 10, width: '100%', alignSelf: 'center', }} showsVerticalScrollIndicator={false}>
+
+              <Controller
+                name="textoDenuncia"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    style={[
+                      stylesN.input, {
+                        borderWidth: errors.textoDenuncia ? 1.5 : 1,
+                        borderColor: errors.textoDenuncia ? '#f23535' : '#000',
+                        marginBottom: errors.textoDenuncia ? 5 : 16
+                      }]}
+                    onBlur={onBlur}
+                    onChangeText={onChange} //value => onChange(value)
+                    value={value}
+                    placeholder="Escreva sua denúncia aqui..."
+                    multiline
+                    autoCapitalize="none"
+                  />
+                )}
+              />
+              {errors.textoDenuncia && <Text style={[styles.inputLoginError, { marginLeft: '10%' }]}>{errors.textoDenuncia.message}</Text>}
+
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '115%', alignSelf: 'center', }}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
+                  <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={''}>
+                  <Text style={styles.buttonText}>Enviar</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </Modal>
+        <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', alignSelf: 'center' }}>
+          {list.map((item) => <ConsultoriasRealizadas key={item.id} item={item} />)}
         </View>
-      </Modal>
+      </ScrollView>
 
     </View>
   );
@@ -154,55 +235,54 @@ const stylesN = StyleSheet.create({
   }
 });
 
-  // return (
-  //   <View style={styles.containerHistUsu}>
-  //     <Text style={styles.titleHistUsu}>Meus Agendamentos</Text>
-  //     <View style={styles.navigatorHistUsu}>
-  //       <TouchableOpacity>
-  //         <Text style={styles.navOptionHistUsu}>Próximas</Text>
-  //       </TouchableOpacity>
+// return (
+//   <View style={styles.containerHistUsu}>
+//     <Text style={styles.titleHistUsu}>Meus Agendamentos</Text>
+//     <View style={styles.navigatorHistUsu}>
+//       <TouchableOpacity>
+//         <Text style={styles.navOptionHistUsu}>Próximas</Text>
+//       </TouchableOpacity>
 
-  //       <TouchableOpacity>
-  //         <Text style={styles.navOption2HistUsu}>Histórico</Text>
-  //       </TouchableOpacity>
-  //     </View>
+//       <TouchableOpacity>
+//         <Text style={styles.navOption2HistUsu}>Histórico</Text>
+//       </TouchableOpacity>
+//     </View>
 
-  //     <ScrollView style={styles.scrollViewHistUsu}>
-  //       <View style={styles.labelContainerHistUsu}>
-  //         <View style={{ paddingRight: 15 }}>
-  //           <Text style={styles.dateHistUsu}>05/11/2023</Text>
-  //           <Text style={styles.timeHistUsu}>17:00</Text>
-  //         </View>
+//     <ScrollView style={styles.scrollViewHistUsu}>
+//       <View style={styles.labelContainerHistUsu}>
+//         <View style={{ paddingRight: 15 }}>
+//           <Text style={styles.dateHistUsu}>05/11/2023</Text>
+//           <Text style={styles.timeHistUsu}>17:00</Text>
+//         </View>
 
-  //         <View>
-  //           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
-  //           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
-  //         </View>
-  //       </View>
+//         <View>
+//           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
+//           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
+//         </View>
+//       </View>
 
-  //       <View style={styles.labelContainerHistUsu}>
-  //         <View style={{ paddingRight: 15 }}>
-  //           <Text style={styles.dateHistUsu}>05/11/2023</Text>
-  //           <Text style={styles.timeHistUsu}>17:00</Text>
-  //         </View>
+//       <View style={styles.labelContainerHistUsu}>
+//         <View style={{ paddingRight: 15 }}>
+//           <Text style={styles.dateHistUsu}>05/11/2023</Text>
+//           <Text style={styles.timeHistUsu}>17:00</Text>
+//         </View>
 
-  //         <View>
-  //           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
-  //           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
-  //         </View>
-  //       </View>
+//         <View>
+//           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
+//           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
+//         </View>
+//       </View>
 
-  //       <View style={styles.labelContainerHistUsu}>
-  //         <View style={{ paddingRight: 15 }}>
-  //           <Text style={styles.dateHistUsu}>05/11/2023</Text>
-  //           <Text style={styles.timeHistUsu}>17:00</Text>
-  //         </View>
+//       <View style={styles.labelContainerHistUsu}>
+//         <View style={{ paddingRight: 15 }}>
+//           <Text style={styles.dateHistUsu}>05/11/2023</Text>
+//           <Text style={styles.timeHistUsu}>17:00</Text>
+//         </View>
 
-  //         <View>
-  //           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
-  //           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
-  //         </View>
-  //       </View>
-  //     </ScrollView>
-  //   </View>
-  // );
+//         <View>
+//           <Text style={styles.categoryHistUsu}>Direito do consumidor</Text>
+//           <Text style={styles.sourceHistUsu}>Realizada por chat</Text>
+//         </View>
+//       </View>
+//     </ScrollView>
+//   </View>
