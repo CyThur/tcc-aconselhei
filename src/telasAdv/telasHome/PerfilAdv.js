@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ImageBackground, Button, Image, StyleSheet } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
@@ -458,6 +458,7 @@ const PerfilAdv = ({ navigation }) => {
         });
         Alert.alert('Horários salvos com sucesso!', 'Em breve seus horários de disponibilidade para esse dia serão atualizados');
         setEditandoHorario(false);
+        navigation.navigate('TabRoutesAdv');
       } else {
         Alert.alert('Nenhum horário foi selecionado!');
       }
@@ -616,7 +617,7 @@ const PerfilAdv = ({ navigation }) => {
 
             {/* botão pra apresentar os horários de disponibilidade */}
             {editandoHorario === false ? (
-              <View style={{ marginBottom: 120 }}>
+              <View style={{ marginBottom: 40 }}>
                 {fraseProBotao()}
               </View>
             ) : (
@@ -642,7 +643,7 @@ const PerfilAdv = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
+                  style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, marginBottom: 40 }}
                   onPress={apagarHorarios}
                 >
                   <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
@@ -694,5 +695,21 @@ const stylesPA = StyleSheet.create({
     margin: 5,
     marginHorizontal: 7,
     alignItems: 'center'
-  }
+  },
+  deleteButton: {
+    bottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 120,
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  deleteButtonText: {
+    color: '#f23535',
+    fontSize: 16,
+    marginLeft: 5,
+  },
 });
