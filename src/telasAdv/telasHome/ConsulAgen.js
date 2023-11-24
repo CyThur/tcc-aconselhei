@@ -16,6 +16,7 @@ export default function ConsulAgen({ navigation }) {
   const q = query(colRef, where('status', '==', 'aceita'));
 
   const [list, setList] = useState([]);
+  // const [linkConsultoria, setLinkConsultoria] = useState('');
 
   async function pegarDadosFiltrados() {
     await getDocs(q).then((snapshot) => {
@@ -34,6 +35,19 @@ export default function ConsulAgen({ navigation }) {
   useEffect(() => {
     pegarDadosFiltrados()
   }, [])
+
+  // async function PegarLink() {
+  //   const docRef = collection(db, 'advogados', user.currentUser.uid, 'LinkReuniao'); // Substitua 'idUsu' pelo ID do usuário
+  //   const snapshot = await getDocs(docRef);
+  //   const doc = snapshot.docs.find(doc => doc.data().link); // Encontrar o primeiro documento onde o campo 'link' existe
+  //   if (doc) {
+  //     setLinkConsultoria(doc.data().link); // Definir 'link' como uma string
+  //   }
+  // }
+
+  // useEffect(() => { TAVA TUDO JUNTO, USEEFFECT NÃO TAVA POR FORA
+  //   PegarLink();
+  // }, []);
 
 
   if (list.length == 0) {
@@ -73,7 +87,7 @@ export default function ConsulAgen({ navigation }) {
       <TouchableOpacity
         style={styleN.buttonSoli}
         onPress={() => {
-          navigation.navigate('TextoSolicitAgenda', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate })
+          navigation.navigate('TextoSolicitAgenda', { nome: item.data.nome, texto: item.data.texto, id: item.id, cate: item.data.cate, diaDaSemana: item.data.diaDaSemana, horario: item.data.horario })
         }}
       >
         <View style={{
@@ -83,7 +97,7 @@ export default function ConsulAgen({ navigation }) {
           alignSelf: 'center',
           alignItems: 'center',
         }}>
-          <View style={{width: 270}}>
+          <View style={{ width: 270 }}>
             <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
             <Text style={styleN.especiTxt}>{item.data.cate}</Text>
           </View>
