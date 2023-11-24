@@ -638,14 +638,14 @@ const PerfilAdv = ({ navigation }) => {
                   style={{ backgroundColor: '#1E5A97', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 30, }}
                   onPress={salvarHorarios}
                 >
-                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>SALVAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>SALVAR HORÁRIOS DE {diaSelecionado.toUpperCase()}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={{ backgroundColor: '#E40000', padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', margin: 10, marginTop: 0, }}
                   onPress={apagarHorarios}
                 >
-                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}-FEIRA</Text>
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>APAGAR HORÁRIOS DE {diaSelecionado.toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>
             )}

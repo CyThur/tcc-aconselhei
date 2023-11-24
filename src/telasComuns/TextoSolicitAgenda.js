@@ -139,14 +139,10 @@ export default function TextoSolicitAgenda({ navigation, route }) {
       });
     }));
 
-  //   const docRefUsu = collection(db, 'usuarios', idUsu, 'LinkReuniaoUsu')  ACHO QUE NÃO PRECISA MAIS
-  //   await addDoc(docRefUsu, {
-  //     link: data.link
-  //   });
-  //   setModalVisible(false);
-  //   setInputText('');
-  //   navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
-  //   Alert.alert('Atenção', 'Link enviado com sucesso!')
+    setModalVisible(false);
+    setInputText('');
+    navigation.navigate('TabRoutesAdv', { screen: 'HomeAdv' })
+    Alert.alert('Atenção', 'Link enviado com sucesso!')
   }
 
   const EntrarReuniao = async () => {
