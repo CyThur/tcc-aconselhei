@@ -128,6 +128,7 @@ export default function TextoSolicitAgenda({ navigation, route }) {
   };
 
   const EnviarLink = async (data) => {
+    //enviando o link pra solicitação que o adv recebeu
     const collectionRef = collection(db, 'advogados', user.currentUser.uid, 'solicitacoes');
     const q = query(collectionRef, where("cate", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
     const querySnapshot = await getDocs(q);
@@ -135,6 +136,18 @@ export default function TextoSolicitAgenda({ navigation, route }) {
     await Promise.all(querySnapshot.docs.map(async (docData) => {
       const docRefAdv = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docData.id);
       await updateDoc(docRefAdv, {
+        link: data.link
+      });
+    }));
+
+    //enviando o link pra solicitação aceita que o usu recebeu
+    const collectionRefUsu = collection(db, 'usuarios', idUsu, 'solicitAceita');
+    const qUsu = query(collectionRefUsu, where("espe", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
+    const querySnapshotUsu = await getDocs(qUsu);
+
+    await Promise.all(querySnapshotUsu.docs.map(async (docData) => {
+      const docRefUsu = doc(db, 'usuarios', idUsu, 'solicitAceita', docData.id);
+      await updateDoc(docRefUsu, {
         link: data.link
       });
     }));

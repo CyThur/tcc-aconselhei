@@ -687,6 +687,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width:'92%'
   },
 
   dateHistUsu: {
@@ -990,6 +991,30 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'justify',
     marginBottom: 10,
+  },
+  buttonSoli: {
+    width: '100%',
+    height: 100,
+    backgroundColor: '#C0C0C0',
+    marginBottom: 10,
+    padding: 15,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#4F4F4F',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5, especiTxt: {
+      fontSize: 15,
+      color: 'gray',
+      marginBottom: 15,
+    },
+    shadowRadius: 3.84,
+    elevation: 8,
   },
 
 });

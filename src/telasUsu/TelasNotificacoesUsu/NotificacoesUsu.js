@@ -83,6 +83,7 @@ export default function NotificacoesUsu() {
       }).catch((err) => console.log(err))
 
       setList([...arr, ...arrAceita]);
+      console.log(list);
     }
 
     pegarNotificacoes();
@@ -157,7 +158,7 @@ export default function NotificacoesUsu() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
 
-          <View style={[styleN.buttonSoli, {height: item.data.status == 'aceita' ? 150 : 300} ]}>
+          <View style={[styleN.buttonSoli, { height: item.data.status == 'aceita' ? 150 : 300 }]}>
             <TouchableOpacity
               onPressIn={() => {
                 buttonPressTimer.current = setTimeout(() => {
@@ -177,10 +178,13 @@ export default function NotificacoesUsu() {
                   <View style={{ margin: 15, flexDirection: 'row', flexWrap: 'wrap', width: '80%', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
                     <Text style={styleN.txt}>{item.data.nome}</Text>
                     <Text style={styleN.txt}> ({item.data.espe})</Text>
-                    <Text style={styleN.txt2}>{item.data.status == 'aceita' ?
-                      'aceitou sua solicitação! Em breve você receberá o link para reunião'
+                    <Text style={styleN.txt2}>{item.data.status == 'aceita' && item.data.link ?
+                      'te enviou o link! Veja a consultoria na agenda para acessá-lo'
                       :
-                      'recusou sua solicitação!'
+                      item.data.status == 'aceita' ? //DÁ PRA APAGAR AS NOTIFICAÇÕES 'status == aceita' E 'item.data.link' (quando tem link) ???
+                        'aceitou sua solicitação! Em breve você receberá o link para reunião'
+                        :
+                        'recusou sua solicitação!'
                     }
                     </Text>
                   </View>
@@ -188,11 +192,11 @@ export default function NotificacoesUsu() {
               </View>
             </TouchableOpacity>
             {item.data.status == 'recusada' ? (
-              <View style={{height: '55%'}}>
-              <Text style={styleN.txt3}>Resposta:</Text>
-              <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
-                <Text style={[styleN.txt, { marginBottom: 30 }]}>{item.data.texto} </Text>
-              </ScrollView>
+              <View style={{ height: '55%' }}>
+                <Text style={styleN.txt3}>Resposta:</Text>
+                <ScrollView style={{ marginBottom: 15, paddingLeft: 15, paddingTop: 15, paddingRight: 15, width: '91%', backgroundColor: '#D3D3D3', alignSelf: 'center', padding: 5, borderRadius: 10, }}>
+                  <Text style={[styleN.txt, { marginBottom: 30 }]}>{item.data.texto} </Text>
+                </ScrollView>
               </View>
             ) : null}
           </View>

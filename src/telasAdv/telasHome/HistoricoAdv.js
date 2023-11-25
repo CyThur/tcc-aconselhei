@@ -48,7 +48,7 @@ export default function HistoricoAdv({ navigation }) {
   }, [])
 
   function ConsultoriasRealizadas({ item }) {
-    return (
+    return ( //MELHORAR A ESTILIZAÇÃO DO CARD DO HISTÓRICO
       <View style={styles.labelContainerHistUsu}>
         <View style={{ paddingRight: 15 }}>
           <Text style={styles.dateHistUsu}>{item.data.diaDaSemana}</Text>
@@ -164,7 +164,7 @@ export default function HistoricoAdv({ navigation }) {
                 <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                   <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={''}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={ () => {setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso, e será analisada pela equipe da AconseLhEI');} }>
                   <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
               </View>
