@@ -675,8 +675,8 @@ export const styles = StyleSheet.create({
   },
 
   labelContainerHistUsu: {
-    backgroundColor: '#F2F1EC',
-    padding: 18,
+    backgroundColor: '#E1E0D9',
+    padding: 20,
     marginHorizontal: 30,
     marginBottom: 20,
     shadowColor: '#000',
@@ -684,23 +684,60 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width:'92%'
+    width:'92%',
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: 'black'
+  },
+
+  nomeHistUsu: {
+    color: 'black', 
+    marginBottom: 10, 
+    fontWeight: '600', 
+    fontSize: 15
   },
 
   dateHistUsu: {
-    color: '#828282',
+    color: '#686868',
     fontWeight: 'bold',
-    fontSize: 13,
-    marginBottom: 5,
+    marginBottom: 17, 
+    fontSize: 15
   },
 
   timeHistUsu: {
     color: '#828282',
+    marginBottom: 15, 
+    fontWeight: '600', 
+    fontSize: 15 
+  },
+
+  msgHistUsu: {
+    color: '#414141', 
+    backgroundColor: '#C6C6C6', 
+    padding: 15, 
+    borderRadius: 8, 
+    lineHeight: 16, 
+    textAlign: 'justify',  
     fontSize: 13,
-    marginBottom: 25,
+    marginBottom: 17,
+    alignSelf:'stretch',
+    fontWeight:'500'
+  },
+
+  denunciarHistUsu: {
+    backgroundColor: '#f23535', 
+    width: '42%', 
+    padding: 10, 
+    paddingVertical: 6, 
+    borderRadius: 5, 
+    alignSelf:'flex-end', 
+    alignItems: 'center',
+  },
+
+  denunciarTxtHistUsu: {
+    color: 'white',
+    fontWeight: '600', 
+    fontSize: 15, 
   },
 
   categoryHistUsu: {

@@ -50,19 +50,14 @@ export default function HistoricoAdv({ navigation }) {
   function ConsultoriasRealizadas({ item }) {
     return ( //MELHORAR A ESTILIZAÇÃO DO CARD DO HISTÓRICO
       <View style={styles.labelContainerHistUsu}>
-        <View style={{ paddingRight: 15 }}>
-          <Text style={styles.dateHistUsu}>{item.data.diaDaSemana}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.horario}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.espe}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.nome}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.texto}</Text>
-          <Text
-            style={[styles.timeHistUsu, { color: 'red', fontWeight: '600', fontSize: 15 }]}
-            onPress={() => setModalVisible(true)}
-          >
-            DENUNCIAR
-          </Text>
-        </View>
+        <Text style={styles.nomeHistUsu}>{item.data.nome} ({item.data.cate})</Text>
+        <Text style={styles.dateHistUsu}>{item.data.diaDaSemana} — {item.data.horario}</Text>
+        <Text style={styles.msgHistUsu}>{item.data.texto}</Text>
+        <TouchableOpacity
+          style={styles.denunciarHistUsu}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.denunciarTxtHistUsu}>DENUNCIAR</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -164,7 +159,7 @@ export default function HistoricoAdv({ navigation }) {
                 <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                   <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={ () => {setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso, e será analisada pela equipe da AconseLhEI');} }>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={() => { setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso, e será analisada pela equipe da AconseLhEI'); }}>
                   <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
               </View>
