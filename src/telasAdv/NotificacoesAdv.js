@@ -81,7 +81,7 @@ export default function NotificacoesAdv() {
             <TouchableOpacity
               onPressIn={() => {
                 buttonPressTimer.current = setTimeout(() => {
-                  Alert.alert("Atenção", "Esta notificação será excluída autmaticamente após você aceitar ou recusar a solicitação.");
+                  Alert.alert("Atenção", "Esta notificação será excluída automaticamente após você aceitar ou recusar a solicitação.");
                 }, pressDurationThreshold);
               }}
               onPressOut={() => {
