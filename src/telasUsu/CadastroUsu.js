@@ -33,12 +33,12 @@ export default function CadastroUsu({ navigation }) {
     };
 
     const schema = yup.object().shape({
-        nome: yup.string().required('Informe seu nome'),
-        email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
-        senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres'),
+        nome: yup.string().required('Informe seu nome').matches(/^[aA-zZ\s]+$/, 'Somente letras são permitidas no nome').max(51, 'Nome muito longo'),
+        email: yup.string().required('Informe seu e-mail').email('E-mail inválido').matches(/^[a-zA-Z0-9.@]+$/, "Somente caracteres alfanuméricos, '.' e '@' são permitidos no e-mail").max(30, 'Email muito longo'),
+        senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres').max(30, 'Senha muito longa'),
         reSenha: yup.string().required('Confirme a senha digitada').min(8, 'Pelo menos 8 caracteres').oneOf([yup.ref('senha'), null], 'As senhas devem ser iguais'),
         data: yup.string().required('Informe sua data de nascimento').min(10, 'Data incorreta').test('valida-data', 'Você deve ter pelo menos 18 anos para se cadastrar.', validateAge)
-    })
+      });
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)

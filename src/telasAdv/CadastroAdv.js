@@ -34,13 +34,13 @@ export default function CadastroAdv({ navigation }) {
     const [selected, setSelected] = useState([]);
 
     const schema = yup.object().shape({
-        nomeadv: yup.string().required('Informe seu nome completo'),
-        email: yup.string().required('Informe seu e-mail').email('E-mail inválido'),
-        senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres'),
+        nomeadv: yup.string().required('Informe seu nome completo').matches(/^[aA-zZ\s]+$/, 'Somente letras são permitidas no nome').max(51, 'Nome muito longo'),
+        email: yup.string().required('Informe seu e-mail').email('E-mail inválido').matches(/^[a-zA-Z0-9.@]+$/, "Somente caracteres alfanuméricos, '.' e '@' são permitidos no e-mail").max(30, 'Email muito longo'),
+        senha: yup.string().required('Digite uma senha').min(8, 'Pelo menos 8 caracteres').max(30, 'Senha muito longa'),
         reSenha: yup.string().required('Confirme sua senha').min(8, 'Pelo menos 8 caracteres').oneOf([yup.ref('senha'), null], 'As senhas devem ser iguais'),
-        ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida'),
+        ufOab: yup.string().required('Informe a UF da OAB').min(2, 'UF inválida').max(2, 'UF inválida').transform(value => value.toUpperCase()),
         oab: yup.string().required('Informe o número da OAB').min(6, 'Número inválido').max(6, 'Número inválido'),
-        instituicao: yup.string().required('Informe a instituição onde se formou'),
+        instituicao: yup.string().required('Informe a instituição onde se formou').matches(/^[aA-zZ\s]+$/, 'Somente letras são permitidas no nome').min(3, 'Nome muito curto').max(40, 'Nome muito longo'),
     })
 
     const { control, handleSubmit, formState: { errors } } = useForm({

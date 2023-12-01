@@ -14,6 +14,7 @@ import { stylesP } from '../../StylesPerfil';
 import { storage, db } from '../../firebase.config';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
+import { set } from 'react-hook-form';
 
 const PerfilAdv = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -138,6 +139,7 @@ const PerfilAdv = ({ navigation }) => {
       allowsMultipleSelection: false,
     });
     if (!result.canceled) {
+      const imagemSelecionada = result.assets[0].uri;
       Alert.alert(
         'Atenção',
         'Tem certeza de que deseja trocar sua foto de perfil?',
@@ -146,7 +148,7 @@ const PerfilAdv = ({ navigation }) => {
           {
             text: 'Sim',
             onPress: () => {
-              upload(setSelectedImage(result.assets[0].uri));
+              upload(imagemSelecionada);
             },
           },
         ],
@@ -179,9 +181,19 @@ const PerfilAdv = ({ navigation }) => {
         quality: 1,
         allowsMultipleSelection: false,
       })
+      console.log("RESPOSTA DA CAMERA: ",cameraResp);
+
       if (cameraResp.canceled) {
         Alert.alert('Aviso', 'Nenhuma foto tirada');
       } else {
+        const imagemSelecionada = cameraResp.assets[0].uri; //aqui @--
+
+        if (!imagemSelecionada) {
+          Alert.alert('Erro', 'Algo deu errado.');
+          return;
+        }
+
+        setSelectedImage(imagemSelecionada); //-----@
         Alert.alert(
           'Atenção',
           'Tem certeza de que deseja trocar sua foto de perfil?',
@@ -189,7 +201,7 @@ const PerfilAdv = ({ navigation }) => {
             { text: 'Não', style: 'cancel' },
             {
               text: 'Sim',
-              onPress: () => { upload(setSelectedImage(cameraResp.assets[0].uri)); },
+              onPress: () => { upload(cameraResp.assets[0].uri); }, //aqui
             },
           ],
           { cancelable: false }
@@ -201,9 +213,13 @@ const PerfilAdv = ({ navigation }) => {
   };
 
 
-  const upload = async () => {
+  const upload = async (uri) => {
+    console.log('URI da imagem no início da função upload: ', uri);
     const auth = getAuth()
-    const { uri } = await FileSystem.getInfoAsync(selectedImage);
+
+    console.log('URI da imagem ANTES de chamar FileSystem.getInfoAsync:', uri);
+    const fileInfo = await FileSystem.getInfoAsync(uri);
+    console.log('URI da imagem DEPOIS de chamar FileSystem.getInfoAsync:', uri);
     const docUserRef = doc(db, 'advogados', auth.currentUser.uid)
     const fileName = ref(storage, auth.currentUser.uid)
 

@@ -106,6 +106,7 @@ const PerfilUsu = ({ navigation }) => {
       allowsMultipleSelection: false,
     });
     if (!result.canceled) {
+      const imagemSelecionada = result.assets[0].uri;
       Alert.alert(
         'Atenção',
         'Tem certeza de que deseja trocar sua foto de perfil?',
@@ -114,7 +115,7 @@ const PerfilUsu = ({ navigation }) => {
           {
             text: 'Sim',
             onPress: () => {
-              upload(setSelectedImage(result.assets[0].uri));
+              upload(imagemSelecionada);
             },
           },
         ],
@@ -147,9 +148,19 @@ const PerfilUsu = ({ navigation }) => {
         quality: 1,
         allowsMultipleSelection: false,
       })
+      console.log("RESPOSTA DA CAMERA: ",cameraResp);
+
       if (cameraResp.canceled) {
         Alert.alert('Aviso', 'Nenhuma foto tirada');
       } else {
+        const imagemSelecionada = cameraResp.assets[0].uri;
+
+        if (!imagemSelecionada) {
+          Alert.alert('Erro', 'Algo deu errado.');
+          return;
+        }
+
+        setSelectedImage(imagemSelecionada);
         Alert.alert(
           'Atenção',
           'Tem certeza de que deseja trocar sua foto de perfil?',
@@ -157,7 +168,7 @@ const PerfilUsu = ({ navigation }) => {
             { text: 'Não', style: 'cancel' },
             {
               text: 'Sim',
-              onPress: () => { upload(setSelectedImage(cameraResp.assets[0].uri)); },
+              onPress: () => { upload(cameraResp.assets[0].uri); },
             },
           ],
           { cancelable: false }
@@ -169,9 +180,9 @@ const PerfilUsu = ({ navigation }) => {
   };
 
 
-  const upload = async () => {
+  const upload = async (uri) => {
     const auth = getAuth()
-    const { uri } = await FileSystem.getInfoAsync(selectedImage);
+    const fileInfo = await FileSystem.getInfoAsync(uri);
     const docUserRef = doc(db, 'usuarios', auth.currentUser.uid)
     const fileName = ref(storage, auth.currentUser.uid)
 
