@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, Image, FlatList, Modal, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, View, Image, FlatList, Modal, TextInput, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from '../../Styles';
 import { useForm, Controller, set } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { collection, query, getDocs, where, deleteDoc } from "firebase/firestore";
+import { collection, query, getDocs, where, deleteDoc, doc } from "firebase/firestore";
 import { db } from '../../firebase.config.js';
 import { getAuth } from 'firebase/auth';
 
@@ -25,9 +25,9 @@ export default function HistoricoUsu({ navigation }) {
 
   const user = getAuth()
 
-  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'consultoriasRealizadasUsu');
 
-  const q = query(colRef, where('status', '==', 'aceita'), where('realizada', '==', true));
+  const q = query(colRef, where('status', '==', 'realizada'), where('realizada', '==', true));
 
   async function pegarDadosFiltrados() {
     await getDocs(q).then((snapshot) => {
@@ -47,23 +47,65 @@ export default function HistoricoUsu({ navigation }) {
     pegarDadosFiltrados()
   }, [])
 
+
+  //deletar histórico
+  const pressDurationThreshold = 1000;
+  const buttonPressTimer = useRef(null);
+  const handlePressIn = () => {
+    buttonPressTimer.current = setTimeout(() => {
+      showDeleteConfirmation();
+    }, pressDurationThreshold);
+  };
+  const handlePressOut = () => {
+    clearTimeout(buttonPressTimer.current);
+  };
+
+  const showDeleteConfirmation = (id) => {
+    Alert.alert(
+      'Excluir Notificação',
+      'Tem certeza de que deseja excluir este histórico?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', onPress: () => handleDelete(id) },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  // Altere a função handleDelete para aceitar um id
+  const handleDelete = (id) => {
+    const docRef = doc(db, 'usuarios', user.currentUser.uid, 'consultoriasRealizadasUsu', id)
+    deleteDoc(docRef).then(() => { })
+    // Atualizar a lista de histórico
+    setList((prevList) => prevList.filter((notification) => notification.id !== id));
+    Alert.alert('Histórico excluído com sucesso!');
+  };
+
+
   function ConsultoriasRealizadas({ item }) {
     return (
-      <View style={styles.labelContainerHistUsu}>
-        <View style={{ paddingRight: 15 }}>
-          <Text style={styles.dateHistUsu}>{item.data.diaDaSemana}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.horario}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.espe}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.nome}</Text>
-          <Text style={styles.timeHistUsu}>{item.data.texto}</Text>
-          <Text
-            style={[styles.timeHistUsu, { color: 'red', fontWeight: '600', fontSize: 15 }]}
-            onPress={() => setModalVisible(true)}
-          >
-            DENUNCIAR
-          </Text>
+      <TouchableOpacity
+        onPressIn={() => {
+          buttonPressTimer.current = setTimeout(() => {
+            showDeleteConfirmation(item.id);
+          }, pressDurationThreshold);
+        }}
+        onPressOut={() => {
+          clearTimeout(buttonPressTimer.current);
+        }}
+      >
+        <View style={styles.labelContainerHistUsu}>
+          <Text style={styles.nomeHistUsu}>{item.data.nome} ({item.data.espe})</Text>
+          <Text style={styles.dateHistUsu}>{item.data.diaDaSemana} — {item.data.horario}</Text>
+          <Text style={styles.msgHistUsu}>{item.data.texto}</Text>
+          <TouchableOpacity
+            style={styles.denunciarHistUsu}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.denunciarTxtHistUsu}>DENUNCIAR</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
+
     )
   }
 
@@ -115,7 +157,7 @@ export default function HistoricoUsu({ navigation }) {
             size={20}
             color="#1E5A97"
             style={{ marginRight: '7%' }}
-            onPress={() => navigation.navigate('TabRoutesAdv')} />
+            onPress={() => navigation.navigate('TabRoutesUsu')} />
           <Image
             style={styles.logo2}
             source={require('../../../assets/aconselhei1.png')}
@@ -164,7 +206,7 @@ export default function HistoricoUsu({ navigation }) {
                 <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                   <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={''}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={() => { setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso e será analisada pela equipe do AconseLhEI'); }}>
                   <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
               </View>

@@ -21,21 +21,28 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.mariaarthur.aconseLhEIapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-       
-
         "expo-image-picker",
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photo",
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4a3b9f02-c93f-43be-b76f-e774b33d94e3"
+      }
+    }
   }
 }

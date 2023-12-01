@@ -45,7 +45,7 @@ export default function Inicial({ navigation }) {
           />
         </View>
         <Text style={styles.navOption}>SOLICITAÇÕES</Text>
-        <View style={{ height: '73%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
+        <View style={{ height: '65%', width: '70%', justifyContent: 'center', alignSelf: 'center', alignItems: 'center', }}>
           <Text style={styles.txt3}>Ainda não há nenhuma solicitação.</Text>
         </View>
       </View>

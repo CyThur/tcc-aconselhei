@@ -144,7 +144,7 @@ const styleN = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 2,
-    marginTop: -10,
+    marginTop: 11,
   },
 
   horaTxt: {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useFocusEffect } from '@react-navigation/native';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking, Share } from 'react-native';
-import { getFirestore, updateDoc, collection, query, getDocs, where, deleteDoc } from "firebase/firestore";
+import { getFirestore, updateDoc, collection, query, getDocs, where, deleteDoc, addDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.config.js';
@@ -34,12 +34,12 @@ export default function TextoAgendaUsu({ route }) {
 
         useEffect(() => {
             async function PegarLink() {
-                const collectionRef = collection(db, 'advogados', idAdv, 'solicitacoes');
-                const q = query(collectionRef, where("cate", "==", `${espe}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
+                const collectionRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+                const q = query(collectionRef, where("espe", "==", `${espe}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
                 const querySnapshot = await getDocs(q);
 
                 const links = await Promise.all(querySnapshot.docs.map(async (docData) => {
-                    const docRefAdv = doc(db, 'advogados', idAdv, 'solicitacoes', docData.id);
+                    const docRefAdv = doc(db, 'usuarios', user.currentUser.uid, 'solicitAceita', docData.id);
                     const docSnap = await getDoc(docRefAdv);
 
                     if (docSnap.exists()) {
@@ -62,11 +62,17 @@ export default function TextoAgendaUsu({ route }) {
             const q = query(collectionRef, where("espe", "==", `${espe}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
             const querySnapshot = await getDocs(q);
             
-            const consulRealizadas = await Promise.all(querySnapshot.docs.map(async (docData) => {
-              const docRef = doc(db, 'usuarios', user.currentUser.uid, 'solicitAceita', docData.id);
-              await updateDoc(docRef, {
-                realizada: true
+            const consulRealizadas = await Promise.all(querySnapshot.docs.map(async (docDocData) => {
+              const docRef = doc(db, 'usuarios', user.currentUser.uid, 'solicitAceita', docDocData.id);
+              const docData = await getDoc(docRef);
+              consultoriasRealizadasRef = collection(db, 'usuarios', user.currentUser.uid, 'consultoriasRealizadasUsu');
+              await addDoc(consultoriasRealizadasRef, {
+                ...docData.data(),
+                realizada: true,
+                status: 'realizada'
               });
+
+              await deleteDoc(docRef);
 
               console.log("realizada");
             }));

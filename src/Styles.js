@@ -424,6 +424,18 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  btnConsulIndisponivel: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    width: 75,
+    height: 35,
+    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+
   btnTextAgendarConsul: {
     color: 'white',
     fontSize: 17,
@@ -675,8 +687,8 @@ export const styles = StyleSheet.create({
   },
 
   labelContainerHistUsu: {
-    backgroundColor: '#F2F1EC',
-    padding: 18,
+    backgroundColor: '#E1E0D9',
+    padding: 20,
     marginHorizontal: 30,
     marginBottom: 20,
     shadowColor: '#000',
@@ -684,22 +696,60 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width:'92%',
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: 'black'
+  },
+
+  nomeHistUsu: {
+    color: 'black', 
+    marginBottom: 10, 
+    fontWeight: '600', 
+    fontSize: 15
   },
 
   dateHistUsu: {
-    color: '#828282',
+    color: '#686868',
     fontWeight: 'bold',
-    fontSize: 13,
-    marginBottom: 5,
+    marginBottom: 17, 
+    fontSize: 15
   },
 
   timeHistUsu: {
     color: '#828282',
+    marginBottom: 15, 
+    fontWeight: '600', 
+    fontSize: 15 
+  },
+
+  msgHistUsu: {
+    color: '#414141', 
+    backgroundColor: '#C6C6C6', 
+    padding: 15, 
+    borderRadius: 8, 
+    lineHeight: 16, 
+    textAlign: 'justify',  
     fontSize: 13,
-    marginBottom: 25,
+    marginBottom: 17,
+    alignSelf:'stretch',
+    fontWeight:'500'
+  },
+
+  denunciarHistUsu: {
+    backgroundColor: '#f23535', 
+    width: '42%', 
+    padding: 10, 
+    paddingVertical: 6, 
+    borderRadius: 5, 
+    alignSelf:'flex-end', 
+    alignItems: 'center',
+  },
+
+  denunciarTxtHistUsu: {
+    color: 'white',
+    fontWeight: '600', 
+    fontSize: 15, 
   },
 
   categoryHistUsu: {
@@ -990,6 +1040,30 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'justify',
     marginBottom: 10,
+  },
+  buttonSoli: {
+    width: '100%',
+    height: 100,
+    backgroundColor: '#C0C0C0',
+    marginBottom: 10,
+    padding: 15,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#4F4F4F',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5, especiTxt: {
+      fontSize: 15,
+      color: 'gray',
+      marginBottom: 15,
+    },
+    shadowRadius: 3.84,
+    elevation: 8,
   },
 
 });
