@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Modal, Image, TextInput, Linking, Share } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, getDocs, getDoc, addDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.config.js';
 import { styles } from '../Styles.js';
 import { useForm, Controller, set } from "react-hook-form";
@@ -165,11 +165,17 @@ export default function TextoSolicitAgenda({ navigation, route }) {
     const q = query(collectionRef, where("cate", "==", `${cate}`), where("diaDaSemana", "==", `${diaDaSemana}`), where("horario", "==", `${horario}`));
     const querySnapshot = await getDocs(q);
     
-    const consulRealizadas = await Promise.all(querySnapshot.docs.map(async (docData) => {
-      const docRef = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docData.id);
-      await updateDoc(docRef, {
-        realizada: true
+    const consulRealizadas = await Promise.all(querySnapshot.docs.map(async (docDocData) => {
+      const docRef = doc(db, 'advogados', user.currentUser.uid, 'solicitacoes', docDocData.id);
+      const docData = await getDoc(docRef);
+      const consultoriasRealizadasRef = collection(db, 'advogados', user.currentUser.uid, 'consultoriasRealizadas');
+      await addDoc(consultoriasRealizadasRef, {
+        ...docData.data(),
+        realizada: true,
+        status: 'realizada'
       });
+
+      await deleteDoc(docRef);
 
       console.log("realizada"); 
     }));

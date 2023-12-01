@@ -424,6 +424,18 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  btnConsulIndisponivel: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    width: 75,
+    height: 35,
+    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+
   btnTextAgendarConsul: {
     color: 'white',
     fontSize: 17,

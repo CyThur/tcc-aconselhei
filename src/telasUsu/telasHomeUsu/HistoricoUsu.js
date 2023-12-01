@@ -25,9 +25,9 @@ export default function HistoricoUsu({ navigation }) {
 
   const user = getAuth()
 
-  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'solicitAceita');
+  const colRef = collection(db, 'usuarios', user.currentUser.uid, 'consultoriasRealizadasUsu');
 
-  const q = query(colRef, where('status', '==', 'aceita'), where('realizada', '==', true));
+  const q = query(colRef, where('status', '==', 'realizada'), where('realizada', '==', true));
 
   async function pegarDadosFiltrados() {
     await getDocs(q).then((snapshot) => {
@@ -159,7 +159,7 @@ export default function HistoricoUsu({ navigation }) {
                 <TouchableOpacity style={[styles.button, { marginBottom: 10, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 0, paddingHorizontal: 0, borderRadius: 0 }]} onPress={() => { setModalVisible(false) }}>
                   <Text style={[styles.buttonText, { color: '#1E5A97' }]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={() => { setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso, e será analisada pela equipe da AconseLhEI'); }}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 10 }]} onPress={() => { setModalVisible(false); Alert.alert('Atenção', 'Sua denúncia foi enviada com sucesso e será analisada pela equipe da AconseLhEI'); }}>
                   <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
               </View>

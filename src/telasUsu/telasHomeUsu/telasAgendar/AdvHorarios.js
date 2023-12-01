@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Alert, Image, ScrollView, StyleSheet } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { addDoc, collection, getDoc, doc } from "firebase/firestore";
+import { addDoc, collection, getDoc, getDocs, doc } from "firebase/firestore";
 import { styles } from '../../../Styles';
 import { db } from '../../../firebase.config.js';
 
@@ -32,6 +32,7 @@ export default function AdvHorarios({ navigation, route }) {
     const [dias, setDias] = useState([]);
     const [stateDiaDaSemana, setStateDiaDaSemana] = useState('');
     const [stateHorario, setStateHorario] = useState([]);
+    const [statusList, setStatusList] = useState([]);
 
     const diasIndices = dias.reduce((acc, dia, index) => {
         acc[dia] = index;
@@ -50,10 +51,31 @@ export default function AdvHorarios({ navigation, route }) {
             console.log(doc(db, "advogados", id));
             if (advogadoDocData.exists()) {
                 setDias(advogadoDocData.data().dias);
-                console.log(`AQUI ${dias}`)
+                console.log(`${dias}`)
             }
         }
         fetchDias();
+    }, []);
+
+    //coletando quais consultorias já foram aceitas
+    useEffect(() => {
+        const fetchStatus = async () => {
+            const solicitacoesCollection = collection(db, "advogados", id, "solicitacoes");
+            const solicitacoesSnapshot = await getDocs(solicitacoesCollection);
+            const newList = [];
+            solicitacoesSnapshot.forEach(doc => {
+                const data = doc.data();
+                newList.push({
+                    statusConsulMarcada: data.status,
+                    diaConsulMarcada: data.diaDaSemana,
+                    horarioConsulMarcada: data.horario
+                });
+            });
+            setStatusList(newList);
+            console.log("NEWLIST: ", newList);
+            console.log("STATUSLIST: ", statusList);
+        }
+        fetchStatus();
     }, []);
 
     useEffect(() => {
@@ -99,16 +121,23 @@ export default function AdvHorarios({ navigation, route }) {
                 const botoes = [];
                 for (let i = 0; i < horariosDia.length; i += botoesPorLinha) {
                     const linhaBotoes = horariosDia.slice(i, i + botoesPorLinha);
-                    const botoesLinha = linhaBotoes.map((horario, index) => (
-                        <TouchableOpacity
-                            key={i + index}
-                            style={styles.btnAgendarConsul}
-                            onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); }}
-                        //TESTE: console.log('OLHA PRA MIM', stateDiaDaSemana, stateHorario); DENTRO DA LINHA ACIMA
-                        >
-                            <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
-                        </TouchableOpacity>
-                    ));
+                    const botoesLinha = linhaBotoes.map((horario, index) => {
+                        const isMarcada = statusList.some(consultoria => consultoria.horarioConsulMarcada === horario &&
+                                                          consultoria.diaConsulMarcada === dia &&
+                                                          consultoria.statusConsulMarcada === 'aceita'
+                        );
+                        return (
+                            <TouchableOpacity
+                                key={i + index}
+                                style={isMarcada ? styles.btnConsulIndisponivel : styles.btnAgendarConsul}
+                                onPress={() => { setModalVisible(true); setStateDiaDaSemana(dia); setStateHorario(horario); }}
+                            //TESTE: console.log(stateDiaDaSemana, stateHorario); DENTRO DA LINHA ACIMA
+                                disabled={isMarcada}
+                            >
+                                <Text style={styles.btnTextAgendarConsul}>{horario}</Text>
+                            </TouchableOpacity>
+                        );
+                    });
 
                     botoes.push(
                         <View key={i} style={{ flexDirection: 'row', justifyContent: 'center', }}>
