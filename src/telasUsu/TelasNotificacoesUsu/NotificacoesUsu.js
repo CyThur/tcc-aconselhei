@@ -108,7 +108,7 @@ export default function NotificacoesUsu() {
       { text: 'Excluir', onPress: () => handleDelete(id) },
     ];
     if (status === 'aceita') {
-      message = 'Esta notificação será excluída automaticamente após a realização da consultoria';
+      message = 'Esta notificação será excluída automaticamente após a realização da consultoria.';
       buttons = [];
     }
 

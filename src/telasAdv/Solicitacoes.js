@@ -80,7 +80,7 @@ export default function Inicial({ navigation }) {
 
           alignItems: 'center',
         }}>
-          <View style={{ width: 270 }}>
+          <View style={{ width: 255 }}>
             <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
             <Text style={styleN.especiTxt}>{item.data.cate}</Text>
           </View>

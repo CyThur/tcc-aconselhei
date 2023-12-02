@@ -69,7 +69,7 @@ export default function AgendaUsu({ navigation }) {
           alignSelf: 'center',
           alignItems: 'center',
         }}>
-          <View style={{ width: 270 }}>
+          <View style={{ width: 255 }}>
             <Text style={styleN.nomeSoli}>{item.data.nome}</Text>
             <Text style={styleN.especiTxt}>{item.data.espe}</Text>
           </View>
