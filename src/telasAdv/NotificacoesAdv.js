@@ -98,7 +98,7 @@ export default function NotificacoesAdv() {
                     <Text style={styleN.txt}>{item.data.nome}</Text>
                     <Text style={styleN.txt}> ({item.data.cate})</Text>
                     <Text style={styleN.txt2}>{item.data.status == 'pendente' ?
-                      'te enviou uma solicitação de consultoria! Você pode aceitar ou recusar nas solicitações'
+                      'te enviou uma solicitação de consultoria! Você pode aceitar ou recusar nas solicitações.'
                       :
                       null
                     }

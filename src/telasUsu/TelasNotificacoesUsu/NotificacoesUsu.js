@@ -186,7 +186,7 @@ export default function NotificacoesUsu() {
                     <Text style={styleN.txt}>{item.data.nome}</Text>
                     <Text style={styleN.txt}> ({item.data.espe})</Text>
                     <Text style={styleN.txt2}>{item.data.status == 'aceita' && item.data.link ?
-                      'te enviou o link! Veja a consultoria na agenda para acessá-lo'
+                      'te enviou o link! Veja a consultoria na agenda para acessá-lo.'
                       :
                       item.data.status == 'aceita' ? //DÁ PRA APAGAR AS NOTIFICAÇÕES 'status == aceita' E 'item.data.link' (quando tem link) ???
                         'aceitou sua solicitação! Em breve você receberá o link para reunião'
